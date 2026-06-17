@@ -117,7 +117,7 @@ private with sharing class fflib_SObjectSelectorTest
 			AccountSelector selector = new AccountSelector();
 			try
 			{
-				List<Account> result = (List<Account>) selector.selectSObjectsById(idSet);
+				selector.selectSObjectsById(idSet);
 				System.assert(false,'Expected exception was not thrown');
 			}
 			catch(fflib_SObjectDomain.DomainException e)
@@ -147,7 +147,7 @@ private with sharing class fflib_SObjectSelectorTest
 			AccountSelector selector = new AccountSelector(false, false, false, true);
 			try
 			{
-				List<Account> result = (List<Account>) selector.selectSObjectsById(idSet);
+				selector.selectSObjectsById(idSet);
 			}
 			catch(fflib_SObjectDomain.DomainException e)
 			{
@@ -346,7 +346,6 @@ private with sharing class fflib_SObjectSelectorTest
 	static void testGetFieldListString() {
 		//Given
 		Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
-		fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
 
 		Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'Username', 'LastLoginDate' };
 		if (UserInfo.isMultiCurrencyOrganization())
@@ -853,7 +852,7 @@ private with sharing class fflib_SObjectSelectorTest
 		fflib_QueryFactory listEmailQF = listEmailSel.addQueryFactorySubselect(oppQF);
 
 		TaskSelector tSel = new TaskSelector();
-		fflib_QueryFactory tQF = tSel.addQueryFactorySubselect(listEmailQF);
+		tSel.addQueryFactorySubselect(listEmailQF);
 
 	String expected = String.format(
 		'SELECT name, id, annualrevenue, accountnumber{0}, ' +

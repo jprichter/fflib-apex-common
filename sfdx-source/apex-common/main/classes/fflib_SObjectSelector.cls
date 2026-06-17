@@ -27,6 +27,7 @@
 /**
  * Class providing common database query support for abstracting and encapsulating query logic
  **/
+@SuppressWarnings('PMD.EmptyStatementBlock')
 public abstract with sharing class fflib_SObjectSelector
 	implements fflib_ISObjectSelector
 {
