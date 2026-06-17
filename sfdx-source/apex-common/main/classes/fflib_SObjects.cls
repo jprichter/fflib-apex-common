@@ -27,8 +27,15 @@ public virtual class fflib_SObjects
 		extends fflib_Objects
 		implements fflib_ISObjects
 {
+	private Schema.SObjectType m_sObjectType;
 
-	public Schema.DescribeSObjectResult SObjectDescribe {get; private set;}
+	public Schema.DescribeSObjectResult SObjectDescribe
+	{
+		get
+		{
+			return fflib_SObjectDescribe.getDescribe(m_sObjectType).getDescribe();
+		}
+	}
 
 	/**
 	 * Useful during unit testing to assert at a more granular and robust level for errors raised during the various trigger events
@@ -51,7 +58,7 @@ public virtual class fflib_SObjects
 	public fflib_SObjects(List<SObject> records, Schema.SObjectType sObjectType)
 	{
 		super(records);
-		SObjectDescribe = sObjectType.getDescribe();
+		m_sObjectType = sObjectType;
 	}
 
 	public virtual List<SObject> getRecords()
@@ -71,7 +78,7 @@ public virtual class fflib_SObjects
 
 	public virtual SObjectType getSObjectType()
 	{
-		return SObjectDescribe.getSObjectType();
+		return m_sObjectType;
 	}
 
 	/**
