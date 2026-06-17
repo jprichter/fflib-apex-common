@@ -268,7 +268,7 @@ private class fflib_QueryFactoryTest {
 			System.assert(false,'Expected InvalidFieldException; none was thrown');
 		} 
 		catch (fflib_QueryFactory.InvalidFieldException ife) {
-			//Expected
+			System.assert(ife.getMessage().contains('Invalid'), 'Unexpected exception message: ' + ife.getMessage());
 		}
 		catch (Exception e){
 			System.assert(false,'Expected InvalidFieldException; ' + e.getTypeName() + ' was thrown instead: ' + e);
