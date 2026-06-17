@@ -38,6 +38,7 @@
  * http://martinfowler.com/eaaCatalog/domainModel.html
  *
  **/
+@SuppressWarnings('PMD.EmptyStatementBlock')
 public virtual with sharing class fflib_SObjectDomain
 		extends fflib_SObjects
 	implements fflib_ISObjectDomain

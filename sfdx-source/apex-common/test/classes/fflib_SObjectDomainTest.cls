@@ -27,6 +27,18 @@
 @IsTest
 private with sharing class fflib_SObjectDomainTest 
 {	
+	private static final String TEST_ID_PADDING = '000000000000';
+	private static Integer testIdSequence = 0;
+
+	@TestVisible
+	private static Id generateTestRecordId(Schema.SObjectType sObjectType)
+	{
+		String keyPrefix = sObjectType.getDescribe().getKeyPrefix();
+		testIdSequence++;
+		String prefix = TEST_ID_PADDING.substring(0, TEST_ID_PADDING.length() - String.valueOf(testIdSequence).length());
+		return Id.valueOf(keyPrefix + prefix + testIdSequence);
+	}
+
 	@IsTest
 	private static void testValidationWithoutDML()
 	{
@@ -58,10 +70,10 @@ private with sharing class fflib_SObjectDomainTest
 	@IsTest
 	private static void testUpdateValidationFailedWithoutDML()
 	{
-		Opportunity oldOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ');
+			Opportunity oldOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
 		oldOpp.Name = 'Test';
 		oldOpp.Type = 'Existing Account'; 
-		Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ'); 
+			Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType)); 
 		newOpp.Name = 'Test';
 		newOpp.Type = 'New Account'; 
 		System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());		
@@ -76,7 +88,7 @@ private with sharing class fflib_SObjectDomainTest
 	@IsTest
 	private static void testOnBeforeDeleteWithoutDML()
 	{
-		Opportunity opp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ'); 
+			Opportunity opp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType)); 
 		opp.Name = 'Test';
 		opp.Type = 'Existing Account';
 		System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());		
@@ -90,7 +102,7 @@ private with sharing class fflib_SObjectDomainTest
 	@IsTest
 	private static void testOnAfterUndeleteWithoutDML()
 	{
-		Opportunity opp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ'); 
+			Opportunity opp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType)); 
 		opp.Name = 'Test';
 		opp.Type = 'Existing Account';
 		System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());		
@@ -119,7 +131,7 @@ private with sharing class fflib_SObjectDomainTest
 			}		
 			
 			// Test Update object security
-			Opportunity existingOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ');
+			Opportunity existingOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
 			existingOpp.Name = 'Test';
 			existingOpp.Type = 'Existing Account'; 			
 			fflib_SObjectDomain.Test.Database.onUpdate(new List<Opportunity> { opp }, new Map<Id, Opportunity> { opp.Id => opp } );
@@ -180,10 +192,10 @@ private with sharing class fflib_SObjectDomainTest
 	@IsTest
 	private static void testOnValidateBehaviorDefault()
 	{
-		Opportunity oldOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ');
+			Opportunity oldOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
 		oldOpp.Name = 'Test Default Behaviour';
 		oldOpp.Type = 'Existing Account'; 
-		Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ'); 
+			Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType)); 
 		newOpp.Name = 'Test Default Behaviour';
 		newOpp.Type = 'New Account'; 		
 		fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[] { newOpp }, new Map<Id, SObject> { newOpp.Id => oldOpp } );		
@@ -193,10 +205,10 @@ private with sharing class fflib_SObjectDomainTest
 	@IsTest
 	private static void testOnValidateBehaviorOld()
 	{
-		Opportunity oldOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ');
+			Opportunity oldOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
 		oldOpp.Name = 'Test Enable Old Behaviour';
 		oldOpp.Type = 'Existing Account'; 
-		Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ'); 
+			Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType)); 
 		newOpp.Name = 'Test Enable Old Behaviour';
 		newOpp.Type = 'New Account'; 		
 		fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[] { newOpp }, new Map<Id, SObject> { newOpp.Id => oldOpp } );
@@ -211,8 +223,8 @@ private with sharing class fflib_SObjectDomainTest
 	@IsTest
 	private static void testGetChangedFieldsAsStrings()
 	{
-		Account acct1 = new Account ( Id = '001E0000006mkRP', Name = 'Test1', AccountNumber = '12345', Site = 'Here'),
-		        acct2 = new Account ( Id = '001E0000006mkRQ', Name = 'Test2', AccountNumber = '54321', Site = 'There');
+		Account acct1 = new Account ( Id = generateTestRecordId(Account.SObjectType), Name = 'Test1', AccountNumber = '12345', Site = 'Here'),
+		        acct2 = new Account ( Id = generateTestRecordId(Account.SObjectType), Name = 'Test2', AccountNumber = '54321', Site = 'There');
 		System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
 		fflib_SObjectDomain.Test.Database.onInsert(new Account[] { acct1, acct2 } );
 		System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
@@ -338,10 +350,10 @@ private with sharing class fflib_SObjectDomainTest
 
 		String  sErrorMessage = '';
 
-		Opportunity oldOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ');
+			Opportunity oldOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
 		oldOpp.Name = 'Test';
 		oldOpp.Type = 'Existing'; 
-		Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject('006E0000006mkRQ'); 
+			Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType)); 
 		newOpp.Name = 'Test';
 		newOpp.Type = 'New'; 
 

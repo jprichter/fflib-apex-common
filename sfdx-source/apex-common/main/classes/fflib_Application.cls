@@ -29,6 +29,7 @@
  * of the Apex Enterprise Patterns, Service, Unit Of Work, Selector and Domain.
  *   See the sample applications Application.cls file for an example
  **/
+@SuppressWarnings('PMD.EmptyStatementBlock')
 public virtual class fflib_Application
 {
 	/**
