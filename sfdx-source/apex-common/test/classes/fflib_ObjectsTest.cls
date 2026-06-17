@@ -25,6 +25,7 @@
 **/
 
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc')
 private class fflib_ObjectsTest
 {
     private static final fflib_ObjectsTest.DataTransferObject TRANSFER_OBJECT_A = new DataTransferObject('Test A');

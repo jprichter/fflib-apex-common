@@ -29,7 +29,7 @@
  * of the Apex Enterprise Patterns, Service, Unit Of Work, Selector and Domain.
  *   See the sample applications Application.cls file for an example
  **/
-@SuppressWarnings('PMD.EmptyStatementBlock, PMD.CognitiveComplexity, PMD.ClassNamingConventions, PMD.FieldNamingConventions')
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.CognitiveComplexity, PMD.ClassNamingConventions, PMD.FieldNamingConventions, PMD.ApexDoc')
 public virtual class fflib_Application
 {
     /**
@@ -298,7 +298,6 @@ public virtual class fflib_Application
         @TestVisible
         protected virtual void setMock(fflib_ISObjectSelector selectorInstance)
         {
-            System.debug(System.LoggingLevel.INFO, '*** fflib - Please note your mocked class should have sObjectType() stubbed, or use setMock( SObjectType, SelectorMock )');
             setMock(selectorInstance.sObjectType(), selectorInstance);
         }
 
@@ -455,7 +454,6 @@ public virtual class fflib_Application
         @TestVisible
         protected virtual void setMock(fflib_ISObjectDomain mockDomain)
         {
-            System.debug(System.LoggingLevel.INFO, '*** fflib - Please note your mocked class should have sObjectType() stubbed, or use setMock( SObjectType, SelectorMock )');
             setMock(mockDomain.sObjectType(), mockDomain);
         }
 

@@ -2,22 +2,22 @@
  * Copyright (c), FinancialForce.com, inc
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, 
+ * Redistribution and use in source and binary forms, with or without modification,
  *   are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice, 
+ * - Redistributions of source code must retain the above copyright notice,
  *      this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *      this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *      this list of conditions and the following disclaimer in the documentation
  *      and/or other materials provided with the distribution.
- * - Neither the name of the FinancialForce.com, inc nor the names of its contributors 
- *      may be used to endorse or promote products derived from this software without 
+ * - Neither the name of the FinancialForce.com, inc nor the names of its contributors
+ *      may be used to endorse or promote products derived from this software without
  *      specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -51,7 +51,7 @@
  * TODO: Need to add some more test methods for more complex use cases and some unexpected (e.g. registerDirty and then registerDeleted)
  *
  **/
-@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions')
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc')
 public virtual inherited sharing class fflib_SObjectUnitOfWork
     implements fflib_ISObjectUnitOfWork
 {
@@ -128,7 +128,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
             {
                 return;
             }
-            
+
             EventBus.publish(objList);
         }
         public virtual void emptyRecycleBin(List<SObject> objList)
@@ -489,7 +489,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
      **/
     public void registerUpsert(SObject record)
     {
-        if (record.Id == null) 
+        if (record.Id == null)
         {
             registerNew(record, null, null);
         }
@@ -518,7 +518,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
      * @param records A list of mix of new and existing records
      * @param externalIdField External id field to use for upserting operation
      **/
-    public void registerUpsert(List<SObject> records, Schema.SObjectField externalIdField) 
+    public void registerUpsert(List<SObject> records, Schema.SObjectField externalIdField)
     {
         for (SObject record : records) {
             this.registerUpsert(record, externalIdField, null, null);
@@ -1039,8 +1039,8 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
         public SObject RelatedTo;
 
         public void resolve()
-        {   
-            if (String.isNotBlank(this.RelatedTo.Id)) 
+        {
+            if (String.isNotBlank(this.RelatedTo.Id))
             {
                 this.Record.put( this.RelatedToField, this.RelatedTo.Id );
             }

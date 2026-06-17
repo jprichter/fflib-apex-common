@@ -2,22 +2,22 @@
  * Copyright (c), FinancialForce.com, inc
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, 
+ * Redistribution and use in source and binary forms, with or without modification,
  *   are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice, 
+ * - Redistributions of source code must retain the above copyright notice,
  *      this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *      this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *      this list of conditions and the following disclaimer in the documentation
  *      and/or other materials provided with the distribution.
- * - Neither the name of the FinancialForce.com, inc nor the names of its contributors 
- *      may be used to endorse or promote products derived from this software without 
+ * - Neither the name of the FinancialForce.com, inc nor the names of its contributors
+ *      may be used to endorse or promote products derived from this software without
  *      specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -28,14 +28,15 @@
     This class adapted from https://github.com/capeterson/Apex-Util
     Used under a BSD license: https://github.com/capeterson/Apex-Util/blob/master/LICENSE
 **/
-@isTest
+@IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
 private class fflib_SObjectDescribeTest {
 
     /**
      * Verify that the different ways of getting your hands on an fflib_SObjectDescribe instance all handle null inputs
      * (and blank/empty strings, why not?) by returning null - since there's no possible way to resolve it.
     **/
-    @isTest
+    @IsTest
     static void getDescribe_badInput(){
         String nullStr = null; //having it as a string var makes for unambiguous selection of overloads
         Schema.SObjectType nullType = null;
@@ -49,7 +50,7 @@ private class fflib_SObjectDescribeTest {
         System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullSObject));
     }
 
-    @isTest
+    @IsTest
     static void NamespacedAttributeMap_implementations(){
         fflib_SObjectDescribe.GlobalDescribeMap gdm = fflib_SObjectDescribe.getGlobalDescribe();
         Schema.SObjectType accountObjType = gdm.get('AccOunT');
@@ -67,7 +68,7 @@ private class fflib_SObjectDescribeTest {
         System.assertEquals(null, fields.get(''), 'Invalid fieldname input should result in null ouput.');
     }
 
-    @isTest
+    @IsTest
     static void FieldsMap(){
         String fakeNamespace = 'fflib_test';
         Map<String,Schema.SObjectField> fakeFieldData = new Map<String,Schema.SObjectField>{
@@ -92,7 +93,7 @@ private class fflib_SObjectDescribeTest {
         System.assertNotEquals(fields.get('name__C'), fields.get(fakeNamespace.capitalize()+'__nAme__c'));
     }
 
-    @isTest
+    @IsTest
     static void GlobalDescribeMap(){
         String fakeNamespace = 'fflib_test';
         Map<String,Schema.SObjectType> fakeFieldData = new Map<String,Schema.SObjectType>{
@@ -110,7 +111,7 @@ private class fflib_SObjectDescribeTest {
         System.assertNotEquals(gdm.get('name__c'), gdm.get(fakeNamespace+'__name__c'));
     }
 
-    @isTest //Tests all forms of the getDescribe static
+    @IsTest //Tests all forms of the getDescribe static
     static void getAccountDescribes(){
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe('Account');
         fflib_SObjectDescribe d2 = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
@@ -119,7 +120,7 @@ private class fflib_SObjectDescribeTest {
         System.assert( (d === d2 && d2 === d3) ,'All three getDescribe calls should return the same cached instance.');
     }
 
-    @isTest
+    @IsTest
     static void simpleAccountFieldDescribe(){
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         Map<String,Schema.SObjectField> fields;
@@ -139,7 +140,7 @@ private class fflib_SObjectDescribeTest {
         System.assertEquals(Account.SObjectType, d.getSObjectType());
     }
 
-    @isTest
+    @IsTest
     static void simpleAccountFieldSetDescribe(){
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         Map<String,Schema.FieldSet> fields;
@@ -158,14 +159,14 @@ private class fflib_SObjectDescribeTest {
         // no asserts on result size to avoid a requirement on field sets existing
     }
 
-    @isTest
+    @IsTest
     	static void simpleAccountGetNameField(){
         	fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         	Schema.SObjectField nameField = d.getNameField();
         	System.assertEquals('Name', nameField.getDescribe().getName());
     }
 
-    @isTest
+    @IsTest
     static void flushCache(){
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe('Account');
         fflib_SObjectDescribe.flushCache();
@@ -173,7 +174,7 @@ private class fflib_SObjectDescribeTest {
         System.assert(d !== d2, 'Second object should be a fresh instance after a cache flush.' );
     }
 
-    @isTest
+    @IsTest
     static void rawGlobalDescribeCheck(){
         Map<String,Schema.SObjectType> systemGd = Schema.getGlobalDescribe();
         Map<String,Schema.SObjectType> cachedGd = fflib_SObjectDescribe.getRawGlobalDescribe();

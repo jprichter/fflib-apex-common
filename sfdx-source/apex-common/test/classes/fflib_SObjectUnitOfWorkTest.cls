@@ -2,22 +2,22 @@
  * Copyright (c), FinancialForce.com, inc
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, 
+ * Redistribution and use in source and binary forms, with or without modification,
  *   are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice, 
+ * - Redistributions of source code must retain the above copyright notice,
  *      this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *      this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *      this list of conditions and the following disclaimer in the documentation
  *      and/or other materials provided with the distribution.
- * - Neither the name of the FinancialForce.com, inc nor the names of its contributors 
- *      may be used to endorse or promote products derived from this software without 
+ * - Neither the name of the FinancialForce.com, inc nor the names of its contributors
+ *      may be used to endorse or promote products derived from this software without
  *      specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -25,6 +25,7 @@
 **/
 
 @IsTest(IsParallel=true)
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc')
 private with sharing class fflib_SObjectUnitOfWorkTest
 {
     // SObjects (in order of dependency) used by UnitOfWork in tests bellow
@@ -358,7 +359,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
      *		- Correct events are fired when commitWork fails during DoWork processing
      *
      */
-    @isTest
+    @IsTest
     private static void testDerivedUnitOfWork_CommitDoWorkFail()
     {
         // Insert Opportunities with UnitOfWork
@@ -569,7 +570,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
                 Name = 'test name B',
                 StageName = 'Open',
                 CloseDate = System.today())
-        ); 
+        );
         uow.commitWork();
 
         // THEN only the first record should be registered with both changed values for Amount and StageName and the second should be the original
@@ -630,7 +631,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assertEquals(1, mockDML.recordsForInsert.size());
     }
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsertByExternalId() {
 
         Opportunity existingOpp = new Opportunity(Name = 'Existing Opportunity', StageName = 'Open', CloseDate = System.today());
@@ -640,7 +641,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 
         System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
         System.assertEquals(0, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed']);
-        
+
         Test.startTest();
             fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
             uow.registerUpsert(new List<Opportunity>{existingOpp}, Opportunity.Id);
@@ -651,7 +652,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assertEquals(1, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed']);
     }
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsertByExternalId_When_UserModeDML_Expect_UpsertInUserMode() {
         // Covers UserModeDML.dmlUpsert (Database.upsert with accessLevel)
         Opportunity existingOpp = new Opportunity(Name = 'Existing Opportunity', StageName = 'Open', CloseDate = System.today());
@@ -667,7 +668,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assertEquals(1, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed']);
     }
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsertByExternalIdParentWillResolve() {
 
         Opportunity existingOpp = new Opportunity(Name = 'Existing Opportunity', StageName = 'Open', CloseDate = System.today());
@@ -677,7 +678,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 
         System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
         System.assertEquals(0, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed']);
-        
+
         List<Schema.SObjectType> orderWithAccounts = new List<Schema.SObjectType>();
         orderWithAccounts.add(Account.SObjectType);
         orderWithAccounts.addAll(MY_SOBJECTS);
@@ -700,14 +701,14 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsertByExternalIdChildWillResolve() {
 
         Opportunity newOpportunity = new Opportunity(Name = 'Existing Opportunity', StageName = 'Closed', CloseDate = System.today());
 
         Account existingAccount = new Account(Name = 'old account name');
         insert existingAccount;
-        
+
         List<Schema.SObjectType> orderWithAccounts = new List<Schema.SObjectType>();
         orderWithAccounts.add(Account.SObjectType);
         orderWithAccounts.addAll(MY_SOBJECTS);
@@ -731,14 +732,14 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsertByExternalIdBothWillResolve() {
 
         Opportunity newOpportunity = new Opportunity(Name = 'Existing Opportunity', StageName = 'Closed', CloseDate = System.today());
 
         String accName = 'new account';
         Account newAccount = new Account(Name = accName);
-        
+
         List<Schema.SObjectType> orderWithAccounts = new List<Schema.SObjectType>();
         orderWithAccounts.add(Account.SObjectType);
         orderWithAccounts.addAll(MY_SOBJECTS);
@@ -757,7 +758,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assertEquals(accName, updatedOpp.Account.Name );
     }
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsertByExternalId_When_CustomIDMLNotIDMLUpsertable_Expect_Exception() {
         // GIVEN an existing opportunity and a custom DML that implements IDML but not IDML2
         Opportunity existingOpp = new Opportunity(Name = 'Existing Opportunity', StageName = 'Open', CloseDate = System.today());
@@ -777,7 +778,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         }
     }
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsert_When_NullExternalIdField_Expect_Exception() {
         Opportunity opp = new Opportunity(Name = 'Test', StageName = 'Open', CloseDate = System.today());
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
@@ -791,7 +792,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assert(exceptionThrown, 'Expected UnitOfWorkException when externalIdField is null');
     }
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsert_When_FieldNotOnTargetSObject_Expect_Exception() {
         Opportunity opp = new Opportunity(Name = 'Test', StageName = 'Open', CloseDate = System.today());
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
@@ -806,7 +807,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assert(exceptionThrown, 'Expected UnitOfWorkException when externalIdField is not on target sObject');
     }
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsert_When_FieldNotValidForUpsert_Expect_Exception() {
         Opportunity opp = new Opportunity(Name = 'Test', StageName = 'Open', CloseDate = System.today());
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
@@ -821,7 +822,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assert(exceptionThrown, 'Expected UnitOfWorkException when externalIdField is not valid for upsert (e.g. not idLookup)');
     }
 
-    @isTest
+    @IsTest
     private static void testRegisterUpsert_When_DifferentExternalIdAlreadyRegisteredForSameType_Expect_Exception() {
         User runningUser = [SELECT Id, Username FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1];
         List<Schema.SObjectType> userTypes = new List<Schema.SObjectType>{ User.SObjectType };

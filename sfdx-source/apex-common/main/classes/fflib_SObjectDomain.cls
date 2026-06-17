@@ -2,22 +2,22 @@
  * Copyright (c), FinancialForce.com, inc
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, 
+ * Redistribution and use in source and binary forms, with or without modification,
  *   are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice, 
+ * - Redistributions of source code must retain the above copyright notice,
  *      this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *      this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *      this list of conditions and the following disclaimer in the documentation
  *      and/or other materials provided with the distribution.
- * - Neither the name of the FinancialForce.com, inc nor the names of its contributors 
- *      may be used to endorse or promote products derived from this software without 
+ * - Neither the name of the FinancialForce.com, inc nor the names of its contributors
+ *      may be used to endorse or promote products derived from this software without
  *      specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -26,19 +26,19 @@
 
 /**
  * Base class aiding in the implementation of a Domain Model around SObject collections
- * 
- * Domain (software engineering). “a set of common requirements, terminology, and functionality 
+ *
+ * Domain (software engineering). “a set of common requirements, terminology, and functionality
  * for any software program constructed to solve a problem in that field”,
  * http://en.wikipedia.org/wiki/Domain_(software_engineering)
  *
- * Domain Model, “An object model of the domain that incorporates both behavior and data.”, 
+ * Domain Model, “An object model of the domain that incorporates both behavior and data.”,
  * “At its worst business logic can be very complex. Rules and logic describe many different "
- * "cases and slants of behavior, and it's this complexity that objects were designed to work with...” 
+ * "cases and slants of behavior, and it's this complexity that objects were designed to work with...”
  * Martin Fowler, EAA Patterns
  * http://martinfowler.com/eaaCatalog/domainModel.html
  *
  **/
-@SuppressWarnings('PMD.EmptyStatementBlock, PMD.CognitiveComplexity, PMD.CyclomaticComplexity, PMD.ExcessivePublicCount, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.LocalVariableNamingConventions')
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.CognitiveComplexity, PMD.CyclomaticComplexity, PMD.ExcessivePublicCount, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.LocalVariableNamingConventions, PMD.ApexDoc')
 public virtual with sharing class fflib_SObjectDomain
         extends fflib_SObjects
     implements fflib_ISObjectDomain
@@ -82,24 +82,24 @@ public virtual with sharing class fflib_SObjectDomain
 
     /**
      * Exposes the configuration for this domain class instance
-     **/ 
-    public Configuration Configuration {get; private set;}    
-        
+     **/
+    public Configuration Configuration {get; private set;}
+
     /**
      * DEPRECATED, This property has been moved to fflib_SObjects
      **/
     public static fflib_SObjectDomain.ErrorFactory Errors {get; private set;}
-    
+
     /**
      * Useful during unit testing to access mock support for database inserts and updates (testing without DML)
      **/
     public static TestFactory Test  {get; private set;}
-    
+
     /**
      * Retains instances of domain classes implementing trigger stateful
      **/
-    private static Map<Type, List<fflib_SObjectDomain>> TriggerStateByClass; 
-    
+    private static Map<Type, List<fflib_SObjectDomain>> TriggerStateByClass;
+
     /**
      * Retains the trigger tracking configuration used for each domain
      **/
@@ -110,12 +110,12 @@ public virtual with sharing class fflib_SObjectDomain
         Errors = new fflib_SObjectDomain.ErrorFactory();
 
         Test = new TestFactory();
-        
+
         TriggerStateByClass = new Map<Type, List<fflib_SObjectDomain>>();
 
         TriggerEventByClass = new Map<Type, TriggerEvent>();
     }
-    
+
     /**
      * Constructs the domain class with the data on which to apply the behaviour implemented within
      *
@@ -142,19 +142,19 @@ public virtual with sharing class fflib_SObjectDomain
         super(sObjectList, sObjectType);
 
         // Configure the Domain object instance
-        Configuration = new Configuration();        
+        Configuration = new Configuration();
     }
-    
+
     /**
      * Override this to apply defaults to the records, this is called by the handleBeforeInsert method
      **/
     public virtual void onApplyDefaults() { }
-    
+
     /**
      * Override this to apply general validation to be performed during insert or update, called by the handleAfterInsert and handleAfterUpdate methods
      **/
     public virtual void onValidate() {  }
-    
+
     /**
      * Override this to apply validation to be performed during insert, called by the handleAfterUpdate method
      **/
@@ -164,62 +164,62 @@ public virtual with sharing class fflib_SObjectDomain
      * Override this to perform processing during the before insert phase, this is called by the handleBeforeInsert method
      **/
     public virtual void onBeforeInsert() { }
-    
+
     /**
      * Override this to perform processing during the before update phase, this is called by the handleBeforeUpdate method
      **/
     public virtual void onBeforeUpdate(Map<Id,SObject> existingRecords) { }
-    
+
     /**
      * Override this to perform processing during the before delete phase, this is called by the handleBeforeDelete method
      **/
     public virtual void onBeforeDelete() { }
-    
+
     /**
      * Override this to perform processing during the after insert phase, this is called by the handleAfterInsert method
      **/
     public virtual void onAfterInsert() { }
-    
+
     /**
      * Override this to perform processing during the after update phase, this is called by the handleAfterUpdate method
-     **/    
+     **/
     public virtual void onAfterUpdate(Map<Id,SObject> existingRecords) { }
-    
+
     /**
      * Override this to perform processing during the after delete phase, this is called by the handleAfterDelete method
-     **/    
-    public virtual void onAfterDelete() { } 
-    
+     **/
+    public virtual void onAfterDelete() { }
+
     /**
      * Override this to perform processing during the after undelete phase, this is called by the handleAfterDelete method
-     **/    
-    public virtual void onAfterUndelete() { }   
-    
+     **/
+    public virtual void onAfterUndelete() { }
+
     /**
      * Base handler for the Apex Trigger event Before Insert, calls the onApplyDefaults method, followed by onBeforeInsert
      **/
-    public virtual void handleBeforeInsert() 
-    { 
-        onApplyDefaults(); 
+    public virtual void handleBeforeInsert()
+    {
+        onApplyDefaults();
         onBeforeInsert();
     }
-    
+
     /**
      * Base handler for the Apex Trigger event Before Update, calls the onBeforeUpdate method
      **/
-    public virtual void handleBeforeUpdate(Map<Id,SObject> existingRecords) 
+    public virtual void handleBeforeUpdate(Map<Id,SObject> existingRecords)
     {
         onBeforeUpdate(existingRecords);
     }
-    
+
     /**
      * Base handler for the Apex Trigger event Before Delete, calls the onBeforeDelete method
      **/
-    public virtual void handleBeforeDelete() 
+    public virtual void handleBeforeDelete()
     {
         onBeforeDelete();
     }
-    
+
     /**
      * Base handler for the Apex Trigger event After Insert, checks object security and calls the onValidate and onAfterInsert methods
      *
@@ -231,18 +231,18 @@ public virtual with sharing class fflib_SObjectDomain
         {
             throw new DomainException('Permission to create an ' + SObjectDescribe.getName() + ' denied.');
         }
-           
+
         onValidate();
-        onAfterInsert(); 
+        onAfterInsert();
     }
-    
+
     /**
      * Base handler for the Apex Trigger event After Update, checks object security and calls the onValidate, onValidate(Map<Id,SObject>) and onAfterUpdate methods
      *
      * @throws DomainException if the current user context is not able to update records
      **/
-    public virtual void handleAfterUpdate(Map<Id,SObject> existingRecords) 
-    {       
+    public virtual void handleAfterUpdate(Map<Id,SObject> existingRecords)
+    {
         if(Configuration.EnforcingTriggerCRUDSecurity && !SObjectDescribe.isUpdateable())
         {
             throw new DomainException('Permission to update an ' + SObjectDescribe.getName() + ' denied.');
@@ -253,38 +253,38 @@ public virtual with sharing class fflib_SObjectDomain
             onValidate();
         }
         onValidate(existingRecords);
-        onAfterUpdate(existingRecords); 
+        onAfterUpdate(existingRecords);
     }
-    
+
     /**
      * Base handler for the Apex Trigger event After Delete, checks object security and calls the onAfterDelete method
      *
      * @throws DomainException if the current user context is not able to delete records
      **/
-    public virtual void handleAfterDelete() 
+    public virtual void handleAfterDelete()
     {
         if(Configuration.EnforcingTriggerCRUDSecurity && !SObjectDescribe.isDeletable())
         {
             throw new DomainException('Permission to delete an ' + SObjectDescribe.getName() + ' denied.');
         }
-           
+
         onAfterDelete();
-    }   
+    }
 
     /**
      * Base handler for the Apex Trigger event After Undelete, checks object security and calls the onAfterUndelete method
      *
      * @throws DomainException if the current user context is not able to delete records
      **/
-    public virtual void handleAfterUndelete() 
+    public virtual void handleAfterUndelete()
     {
         if(Configuration.EnforcingTriggerCRUDSecurity && !SObjectDescribe.isUndeletable())
         {
             throw new DomainException('Permission to undelete an ' + SObjectDescribe.getName() + ' denied.');
         }
-           
+
         onAfterUndelete();
-    }   
+    }
 
     /**
      * Returns the SObjectType this Domain class represents
@@ -363,15 +363,15 @@ public virtual with sharing class fflib_SObjectDomain
     public interface IConstructable2 extends IConstructable
     {
         fflib_SObjectDomain construct(List<SObject> sObjectList, SObjectType sObjectType);
-    }   
-    
+    }
+
     /**
-     * For Domain classes implementing the ITriggerStateful interface returns the instance 
+     * For Domain classes implementing the ITriggerStateful interface returns the instance
      *   of the domain class being shared between trigger invocations, returns null if
      *   the Domain class trigger has not yet fired or the given domain class does not implement
      *   the ITriggerStateful interface. Note this method is sensitive to recursion, meaning
      *   it will return the applicable domain instance for the level of recursion
-     **/ 
+     **/
     public static fflib_SObjectDomain getTriggerInstance(Type domainClass)
     {
         List<fflib_SObjectDomain> domains = TriggerStateByClass.get(domainClass);
@@ -381,13 +381,13 @@ public virtual with sharing class fflib_SObjectDomain
         }
         return domains[domains.size()-1];
     }
-    
+
     /**
-     * Method constructs the given Domain class with the current Trigger context 
+     * Method constructs the given Domain class with the current Trigger context
      * before calling the applicable override methods such as beforeInsert, beforeUpdate etc.
      **/
     public static void triggerHandler(Type domainClass)
-    {       
+    {
         // Process the trigger context
         if(System.Test.isRunningTest() & Test.Database.hasRecords())
         {
@@ -396,34 +396,34 @@ public virtual with sharing class fflib_SObjectDomain
         }
         else
         {
-            // Process the runtime Apex Trigger context 
-            triggerHandler(domainClass, 
-                Trigger.isBefore, 
-                Trigger.isAfter, 
-                Trigger.isInsert, 
-                Trigger.isUpdate, 
-                Trigger.isDelete, 
+            // Process the runtime Apex Trigger context
+            triggerHandler(domainClass,
+                Trigger.isBefore,
+                Trigger.isAfter,
+                Trigger.isInsert,
+                Trigger.isUpdate,
+                Trigger.isDelete,
                 Trigger.isUnDelete,
-                Trigger.new, 
+                Trigger.new,
                 Trigger.oldMap);
         }
     }
-    
+
     /**
      * Calls the applicable override methods such as beforeInsert, beforeUpdate etc. based on a Trigger context
      **/
     private static void triggerHandler(Type domainClass, Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate, Boolean isDelete, Boolean isUndelete, List<SObject> newRecords, Map<Id, SObject> oldRecordsMap)
-    {   
-        // After phase of trigger will reuse prior instance of domain class if ITriggerStateful implemented 
+    {
+        // After phase of trigger will reuse prior instance of domain class if ITriggerStateful implemented
         fflib_SObjectDomain domainObject = isBefore ? null : popTriggerInstance(domainClass, isDelete ? oldRecordsMap.values() : newRecords);
         if(domainObject==null)
-        {       
+        {
             // Construct the domain class constructor class
             String domainClassName = domainClass.getName();
             Type constructableClass = domainClassName.endsWith('Constructor') ? Type.forName(domainClassName) : Type.forName(domainClassName+'.Constructor');
             IConstructable domainConstructor = (IConstructable) constructableClass.newInstance();
-    
-            // Construct the domain class with the approprite record set        
+
+            // Construct the domain class with the approprite record set
             if(isInsert) { domainObject = domainConstructor.construct(newRecords); }
             else if(isUpdate) { domainObject = domainConstructor.construct(newRecords); }
             else if(isDelete) { domainObject = domainConstructor.construct(oldRecordsMap.values()); }
@@ -434,9 +434,9 @@ public virtual with sharing class fflib_SObjectDomain
             {
                 // Push this instance onto the stack to be popped during the after phase
                 pushTriggerInstance(domainClass, domainObject);
-            } 
+            }
         }
-        
+
         // has this event been disabled?
         if(!getTriggerEvent(domainClass).isEnabled(isBefore, isAfter, isInsert, isUpdate, isDelete, isUndelete))
         {
@@ -456,9 +456,9 @@ public virtual with sharing class fflib_SObjectDomain
             else if(isUpdate) { domainObject.handleAfterUpdate(oldRecordsMap); }
             else if(isDelete) { domainObject.handleAfterDelete(); }
             else if(isUndelete) { domainObject.handleAfterUndelete(); }
-        }               
+        }
     }
-    
+
     /**
      * Pushes to the stack of domain classes per type a domain object instance
      **/
@@ -469,9 +469,9 @@ public virtual with sharing class fflib_SObjectDomain
         {
             TriggerStateByClass.put(domainClass, domains = new List<fflib_SObjectDomain>());
         }
-        domains.add(domain);        
+        domains.add(domain);
     }
-    
+
     /**
      * Pops from the stack of domain classes per type a domain object instance and updates the record set
      **/
@@ -487,7 +487,7 @@ public virtual with sharing class fflib_SObjectDomain
         domain.setObjects(records);
         return domain;
     }
-    
+
     public static TriggerEvent getTriggerEvent(Type domainClass)
     {
         if(!TriggerEventByClass.containsKey(domainClass))
@@ -522,14 +522,14 @@ public virtual with sharing class fflib_SObjectDomain
         public TriggerEvent disableBeforeInsert() {BeforeInsertEnabled = false; return this;}
         public TriggerEvent disableBeforeUpdate() {BeforeUpdateEnabled = false; return this;}
         public TriggerEvent disableBeforeDelete() {BeforeDeleteEnabled = false; return this;}
-        
+
         // afters
         public TriggerEvent enableAfterInsert()     {AfterInsertEnabled     = true; return this;}
         public TriggerEvent enableAfterUpdate()     {AfterUpdateEnabled     = true; return this;}
         public TriggerEvent enableAfterDelete()     {AfterDeleteEnabled     = true; return this;}
         public TriggerEvent enableAfterUndelete() {AfterUndeleteEnabled     = true; return this;}
 
-        
+
         public TriggerEvent disableAfterInsert()    {AfterInsertEnabled     = false; return this;}
         public TriggerEvent disableAfterUpdate()    {AfterUpdateEnabled     = false; return this;}
         public TriggerEvent disableAfterDelete()    {AfterDeleteEnabled     = false; return this;}
@@ -589,22 +589,22 @@ public virtual with sharing class fflib_SObjectDomain
      **/
     public class Configuration
     {
-        /** 
+        /**
          * Backwards compatibility mode for handleAfterUpdate routing to onValidate()
          **/
-        public Boolean OldOnUpdateValidateBehaviour {get; private set;}     
+        public Boolean OldOnUpdateValidateBehaviour {get; private set;}
         /**
          * True if the base class is checking the users CRUD requirements before invoking trigger methods
-         **/ 
+         **/
         public Boolean EnforcingTriggerCRUDSecurity {get; private set;}
-        
+
         /**
          * Enables reuse of the same Domain instance between before and after trigger phases (subject to recursive scenarios)
          **/
         public Boolean TriggerStateEnabled {get; private set;}
-            
+
         /**
-         * Default configuration 
+         * Default configuration
          **/
         public Configuration()
         {
@@ -612,23 +612,23 @@ public virtual with sharing class fflib_SObjectDomain
             TriggerStateEnabled = false;
             OldOnUpdateValidateBehaviour = false; // Breaking change, but felt to better practice
         }
-        
+
         /**
          * See associated property
          **/
         public Configuration enableTriggerState()
         {
             TriggerStateEnabled = true;
-            return this;    
+            return this;
         }
-        
+
         /**
          * See associated property
          **/
         public Configuration disableTriggerState()
         {
             TriggerStateEnabled = false;
-            return this;    
+            return this;
         }
 
         /**
@@ -667,7 +667,7 @@ public virtual with sharing class fflib_SObjectDomain
             return this;
         }
     }
-    
+
     /**
      * General exception class for the domain layer
      **/
@@ -682,7 +682,7 @@ public virtual with sharing class fflib_SObjectDomain
     {
         return fflib_SObjectDomain.Errors.error(this, message, record);
     }
-    
+
     /**
      * Ensures logging of errors in the Domain context for later assertions in tests
      **/
@@ -744,7 +744,7 @@ public virtual with sharing class fflib_SObjectDomain
             errorList.clear();
         }
     }
-    
+
     /**
      * DEPRECATED, This class has been moved to fflib_SObjects
      **/
@@ -782,17 +782,17 @@ public virtual with sharing class fflib_SObjectDomain
 
     /**
      * Provides test context mocking facilities to unit tests testing domain classes
-     **/    
+     **/
     public class TestFactory
     {
         public MockDatabase Database = new MockDatabase();
-         
+
         private TestFactory()
-        {       
-            
+        {
+
         }
     }
-    
+
     /**
      * Class used during Unit testing of Domain classes, can be used (not exclusively) to speed up test execution and focus testing
      **/
@@ -804,21 +804,21 @@ public virtual with sharing class fflib_SObjectDomain
         private Boolean isUndelete = false;
         private List<SObject> records = new List<SObject>();
         private Map<Id, SObject> oldRecords = new Map<Id, SObject>();
-        
+
         private MockDatabase()
         {
-            
+
         }
-            
+
         private void testTriggerHandler(Type domainClass)
         {
             // Mock Before
             triggerHandler(domainClass, true, false, isInsert, isUpdate, isDelete, isUndelete, records, oldRecords);
-            
+
             // Mock After
             triggerHandler(domainClass, false, true, isInsert, isUpdate, isDelete, isUndelete, records, oldRecords);
         }
-        
+
         public void onInsert(List<SObject> records)
         {
             this.isInsert = true;
@@ -827,7 +827,7 @@ public virtual with sharing class fflib_SObjectDomain
             this.isUndelete = false;
             this.records = records;
         }
-        
+
         public void onUpdate(List<SObject> records, Map<Id, SObject> oldRecords)
         {
             this.isInsert = false;
@@ -837,7 +837,7 @@ public virtual with sharing class fflib_SObjectDomain
             this.isUndelete = false;
             this.oldRecords = oldRecords;
         }
-        
+
         public void onDelete(Map<Id, SObject> records)
         {
             this.isInsert = false;
@@ -846,7 +846,7 @@ public virtual with sharing class fflib_SObjectDomain
             this.isUndelete = false;
             this.oldRecords = records;
         }
-        
+
         public void onUndelete(List<SObject> records)
         {
             this.isInsert = false;
@@ -855,7 +855,7 @@ public virtual with sharing class fflib_SObjectDomain
             this.isUndelete = true;
             this.records = records;
         }
-        
+
         public Boolean hasRecords()
         {
             return records!=null && records.size()>0 || oldRecords!=null && oldRecords.size()>0;
@@ -868,7 +868,7 @@ public virtual with sharing class fflib_SObjectDomain
     public with sharing class TestSObjectDomain extends fflib_SObjectDomain
     {
         private String someState;
-        
+
         public TestSObjectDomain(List<Opportunity> sObjectList)
         {
             // Domain classes are initialised with lists to enforce bulkification throughout
@@ -879,40 +879,40 @@ public virtual with sharing class fflib_SObjectDomain
         {
             // Domain classes are initialised with lists to enforce bulkification throughout
             super(sObjectList, sObjectType);
-        }           
-        
+        }
+
         public override void onApplyDefaults()
         {
             // Not required in production code
             super.onApplyDefaults();
-            
+
             // Apply defaults to Testfflib_SObjectDomain
             for(Opportunity opportunity : (List<Opportunity>) Records)
             {
-                opportunity.CloseDate = System.today().addDays(30);                     
+                opportunity.CloseDate = System.today().addDays(30);
             }
         }
-    
-        public override void onValidate()   
+
+        public override void onValidate()
         {
             // Not required in production code
             super.onValidate();
-            
+
             // Validate Testfflib_SObjectDomain
             for(Opportunity opp : (List<Opportunity>) Records)
             {
                 if(opp.Type!=null && opp.Type.startsWith('Existing') && opp.AccountId == null)
                 {
-                    opp.AccountId.addError( error('You must provide an Account for Opportunities for existing Customers.', opp, Opportunity.AccountId) );                   
-                }           
-            }       
+                    opp.AccountId.addError( error('You must provide an Account for Opportunities for existing Customers.', opp, Opportunity.AccountId) );
+                }
+            }
         }
-        
+
         public override void onValidate(Map<Id,SObject> existingRecords)
         {
-            // Not required in production code  
+            // Not required in production code
             super.onValidate(existingRecords);
-            
+
             // Validate changes to Testfflib_SObjectDomain
             for(Opportunity opp : (List<Opportunity>) Records)
             {
@@ -923,41 +923,41 @@ public virtual with sharing class fflib_SObjectDomain
                 }
             }
         }
-        
+
         public override void onBeforeDelete()
         {
             // Not required in production code
             super.onBeforeDelete();
-            
+
             // Validate changes to Testfflib_SObjectDomain
             for(Opportunity opp : (List<Opportunity>) Records)
             {
                 opp.addError( error('You cannot delete this Opportunity.', opp) );
-            }           
+            }
         }
-        
+
         public override void onAfterUndelete()
         {
             // Not required in production code
             super.onAfterUndelete();
         }
-        
+
         public override void onBeforeInsert()
         {
             // Assert this variable is null in the after insert (since this domain class is stateless)
             someState = 'This should not survice the trigger after phase';
         }
-        
+
         public override void onAfterInsert()
         {
             // This is a stateless domain class, so should not retain anything betweet before and after
             System.assertEquals(null, someState);
         }
-    }   
-    
+    }
+
     /**
      * Typically an inner class to the domain class, supported here for test purposes
-     **/    
+     **/
     public class TestSObjectDomainConstructor implements fflib_SObjectDomain.IConstructable
     {
         public fflib_SObjectDomain construct(List<SObject> sObjectList)
@@ -965,53 +965,53 @@ public virtual with sharing class fflib_SObjectDomain
             return new TestSObjectDomain(sObjectList);
         }
     }
-    
+
     /**
      * Test domain class (ideally this would be in the test class, however Type.newInstance does not see such classes)
      **/
-    public with sharing class TestSObjectStatefulDomain 
-        extends fflib_SObjectDomain 
+    public with sharing class TestSObjectStatefulDomain
+        extends fflib_SObjectDomain
     {
         public String someState;
-        
+
         public TestSObjectStatefulDomain(List<Opportunity> sObjectList)
         {
             super(sObjectList);
 
-            // Ensure this instance is re-used in the after trigger phase (subject to recursive scenarios)      
-            Configuration.enableTriggerState();         
+            // Ensure this instance is re-used in the after trigger phase (subject to recursive scenarios)
+            Configuration.enableTriggerState();
         }
-        
-        public override void onBeforeInsert() 
+
+        public override void onBeforeInsert()
         {
             // This must always be null, as we do not reuse domain instances within recursive scenarios (different record sets)
             System.assertEquals(null, someState);
-            
-            // Process records           
+
+            // Process records
             List<Opportunity> newOpps = new List<Opportunity>();
             for(Opportunity opp : (List<Opportunity>) Records)
             {
                 // Set some state sensitive to the incoming records
                 someState = 'Error on Record ' + opp.Name;
-                
+
                 // Create a new Opportunity record to trigger recursive code path?
                 if(opp.Name.equals('Test Recursive 1'))
                 {
                     newOpps.add(new Opportunity ( Name = 'Test Recursive 2', Type = 'Existing Account' ));
                 }
-            }               
-            
-            // If testing recursiving emulate an insert     
+            }
+
+            // If testing recursiving emulate an insert
             if(newOpps.size()>0)
             {
                 // This will force recursion and thus validate via the above assert results in a new domain instance
-                fflib_SObjectDomain.Test.Database.onInsert(newOpps);        
+                fflib_SObjectDomain.Test.Database.onInsert(newOpps);
                 fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectStatefulDomainConstructor.class);
-            }                               
+            }
         }
-        
-        public override void onAfterInsert() 
-        { 
+
+        public override void onAfterInsert()
+        {
             // Use the state set in the before insert (since this is a stateful domain class)
             if(someState!=null)
             {
@@ -1020,83 +1020,83 @@ public virtual with sharing class fflib_SObjectDomain
                     opp.addError(error(someState, opp));
                 }
             }
-        }       
-    }   
-    
+        }
+    }
+
     /**
      * Typically an inner class to the domain class, supported here for test purposes
-     **/    
+     **/
     public class TestSObjectStatefulDomainConstructor implements fflib_SObjectDomain.IConstructable
     {
         public fflib_SObjectDomain construct(List<SObject> sObjectList)
         {
             return new TestSObjectStatefulDomain(sObjectList);
-        }               
-    }
-    
-    /**
-     * Test domain class (ideally this would be in the test class, however Type.newInstance does not see such classes)
-     **/
-    public with sharing class TestSObjectOnValidateBehaviour 
-        extends fflib_SObjectDomain 
-    {
-        public TestSObjectOnValidateBehaviour(List<Opportunity> sObjectList)
-        {
-            super(sObjectList);
-            
-            // Enable old behaviour based on the test Opportunity name passed in 
-            if(sObjectList[0].Name == 'Test Enable Old Behaviour')
-            {
-                Configuration.enableOldOnUpdateValidateBehaviour();
-            }
         }
-        
-        public override void onValidate() 
-        {
-            // Throw exception to give the test somethign to assert on
-            throw new DomainException('onValidate called');
-        }
-    }   
-    
-    /**
-     * Typically an inner class to the domain class, supported here for test purposes
-     **/    
-    public class TestSObjectOnValidateBehaviourConstructor implements fflib_SObjectDomain.IConstructable
-    {
-        public fflib_SObjectDomain construct(List<SObject> sObjectList)
-        {
-            return new TestSObjectOnValidateBehaviour(sObjectList);
-        }               
     }
 
     /**
      * Test domain class (ideally this would be in the test class, however Type.newInstance does not see such classes)
      **/
-    public with sharing class TestSObjectChangedRecords 
-        extends fflib_SObjectDomain 
+    public with sharing class TestSObjectOnValidateBehaviour
+        extends fflib_SObjectDomain
+    {
+        public TestSObjectOnValidateBehaviour(List<Opportunity> sObjectList)
+        {
+            super(sObjectList);
+
+            // Enable old behaviour based on the test Opportunity name passed in
+            if(sObjectList[0].Name == 'Test Enable Old Behaviour')
+            {
+                Configuration.enableOldOnUpdateValidateBehaviour();
+            }
+        }
+
+        public override void onValidate()
+        {
+            // Throw exception to give the test somethign to assert on
+            throw new DomainException('onValidate called');
+        }
+    }
+
+    /**
+     * Typically an inner class to the domain class, supported here for test purposes
+     **/
+    public class TestSObjectOnValidateBehaviourConstructor implements fflib_SObjectDomain.IConstructable
+    {
+        public fflib_SObjectDomain construct(List<SObject> sObjectList)
+        {
+            return new TestSObjectOnValidateBehaviour(sObjectList);
+        }
+    }
+
+    /**
+     * Test domain class (ideally this would be in the test class, however Type.newInstance does not see such classes)
+     **/
+    public with sharing class TestSObjectChangedRecords
+        extends fflib_SObjectDomain
     {
         public TestSObjectChangedRecords(List<Opportunity> sObjectList)
         {
             super(sObjectList);
         }
-    }   
-    
+    }
+
     /**
      * Typically an inner class to the domain class, supported here for test purposes
-     **/    
+     **/
     public class TestSObjectChangedRecordsConstructor implements fflib_SObjectDomain.IConstructable
     {
         public fflib_SObjectDomain construct(List<SObject> sObjectList)
         {
             return new TestSObjectChangedRecords(sObjectList);
-        }               
-    }                   
-    
+        }
+    }
+
     /**
      * Test domain class (ideally this would be in the test class, however Type.newInstance does not see such classes)
      **/
-    public with sharing class TestSObjectDisableBehaviour 
-        extends fflib_SObjectDomain 
+    public with sharing class TestSObjectDisableBehaviour
+        extends fflib_SObjectDomain
     {
         public TestSObjectDisableBehaviour(List<Opportunity> sObjectList)
         {
@@ -1141,7 +1141,7 @@ public virtual with sharing class fflib_SObjectDomain
 
     /**
      * Typically an inner class to the domain class, supported here for test purposes
-     **/    
+     **/
     public class TestSObjectDisableBehaviourConstructor implements fflib_SObjectDomain.IConstructable
     {
         public fflib_SObjectDomain construct(List<SObject> sObjectList)

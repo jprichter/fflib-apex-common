@@ -23,6 +23,7 @@
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
+@SuppressWarnings('PMD.ApexDoc')
 public virtual class fflib_Objects implements fflib_IObjects
 {
     protected List<Object> objects { get; private set;} { objects = new List<Object>(); }
