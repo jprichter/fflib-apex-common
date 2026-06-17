@@ -84,12 +84,15 @@ private class fflib_QueryFactoryTest {
 		fflib_QueryFactory qf1 = new fflib_QueryFactory(Contact.SObjectType);
 		fflib_QueryFactory qf2 = new fflib_QueryFactory(Contact.SObjectType);
 		System.assertEquals(qf1,qf2);
+		System.assertEquals(qf1.hashCode(), qf2.hashCode());
 		qf1.selectField('name');
 		System.assertNotEquals(qf1,qf2);
 		qf2.selectField('NAmE');
 		System.assertEquals(qf1,qf2);
+		System.assertEquals(qf1.hashCode(), qf2.hashCode());
 		qf1.selectField('name').selectFields( new Set<String>{ 'NAME', 'name' }).selectFields( new Set<Schema.SObjectField>{ Contact.Name, Contact.Name} );
 		System.assertEquals(qf1,qf2);
+		System.assertEquals(qf1.hashCode(), qf2.hashCode());
 	}
 
 	@isTest
@@ -516,7 +519,7 @@ private class fflib_QueryFactoryTest {
 	static void deterministic_toSOQL(){
 		fflib_QueryFactory qf1 = new fflib_QueryFactory(User.SObjectType);
 		fflib_QueryFactory qf2 = new fflib_QueryFactory(User.SObjectType);
-		for(fflib_QueryFactory qf:new Set<fflib_QueryFactory>{qf1,qf2}){
+		for(fflib_QueryFactory qf:new List<fflib_QueryFactory>{qf1,qf2}){
 			qf.selectFields(new List<String>{
 				'Id',
 				'FirstName',
