@@ -176,6 +176,10 @@ public class fflib_QueryFactory { //No explicit sharing declaration - inherit fr
 		return ((fflib_QueryFactory)obj).toSOQL() == this.toSOQL();
 	}
 
+	public Integer hashCode(){
+		return toSOQL().hashCode();
+	}
+
 	/**
 	 * Construct a new fflib_QueryFactory instance with no options other than the FROM clause.
 	 * You *must* call selectField(s) before {@link #toSOQL} will return a valid, runnable query.
