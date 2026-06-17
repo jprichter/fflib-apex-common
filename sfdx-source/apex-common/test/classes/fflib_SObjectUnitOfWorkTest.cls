@@ -851,6 +851,16 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assertEquals(AccessLevel.SYSTEM_MODE,dml.m_accessLevel);
     }
 
+    @IsTest
+    private static void constructSimpleDML_When_EmptyListOperations_Expect_NoException() {
+        fflib_SObjectUnitOfWork.SimpleDML dml = new fflib_SObjectUnitOfWork.SimpleDML();
+
+        dml.eventPublish(new List<SObject>());
+        dml.emptyRecycleBin(new List<SObject>());
+
+        System.assert(true, 'Empty list operations should be a no-op');
+    }
+
     /**
      * Assert that actual events exactly match expected events (size, order and name)
      * and types match expected types
