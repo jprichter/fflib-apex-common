@@ -227,7 +227,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
      */
     private void handleRegisterType(Schema.SObjectType sObjectType)
     {
-        String sObjectName = sObjectType.getDescribe().getName();
+        String sObjectName = getSObjectName(sObjectType);
 
         // add type to dml operation tracking
         m_newListByType.put(sObjectName, new List<SObject>());
@@ -526,7 +526,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
     public void registerUpsert(SObject record, Schema.SObjectField externalIdField, Schema.sObjectField relatedToParentField, SObject relatedToParentRecord)
     {
         SObjectType sObjectType = record.getSObjectType();
-        String sObjName = sObjectType.getDescribe().getName();
+        String sObjName = getSObjectName(sObjectType);
 
         assertForNonEventSObjectType(sObjName);
         assertForSupportedSObjectType(m_upsertRecordsPerType, sObjName);
@@ -782,62 +782,63 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
 		onPublishAfterFailureEventsFinished();
 	}
 
-	private void publishBeforeEventsStarting()
-	{
-		for (Schema.SObjectType sObjectType : m_sObjectTypes)
-		{
-			m_dml.eventPublish(m_publishBeforeListByType.get(sObjectType.getDescribe().getName()));
-		}
-	}
+    private void publishBeforeEventsStarting()
+    {
+        for (Schema.SObjectType sObjectType : m_sObjectTypes)
+        {
+            m_dml.eventPublish(m_publishBeforeListByType.get(getSObjectName(sObjectType)));
+        }
+    }
 
-	private void insertDmlByType()
-	{
-		for (Schema.SObjectType sObjectType : m_sObjectTypes)
-		{
-			m_relationships.get(sObjectType.getDescribe().getName()).resolve();
-			m_dml.dmlInsert(m_newListByType.get(sObjectType.getDescribe().getName()));
-		}
-	}
+    private void insertDmlByType()
+    {
+        for (Schema.SObjectType sObjectType : m_sObjectTypes)
+        {
+            String sObjectName = getSObjectName(sObjectType);
+            m_relationships.get(sObjectName).resolve();
+            m_dml.dmlInsert(m_newListByType.get(sObjectName));
+        }
+    }
 
-	private void updateDmlByType()
-	{
-		for (Schema.SObjectType sObjectType : m_sObjectTypes)
-		{
-			m_dml.dmlUpdate(m_dirtyMapByType.get(sObjectType.getDescribe().getName()).values());
-		}
-	}
+    private void updateDmlByType()
+    {
+        for (Schema.SObjectType sObjectType : m_sObjectTypes)
+        {
+            m_dml.dmlUpdate(m_dirtyMapByType.get(getSObjectName(sObjectType)).values());
+        }
+    }
 
-	private void upsertDmlByType()
-	{
-		String sobjName;
-		for (Schema.SObjectType sObjectType : m_sObjectTypes) {
-			sobjName = sObjectType.getDescribe().getName();
-			List<SObject> upsertRecords = m_upsertRecordsPerType.get(sobjName);
-			if (upsertRecords != null && !upsertRecords.isEmpty()) {
-				m_relationships.get(sobjName).resolve();
+    private void upsertDmlByType()
+    {
+        String sobjName;
+        for (Schema.SObjectType sObjectType : m_sObjectTypes) {
+            sobjName = getSObjectName(sObjectType);
+            List<SObject> upsertRecords = m_upsertRecordsPerType.get(sobjName);
+            if (upsertRecords != null && !upsertRecords.isEmpty()) {
+                m_relationships.get(sobjName).resolve();
 				IDMLUpsertable dmlUpsertable = (IDMLUpsertable) m_dml;
 				dmlUpsertable.dmlUpsert(upsertRecords, m_externalIdToUpsertPerType.get(sobjName));
 			}
 		}
 	}
 
-	private void deleteDmlByType()
-	{
-		Integer objectIdx = m_sObjectTypes.size() - 1;
-		while (objectIdx >= 0)
-		{
-			m_dml.dmlDelete(m_deletedMapByType.get(m_sObjectTypes[objectIdx--].getDescribe().getName()).values());
-		}
-	}
+    private void deleteDmlByType()
+    {
+        Integer objectIdx = m_sObjectTypes.size() - 1;
+        while (objectIdx >= 0)
+        {
+            m_dml.dmlDelete(m_deletedMapByType.get(getSObjectName(m_sObjectTypes[objectIdx--])).values());
+        }
+    }
 
-	private void emptyRecycleBinByType()
-	{
-		Integer objectIdx = m_sObjectTypes.size() - 1;
-		while (objectIdx >= 0)
-		{
-			m_dml.emptyRecycleBin(m_emptyRecycleBinMapByType.get(m_sObjectTypes[objectIdx--].getDescribe().getName()).values());
-		}
-	}
+    private void emptyRecycleBinByType()
+    {
+        Integer objectIdx = m_sObjectTypes.size() - 1;
+        while (objectIdx >= 0)
+        {
+            m_dml.emptyRecycleBin(m_emptyRecycleBinMapByType.get(getSObjectName(m_sObjectTypes[objectIdx--])).values());
+        }
+    }
 
 	private void resolveEmailRelationships()
 	{
@@ -853,21 +854,26 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
 		}
 	}
 
-	private void publishAfterSuccessEvents()
-	{
-		for (Schema.SObjectType sObjectType : m_sObjectTypes)
-		{
-			m_dml.eventPublish(m_publishAfterSuccessListByType.get(sObjectType.getDescribe().getName()));
-		}
-	}
+    private void publishAfterSuccessEvents()
+    {
+        for (Schema.SObjectType sObjectType : m_sObjectTypes)
+        {
+            m_dml.eventPublish(m_publishAfterSuccessListByType.get(getSObjectName(sObjectType)));
+        }
+    }
 
-	private void publishAfterFailureEvents()
-	{
-		for (Schema.SObjectType sObjectType : m_sObjectTypes)
-		{
-			m_dml.eventPublish(m_publishAfterFailureListByType.get(sObjectType.getDescribe().getName()));
-		}
-	}
+    private void publishAfterFailureEvents()
+    {
+        for (Schema.SObjectType sObjectType : m_sObjectTypes)
+        {
+            m_dml.eventPublish(m_publishAfterFailureListByType.get(getSObjectName(sObjectType)));
+        }
+    }
+
+    private String getSObjectName(Schema.SObjectType sObjectType)
+    {
+        return sObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getName();
+    }
 
 	@TestVisible
 	private void assertForNonEventSObjectType(String sObjectType)

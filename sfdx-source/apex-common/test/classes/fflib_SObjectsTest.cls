@@ -38,7 +38,7 @@ public class fflib_SObjectsTest
 	 */
 	@TestVisible
 	private static Id generateTestRecordId(Schema.SObjectType sobjectType) {
-		String keyPrefix = sobjectType.getDescribe().getKeyPrefix();
+		String keyPrefix = fflib_SObjectDescribe.getDescribe(sobjectType).getDescribe().getKeyPrefix();
 		testFakeIdSequence++;
 		String prefix = TEST_FAKE_ID_PADDING.substring(
 			0,

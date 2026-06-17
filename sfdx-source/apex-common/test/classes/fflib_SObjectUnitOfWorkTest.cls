@@ -878,7 +878,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assertEquals(expectedTypes.size(), actualTypes.size(), 'types size');
         for (Schema.SObjectType sObjectType :expectedTypes)
         {
-            System.assertEquals(true, actualTypes.contains(sObjectType), String.format('Type {0} was not registered.', new List<String> { sObjectType.getDescribe().getName() }));
+            System.assertEquals(true, actualTypes.contains(sObjectType), String.format('Type {0} was not registered.', new List<String> { String.valueOf(sObjectType) }));
         }
     }
 
@@ -939,7 +939,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         {
             if (m_registeredTypes.contains(sObjectType))
             {
-                throw new DerivedUnitOfWorkException(String.format('Type {0} has already been registered.', new List<String> { sObjectType.getDescribe().getName() }));
+                throw new DerivedUnitOfWorkException(String.format('Type {0} has already been registered.', new List<String> { String.valueOf(sObjectType) }));
             }
             m_registeredTypes.add(sObjectType);
         }
