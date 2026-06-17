@@ -32,14 +32,16 @@ private with sharing class fflib_SObjectSelectorTest
 		fflib_SecurityUtilsTest.testSetup();
 	}
 	
-	static testMethod void testGetSObjectName()
+	@IsTest
+	static void testGetSObjectName()
 	{
 		AccountSelector selector = new AccountSelector();
 		system.assertEquals(null, selector.getSObjectFieldSetList());
 		system.assertEquals('Account',selector.getSObjectName());
 	}
 	
-	static testMethod void testSelectSObjectsById()
+	@IsTest
+	static void testSelectSObjectsById()
 	{
 		// Inserting in reverse order so that we can test the order by of select 
 		List<Account> accountList = new List<Account> {
@@ -64,7 +66,8 @@ private with sharing class fflib_SObjectSelectorTest
 		system.assertEquals(76543.21,result[1].AnnualRevenue);
 	}
 
-	static testMethod void testQueryLocatorById()
+	@IsTest
+	static void testQueryLocatorById()
 	{
 		// Inserting in reverse order so that we can test the order by of select 
 		List<Account> accountList = new List<Account> {
@@ -94,7 +97,8 @@ private with sharing class fflib_SObjectSelectorTest
 		System.assertEquals(false, iteratorResult.hasNext());
 	}
 	
-	static testMethod void testAssertIsAccessible()
+	@IsTest
+	static void testAssertIsAccessible()
 	{
 		List<Account> accountList = new List<Account> {
 			new Account(Name='TestAccount2',AccountNumber='A2',AnnualRevenue=12345.67),
@@ -123,7 +127,8 @@ private with sharing class fflib_SObjectSelectorTest
 		}
 	}
 
-	static testMethod void testCRUDOff()
+	@IsTest
+	static void testCRUDOff()
 	{
 		List<Account> accountList = new List<Account> {
 			new Account(Name='TestAccount2',AccountNumber='A2',AnnualRevenue=12345.67),
@@ -151,7 +156,8 @@ private with sharing class fflib_SObjectSelectorTest
 		}
 	}
 	
-	static testMethod void testSOQL()
+	@IsTest
+	static void testSOQL()
 	{
 		AccountSelector selector = new AccountSelector();
 		String soql = selector.newQueryFactory().toSOQL();
@@ -163,7 +169,8 @@ private with sharing class fflib_SObjectSelectorTest
 		assertFieldListString(fieldListString, null);
 	}
 	
-	static testMethod void testSOQL_defaultSorting()
+	@IsTest
+	static void testSOQL_defaultSorting()
 	{
 		DefaultSortingAccountSelector selector = new DefaultSortingAccountSelector(false);
 		String soql = selector.newQueryFactory().toSOQL();
@@ -176,7 +183,8 @@ private with sharing class fflib_SObjectSelectorTest
 		assertFieldListString(fieldListString, null);
 	}
 
-	static testMethod void testDefaultConfig()
+	@IsTest
+	static void testDefaultConfig()
 	{
 		AccountSelector selector = new AccountSelector();
 		System.assertEquals(false, selector.isEnforcingFLS());
@@ -401,7 +409,8 @@ private with sharing class fflib_SObjectSelectorTest
 
 		User u = getMinimumAccessUser();
 		System.runAs(u){
-			sel.selectSObjectsById(new Set<Id>{fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType)});
+			List<Opportunity> opportunities = sel.selectSObjectsById(new Set<Id>{fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType)});
+			System.assertEquals(0, opportunities.size());
 		}
 	}
 
@@ -435,7 +444,8 @@ private with sharing class fflib_SObjectSelectorTest
 		//Account has Read access by the limited read only user but no FLS access
 		User u = getMinimumAccessUser();
 		System.runAs(u){
-			sel.selectSObjectsById(new Set<Id>{fflib_SObjectsTest.generateTestRecordId(Account.SObjectType)});
+			List<Account> accounts = sel.selectSObjectsById(new Set<Id>{fflib_SObjectsTest.generateTestRecordId(Account.SObjectType)});
+			System.assertEquals(0, accounts.size());
 		}
 	}
 
