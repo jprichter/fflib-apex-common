@@ -51,6 +51,7 @@
  * There is a google doc providing additional guidance on the use of this class with field sets at
  * https://docs.google.com/a/financialforce.com/document/d/1I4cxN4xHT4UJj_3Oi0YBL_MJ5chm-KG8kMN1D1un8-g/edit?usp=sharing
 **/
+@SuppressWarnings('PMD.CognitiveComplexity, PMD.CyclomaticComplexity, PMD.ExcessivePublicCount, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList')
 public class fflib_QueryFactory { //No explicit sharing declaration - inherit from caller
 	public enum SortOrder {ASCENDING, DESCENDING}
 	public enum FLSEnforcement{NONE, LEGACY, USER_MODE, SYSTEM_MODE}
