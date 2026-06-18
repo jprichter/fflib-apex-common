@@ -62,7 +62,7 @@ Contact.Email, Contact.Title
             'Title'
             }
 ,
-            qf.getSelectedFields());
+            qf.getSelectedFields(), 'field Selections should produce new Set<String> { FirstName, LastName, AccountId, Account.Name, HomeP...');
     }
 
     @IsTest
@@ -78,7 +78,7 @@ Contact.Email, Contact.Title
         System.assert( Pattern.matches('SELECT.*Name.*FROM.*',query), 'Expected Name field in query, got '+query);
         System.assert( Pattern.matches('SELECT.*Email.*FROM.*',query), 'Expected Name field in query, got '+query);
         qf.setLimit(100);
-        System.assertEquals(100,qf.getLimit());
+        System.assertEquals(100,qf.getLimit(), 'simple Field Selection should produce 100');
         System.assert( qf.toSOQL().endsWithIgnoreCase('LIMIT '+qf.getLimit()), 'Failed to respect limit clause:'+qf.toSOQL() );
     }
 
@@ -90,7 +90,7 @@ Contact.Email, Contact.Title
         qf.selectField('name');
         qf.selectField('email');
         qf.setCondition( whereClause );
-        System.assertEquals(whereClause,qf.getCondition());
+        System.assertEquals(whereClause,qf.getCondition(), 'simple Field Condition should produce whereClause');
         String query = qf.toSOQL();
         System.assert(query.endsWith('WHERE name = \'test\''),'Query should have ended with a filter on name, got: '+query);
     }
@@ -113,13 +113,13 @@ Contact.Email, Contact.Title
     {
         fflib_QueryFactory qf1 = new fflib_QueryFactory(Contact.SObjectType);
         fflib_QueryFactory qf2 = new fflib_QueryFactory(Contact.SObjectType);
-        System.assertEquals(qf1,qf2);
-        System.assertEquals(qf1.hashCode(), qf2.hashCode());
+        System.assertEquals(qf1,qf2, 'equality Check should produce qf1');
+        System.assertEquals(qf1.hashCode(), qf2.hashCode(), 'equality Check should produce qf1.hashCode()');
         qf1.selectField('name');
-        System.assertNotEquals(qf1,qf2);
+        System.assertNotEquals(qf1,qf2, 'equality Check should not produce qf1');
         qf2.selectField('NAmE');
-        System.assertEquals(qf1,qf2);
-        System.assertEquals(qf1.hashCode(), qf2.hashCode());
+        System.assertEquals(qf1,qf2, 'equality Check should produce qf1');
+        System.assertEquals(qf1.hashCode(), qf2.hashCode(), 'equality Check should produce qf1.hashCode()');
         qf1.selectField('name').selectFields( new Set<String>
         {
 'NAME', 'name'
@@ -129,8 +129,8 @@ Contact.Email, Contact.Title
 Contact.Name, Contact.Name
         }
 );
-        System.assertEquals(qf1,qf2);
-        System.assertEquals(qf1.hashCode(), qf2.hashCode());
+        System.assertEquals(qf1,qf2, 'equality Check should produce qf1');
+        System.assertEquals(qf1.hashCode(), qf2.hashCode(), 'equality Check should produce qf1.hashCode()');
     }
 
     @IsTest
@@ -214,7 +214,7 @@ catch(fflib_QueryFactory.InvalidFieldException e)
         {
             exceptions.add(e);
         }
-        System.assertEquals(4,exceptions.size());
+        System.assertEquals(4,exceptions.size(), 'invalid Field Tests should produce 4');
     }
 
     @IsTest
@@ -227,9 +227,9 @@ catch(fflib_QueryFactory.InvalidFieldException e)
         qf.addOrdering( new fflib_QueryFactory.Ordering('Contact','name',fflib_QueryFactory.SortOrder.ASCENDING) ).addOrdering( new fflib_QueryFactory.Ordering('Contact','CreatedDATE',fflib_QueryFactory.SortOrder.DESCENDING) );
         String query = qf.toSOQL();
 
-        System.assertEquals(2,qf.getOrderings().size());
-        System.assertEquals('Name',qf.getOrderings()[0].getField() );
-        System.assertEquals(fflib_QueryFactory.SortOrder.DESCENDING,qf.getOrderings()[1].getDirection() );
+        System.assertEquals(2,qf.getOrderings().size(), 'ordering should produce 2');
+        System.assertEquals('Name',qf.getOrderings()[0].getField() , 'ordering should produce Name');
+        System.assertEquals(fflib_QueryFactory.SortOrder.DESCENDING,qf.getOrderings()[1].getDirection() , 'ordering should produce fflib_QueryFactory.SortOrder.DESCENDING');
 
 
         System.assert( Pattern.matches('SELECT.*Name.*FROM.*',query), 'Expected Name field in query, got '+query);
@@ -293,7 +293,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         {
             e = ex;
         }
-        System.assertNotEquals(null,e);
+        System.assertNotEquals(null,e, 'invalid Field string should not produce null');
     }
 
     @IsTest
@@ -314,7 +314,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         {
             e = ex;
         }
-        System.assertNotEquals(null,e);
+        System.assertNotEquals(null,e, 'invalid Fields string should not produce null');
     }
 
     @IsTest
@@ -332,7 +332,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         {
             e = ex;
         }
-        System.assertNotEquals(null,e);
+        System.assertNotEquals(null,e, 'invalid Field null Token should not produce null');
     }
 
     @IsTest
@@ -354,7 +354,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         {
             e = ex;
         }
-        System.assertNotEquals(null,e);
+        System.assertNotEquals(null,e, 'invalid Fields null Token should not produce null');
     }
 
     @IsTest
@@ -380,7 +380,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
     {
         String qfld = fflib_QueryFactory.getFieldTokenPath(Contact.Name);
         String qfld2 = fflib_QueryFactory.getFieldTokenPath(Contact.LastName);
-        System.assert(!qfld.equals(qfld2));
+        System.assert(!qfld.equals(qfld2), 'query Fields Not Equals should satisfy !qfld.equals(qfld2)');
     }
 
     @IsTest
@@ -391,7 +391,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         //explicitly assert object accessibility when creating the subselect
         qf.subselectQuery('Tasks', true).selectField('Id').selectField('Subject').setCondition(' IsDeleted = false ');
         List<fflib_QueryFactory> queries = qf.getSubselectQueries();
-        System.assert(queries != null);
+        System.assert(queries != null, 'add Child Queries With Child Relationship success should satisfy queries != null');
         System.assert(
                 Pattern.matches('SELECT.*(SELECT.*FROM Tasks WHERE.*).*FROM Contact WHERE.*', qf.toSOQL()),
                 'Incorrect returned query'
@@ -406,7 +406,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         //explicitly assert object accessibility when creating the subselect
         qf.subselectQuery('Tasks').selectField('Id').selectField('Subject').setCondition(' IsDeleted = false ');
         List<fflib_QueryFactory> queries = qf.getSubselectQueries();
-        System.assert(queries != null);
+        System.assert(queries != null, 'add Child Queries With Child Relationship No Accessible Check success should satisfy queries != null');
         System.assert(
                 Pattern.matches('SELECT.*(SELECT.*FROM Tasks WHERE.*).*FROM Contact WHERE.*', qf.toSOQL()),
                 'Incorrect returned query'
@@ -432,7 +432,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         //explicitly assert object accessibility when creating the subselect
         qf.subselectQuery(relationship, true).selectField('Id').selectField('Subject').setCondition(' IsDeleted = false ');
         List<fflib_QueryFactory> queries = qf.getSubselectQueries();
-        System.assert(queries != null);
+        System.assert(queries != null, 'add Child Queries With Child Relationship Obj Check Is Accessible success should satisfy queries != null');
         System.assert(
                 Pattern.matches('SELECT.*(SELECT.*FROM Tasks WHERE.*).*FROM Contact WHERE.*', qf.toSOQL()),
                 'Incorrect returned query'
@@ -458,7 +458,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         //explicitly assert object accessibility when creating the subselect
         qf.subselectQuery(relationship).selectField('Id').selectField('Subject').setCondition(' IsDeleted = false ');
         List<fflib_QueryFactory> queries = qf.getSubselectQueries();
-        System.assert(queries != null);
+        System.assert(queries != null, 'add Child Queries With Child Relationship Obj success should satisfy queries != null');
         System.assert(
                 Pattern.matches('SELECT.*(SELECT.*FROM Tasks WHERE.*).*FROM Contact WHERE.*', qf.toSOQL()),
                 'Incorrect returned query'
@@ -481,7 +481,7 @@ catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex)
         {
             e = ex;
         }
-        System.assertNotEquals(e, null);
+        System.assertNotEquals(e, null, 'add Child Queries With Child Relationship No Accessible Check fail should not produce e');
     }
 
     @IsTest
@@ -492,7 +492,7 @@ catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex)
         //explicitly assert object accessibility when creating the subselect
         qf.subselectQuery(Task.SObjectType, true).selectField('Id').selectField('Subject').setCondition(' IsDeleted = false ');
         List<fflib_QueryFactory> queries = qf.getSubselectQueries();
-        System.assert(queries != null);
+        System.assert(queries != null, 'add Child Queries success should satisfy queries != null');
         System.assert(
                 Pattern.matches('SELECT.*(SELECT.*FROM Tasks WHERE.*).*FROM Contact WHERE.*', qf.toSOQL()),
                 'Incorrect returned query'
@@ -516,14 +516,14 @@ catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex)
                 relationship = childRow;
             }
         }
-        System.assert(qf.getSubselectQueries() == null);
+        System.assert(qf.getSubselectQueries() == null, 'add Child Query Same Relationship Again success should satisfy qf.getSubselectQueries() == null');
         fflib_QueryFactory childQf = qf.subselectQuery(Task.SObjectType);
         childQf.assertIsAccessible();
         childQf.setEnforceFLS(true);
         childQf.selectField('Id');
         List<fflib_QueryFactory> queries = qf.getSubselectQueries();
-        System.assert(queries != null);
-        System.assert(queries.size() == 1);
+        System.assert(queries != null, 'add Child Query Same Relationship Again success should satisfy queries != null');
+        System.assert(queries.size() == 1, 'add Child Query Same Relationship Again success should satisfy queries.size() == 1');
     }
 
     @IsTest
@@ -545,7 +545,7 @@ catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex)
         {
             e = ex;
         }
-        System.assertNotEquals(e, null);
+        System.assertNotEquals(e, null, 'add Child Queries invalid Child Relationship should not produce e');
     }
 
     @IsTest
@@ -580,7 +580,7 @@ Contact.FirstName
           .addOrdering(Contact.CreatedDate,fflib_QueryFactory.SortOrder.DESCENDING, true);
         Set<String> fields = qf.getSelectedFields();
         fflib_QueryFactory.Ordering ordering = new fflib_QueryFactory.Ordering('Contact','name',fflib_QueryFactory.SortOrder.ASCENDING);
-        System.assertEquals('Name',ordering.getField());
+        System.assertEquals('Name',ordering.getField(), 'check Field Object Read Sort success should produce Name');
 
         System.assertEquals(new Set<String>
         {
@@ -592,9 +592,9 @@ Contact.FirstName
             'FirstName'
             }
 ,
-            fields);
+            fields, 'check Field Object Read Sort success should produce new Set<String> { CreatedBy.Name, LastModifiedById, LastModifiedDate,...');
 
-        System.assert(qf.toSOQL().containsIgnoreCase('NULLS LAST'));
+        System.assert(qf.toSOQL().containsIgnoreCase('NULLS LAST'), 'check Field Object Read Sort success should satisfy qf.toSOQL().containsIgnoreCase(NULLS LAST)');
     }
 
     @IsTest
@@ -617,7 +617,7 @@ catch (fflib_SecurityUtils.CrudException e)
                 {
                     excThrown = true;
                 }
-                System.assert(excThrown);
+                System.assert(excThrown, 'check Object Read fail should satisfy excThrown');
             }
         }
     }
@@ -643,7 +643,7 @@ catch (fflib_SecurityUtils.FlsException e)
                 {
                     excThrown = true;
                 }
-                System.assert(excThrown);
+                System.assert(excThrown, 'check Field Read fail should satisfy excThrown');
             }
         }
     }
@@ -683,9 +683,9 @@ qf1,qf2
             'SELECT CreatedBy.ManagerId, CreatedBy.Name, '
             +'FirstName, Id, LastModifiedBy.Email, LastName '
             +'FROM User';
-        System.assertEquals(qf1.toSOQL(), qf2.toSOQL());
-        System.assertEquals(expectedQuery, qf1.toSOQL());
-        System.assertEquals(expectedQuery, qf2.toSOQL());
+        System.assertEquals(qf1.toSOQL(), qf2.toSOQL(), 'deterministic to SOQL should produce qf1.toSOQL()');
+        System.assertEquals(expectedQuery, qf1.toSOQL(), 'deterministic to SOQL should produce expectedQuery');
+        System.assertEquals(expectedQuery, qf2.toSOQL(), 'deterministic to SOQL should produce expectedQuery');
     }
 
     @IsTest
@@ -701,12 +701,12 @@ qf1,qf2
 
         fflib_QueryFactory qf2 = qf.deepClone();
 
-        System.assertEquals(qf2, qf);
+        System.assertEquals(qf2, qf, 'deep Clone Basic No Changes should produce qf2');
 
-        System.assertEquals(qf.getLimit(), qf2.getLimit());
-        System.assertEquals(qf.getCondition(), qf2.getCondition());
-        System.assertEquals(qf.toSOQL(), qf2.toSOQL());
-        System.assertEquals(qf.getOrderings(), qf2.getOrderings());
+        System.assertEquals(qf.getLimit(), qf2.getLimit(), 'deep Clone Basic No Changes should produce qf.getLimit()');
+        System.assertEquals(qf.getCondition(), qf2.getCondition(), 'deep Clone Basic No Changes should produce qf.getCondition()');
+        System.assertEquals(qf.toSOQL(), qf2.toSOQL(), 'deep Clone Basic No Changes should produce qf.toSOQL()');
+        System.assertEquals(qf.getOrderings(), qf2.getOrderings(), 'deep Clone Basic No Changes should produce qf.getOrderings()');
     }
 
     @IsTest
@@ -724,13 +724,13 @@ qf1,qf2
 
         fflib_QueryFactory qf2 = qf.deepClone();
 
-        System.assertEquals(qf, qf2);
+        System.assertEquals(qf, qf2, 'deep Clone Subquery No Changes should produce qf');
 
-        System.assertEquals(qf.getLimit(), qf2.getLimit());
-        System.assertEquals(qf.getCondition(), qf2.getCondition());
-        System.assertEquals(qf.toSOQL(), qf2.toSOQL());
-        System.assertEquals(qf.getOrderings(), qf2.getOrderings());
-        System.assertEquals(qf.getSubselectQueries(), qf2.getSubselectQueries());
+        System.assertEquals(qf.getLimit(), qf2.getLimit(), 'deep Clone Subquery No Changes should produce qf.getLimit()');
+        System.assertEquals(qf.getCondition(), qf2.getCondition(), 'deep Clone Subquery No Changes should produce qf.getCondition()');
+        System.assertEquals(qf.toSOQL(), qf2.toSOQL(), 'deep Clone Subquery No Changes should produce qf.toSOQL()');
+        System.assertEquals(qf.getOrderings(), qf2.getOrderings(), 'deep Clone Subquery No Changes should produce qf.getOrderings()');
+        System.assertEquals(qf.getSubselectQueries(), qf2.getSubselectQueries(), 'deep Clone Subquery No Changes should produce qf.getSubselectQueries()');
     }
 
     @IsTest
@@ -754,27 +754,27 @@ qf1,qf2
 
         qf2.getOrderings().remove(0);
 
-        System.assertEquals(10, qf.getLimit());
-        System.assertEquals(200, qf2.getLimit());
+        System.assertEquals(10, qf.getLimit(), 'deep Clone Basic should produce 10');
+        System.assertEquals(200, qf2.getLimit(), 'deep Clone Basic should produce 200');
 
-        System.assertEquals('id=12345', qf.getCondition());
-        System.assertEquals('id=54321', qf2.getCondition());
+        System.assertEquals('id=12345', qf.getCondition(), 'deep Clone Basic should produce id=12345');
+        System.assertEquals('id=54321', qf2.getCondition(), 'deep Clone Basic should produce id=54321');
 
         String query = qf.toSOQL();
         String query2 = qf2.toSOQL();
 
-        System.assert(query.containsIgnoreCase('Fax') == false);
-        System.assert(query.containsIgnoreCase('Description'));
-        System.assert(query2.containsIgnoreCase('Description'));
-        System.assert(query2.containsIgnoreCase('Fax'));
+        System.assert(query.containsIgnoreCase('Fax') == false, 'deep Clone Basic should satisfy query.containsIgnoreCase(Fax) == false');
+        System.assert(query.containsIgnoreCase('Description'), 'deep Clone Basic should satisfy query.containsIgnoreCase(Description)');
+        System.assert(query2.containsIgnoreCase('Description'), 'deep Clone Basic should satisfy query2.containsIgnoreCase(Description)');
+        System.assert(query2.containsIgnoreCase('Fax'), 'deep Clone Basic should satisfy query2.containsIgnoreCase(Fax)');
 
-        System.assertEquals(2, qf.getOrderings().size());
-        System.assertEquals('Name', qf.getOrderings()[0].getField() );
-        System.assertEquals(fflib_QueryFactory.SortOrder.DESCENDING, qf.getOrderings()[1].getDirection());
+        System.assertEquals(2, qf.getOrderings().size(), 'deep Clone Basic should produce 2');
+        System.assertEquals('Name', qf.getOrderings()[0].getField() , 'deep Clone Basic should produce Name');
+        System.assertEquals(fflib_QueryFactory.SortOrder.DESCENDING, qf.getOrderings()[1].getDirection(), 'deep Clone Basic should produce fflib_QueryFactory.SortOrder.DESCENDING');
 
-        System.assertEquals(2, qf2.getOrderings().size());
-        System.assertEquals('Fax', qf2.getOrderings()[1].getField());
-        System.assertEquals(fflib_QueryFactory.SortOrder.ASCENDING, qf2.getOrderings()[1].getDirection());
+        System.assertEquals(2, qf2.getOrderings().size(), 'deep Clone Basic should produce 2');
+        System.assertEquals('Fax', qf2.getOrderings()[1].getField(), 'deep Clone Basic should produce Fax');
+        System.assertEquals(fflib_QueryFactory.SortOrder.ASCENDING, qf2.getOrderings()[1].getDirection(), 'deep Clone Basic should produce fflib_QueryFactory.SortOrder.ASCENDING');
 
     }
 
@@ -794,11 +794,11 @@ qf1,qf2
 
         subquery2_0.addOrdering(new fflib_QueryFactory.Ordering('Contact','Name',fflib_QueryFactory.SortOrder.ASCENDING));
 
-        System.assert(subqueries.size() == 1);
-        System.assert(subqueries2.size() == 2);
+        System.assert(subqueries.size() == 1, 'deep Clone Subquery should satisfy subqueries.size() == 1');
+        System.assert(subqueries2.size() == 2, 'deep Clone Subquery should satisfy subqueries2.size() == 2');
 
-        System.assert(qf.getSubselectQueries().get(0).getOrderings().size() == 0);
-        System.assert(qf2.getSubselectQueries().get(0).getOrderings().size() == 1);
+        System.assert(qf.getSubselectQueries().get(0).getOrderings().size() == 0, 'deep Clone Subquery should satisfy qf.getSubselectQueries().get(0).getOrderings().size() == 0');
+        System.assert(qf2.getSubselectQueries().get(0).getOrderings().size() == 1, 'deep Clone Subquery should satisfy qf2.getSubselectQueries().get(0).getOrderings().size() == 1');
     }
 
     @IsTest
@@ -829,7 +829,7 @@ qf1,qf2
         String actualSoql = qf.toSOQL();
 
         //Then
-        System.assertNotEquals(orderedQuery, actualSoql);
+        System.assertNotEquals(orderedQuery, actualSoql, 'test Soql unsorted Select Fields should not produce orderedQuery');
     }
 
     @IsTest
@@ -849,7 +849,7 @@ qf1,qf2
         String actualSoql = qf.toSOQL();
 
         //Then
-        System.assertEquals(allRowsQuery, actualSoql);
+        System.assertEquals(allRowsQuery, actualSoql, 'test Soql all Rows should produce allRowsQuery');
     }
 
     public static User createTestUser_noAccess()

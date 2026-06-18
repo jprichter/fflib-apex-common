@@ -44,12 +44,12 @@ private class fflib_SObjectDescribeTest
         Schema.SObjectType nullType = null;
         Schema.DescribeSObjectResult nullDescribe = null;
         SObject nullSObject = null;
-        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullStr));
-        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(''));
-        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(' '));
-        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullType));
-        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullDescribe));
-        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullSObject));
+        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullStr), 'get Describe bad Input should produce null');
+        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(''), 'get Describe bad Input should produce null');
+        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(' '), 'get Describe bad Input should produce null');
+        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullType), 'get Describe bad Input should produce null');
+        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullDescribe), 'get Describe bad Input should produce null');
+        System.assertEquals(null, fflib_SObjectDescribe.getDescribe(nullSObject), 'get Describe bad Input should produce null');
     }
 
     @IsTest
@@ -57,15 +57,15 @@ private class fflib_SObjectDescribeTest
     {
         fflib_SObjectDescribe.GlobalDescribeMap gdm = fflib_SObjectDescribe.getGlobalDescribe();
         Schema.SObjectType accountObjType = gdm.get('AccOunT');
-        System.assertEquals(accountObjType, Account.SobjectType);
-        System.assertEquals(Schema.getGlobalDescribe().size(), gdm.size());
+        System.assertEquals(accountObjType, Account.SobjectType, 'Namespaced Attribute Map implementations should produce accountObjType');
+        System.assertEquals(Schema.getGlobalDescribe().size(), gdm.size(), 'Namespaced Attribute Map implementations should produce Schema.getGlobalDescribe().size()');
 
         fflib_SObjectDescribe acccountDescribe = fflib_SObjectDescribe.getDescribe(accountObjType);
         fflib_SObjectDescribe.FieldsMap fields = acccountDescribe.getFields();
-        System.assert( fields.keySet().containsAll(acccountDescribe.getFieldsMap().keySet()) );
+        System.assert( fields.keySet().containsAll(acccountDescribe.getFieldsMap().keySet()) , 'Namespaced Attribute Map implementations should satisfy fields.keySet().containsAll(acccountDescribe.getFieldsMap().keySet())');
 
-        System.assertEquals(fields.get('name'), Account.SObjectType.fields.name); //behavior of FieldsMap is tested in another method
-        System.assertEquals(Schema.SObjectType.Account.fields.getMap().size(), fields.size());
+        System.assertEquals(fields.get('name'), Account.SObjectType.fields.name, 'Namespaced Attribute Map implementations should produce fields.get(name)'); //behavior of FieldsMap is tested in another method
+        System.assertEquals(Schema.SObjectType.Account.fields.getMap().size(), fields.size(), 'Namespaced Attribute Map implementations should produce Schema.SObjectType.Account.fields.getMap().size()');
 
         System.assertEquals(null, fields.get(null), 'Null input should result in null ouput.');
         System.assertEquals(null, fields.get(''), 'Invalid fieldname input should result in null ouput.');
@@ -85,18 +85,18 @@ private class fflib_SObjectDescribeTest
 ;
         fflib_SObjectDescribe.FieldsMap fields = new fflib_SObjectDescribe.FieldsMap(fakeFieldData);
         fields.currentNamespace = fakeNamespace;
-        System.assertEquals(true, fields.containsKey('name__c') );
-        System.assertEquals(true, fields.containsKey(fakeNamespace.toUpperCase()+'__nAMe__c') );
-        System.assert(fields.get('NAme__c') === fields.get(fakeNamespace+'__namE__c'));
+        System.assertEquals(true, fields.containsKey('name__c') , 'Fields Map should produce true');
+        System.assertEquals(true, fields.containsKey(fakeNamespace.toUpperCase()+'__nAMe__c') , 'Fields Map should produce true');
+        System.assert(fields.get('NAme__c') === fields.get(fakeNamespace+'__namE__c'), 'Fields Map should satisfy fields.get(NAme__c) === fields.get(fakeNamespace+__namE__c)');
 
-        System.assert(!fields.keySet(false).contains('otherField__c'));
-        System.assert(fields.keySet(false).contains(fakeNamespace+'__otherField__c'));
+        System.assert(!fields.keySet(false).contains('otherField__c'), 'Fields Map should satisfy !fields.keySet(false).contains(otherField__c)');
+        System.assert(fields.keySet(false).contains(fakeNamespace+'__otherField__c'), 'Fields Map should satisfy fields.keySet(false).contains(fakeNamespace+__otherField__c)');
 
-        System.assert(fields.keySet(true).contains('otherField__c'));
-        System.assert(!fields.keySet(true).contains(fakeNamespace+'__otherField__c'));
+        System.assert(fields.keySet(true).contains('otherField__c'), 'Fields Map should satisfy fields.keySet(true).contains(otherField__c)');
+        System.assert(!fields.keySet(true).contains(fakeNamespace+'__otherField__c'), 'Fields Map should satisfy !fields.keySet(true).contains(fakeNamespace+__otherField__c)');
 
         fields.currentNamespace = 'someOtherNamespace';
-        System.assertNotEquals(fields.get('name__C'), fields.get(fakeNamespace.capitalize()+'__nAme__c'));
+        System.assertNotEquals(fields.get('name__C'), fields.get(fakeNamespace.capitalize()+'__nAme__c'), 'Fields Map should not produce fields.get(name__C)');
     }
 
     @IsTest
@@ -112,12 +112,12 @@ private class fflib_SObjectDescribeTest
 ;
         fflib_SObjectDescribe.GlobalDescribeMap gdm = new fflib_SObjectDescribe.GlobalDescribeMap(fakeFieldData);
         gdm.currentNamespace = fakeNamespace;
-        System.assertEquals(true, gdm.containsKey('name__c') );
-        System.assertEquals(true, gdm.containsKey(fakeNamespace+'__name__c') );
-        System.assert(gdm.get('name__c') === gdm.get(fakeNamespace+'__name__c'));
+        System.assertEquals(true, gdm.containsKey('name__c') , 'Global Describe Map should produce true');
+        System.assertEquals(true, gdm.containsKey(fakeNamespace+'__name__c') , 'Global Describe Map should produce true');
+        System.assert(gdm.get('name__c') === gdm.get(fakeNamespace+'__name__c'), 'Global Describe Map should satisfy gdm.get(name__c) === gdm.get(fakeNamespace+__name__c)');
 
         gdm.currentNamespace = 'someOtherNamespace';
-        System.assertNotEquals(gdm.get('name__c'), gdm.get(fakeNamespace+'__name__c'));
+        System.assertNotEquals(gdm.get('name__c'), gdm.get(fakeNamespace+'__name__c'), 'Global Describe Map should not produce gdm.get(name__c)');
     }
 
     @IsTest //Tests all forms of the getDescribe static
@@ -126,7 +126,7 @@ private class fflib_SObjectDescribeTest
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe('Account');
         fflib_SObjectDescribe d2 = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         fflib_SObjectDescribe d3 = fflib_SObjectDescribe.getDescribe(Schema.SObjectType.Account);
-        System.assertEquals('Account', d.getDescribe().getName());
+        System.assertEquals('Account', d.getDescribe().getName(), 'get Account Describes should produce Account');
         System.assert( (d === d2 && d2 === d3) ,'All three getDescribe calls should return the same cached instance.');
     }
 
@@ -148,8 +148,8 @@ private class fflib_SObjectDescribeTest
 
         // System.assertEquals(1, Limits.getFieldsDescribes() );
 
-        System.assertEquals(false,fields.isEmpty());
-        System.assertEquals(Account.SObjectType, d.getSObjectType());
+        System.assertEquals(false,fields.isEmpty(), 'simple Account Field Describe should produce false');
+        System.assertEquals(Account.SObjectType, d.getSObjectType(), 'simple Account Field Describe should produce Account.SObjectType');
     }
 
     @IsTest
@@ -178,7 +178,7 @@ private class fflib_SObjectDescribeTest
     {
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         Schema.SObjectField nameField = d.getNameField();
-        System.assertEquals('Name', nameField.getDescribe().getName());
+        System.assertEquals('Name', nameField.getDescribe().getName(), 'simple Account Get Name Field should produce Name');
     }
 
     @IsTest
@@ -195,7 +195,7 @@ private class fflib_SObjectDescribeTest
     {
         Map<String,Schema.SObjectType> systemGd = Schema.getGlobalDescribe();
         Map<String,Schema.SObjectType> cachedGd = fflib_SObjectDescribe.getRawGlobalDescribe();
-        System.assertEquals(systemGd.size(),cachedGd.size());
+        System.assertEquals(systemGd.size(),cachedGd.size(), 'raw Global Describe Check should produce systemGd.size()');
     }
 
 }

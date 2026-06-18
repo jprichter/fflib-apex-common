@@ -70,9 +70,9 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         uow.commitWork();
 
         // assert that mock email functionality was called
-        System.assert(((Mock_SendEmailWork) uow.m_emailWork).doWorkWasCalled);
+        System.assert(((Mock_SendEmailWork) uow.m_emailWork).doWorkWasCalled, 'test Unit Of Work Email should satisfy ((Mock_SendEmailWork) uow.m_emailWork).doWorkWasCalled');
 
-        System.assertEquals(1, mockDML.recordsForInsert.size());
+        System.assertEquals(1, mockDML.recordsForInsert.size(), 'test Unit Of Work Email should produce 1');
     }
 
     @IsTest
@@ -99,7 +99,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         }
 
         // THEN it should have thrown an exception
-        System.assert(exceptionThrown);
+        System.assert(exceptionThrown, 'test Register New Throw Exception On Dirty Record should satisfy exceptionThrown');
     }
 
     @IsTest
@@ -126,7 +126,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         }
 
         // THEN it should have thrown an exception
-        System.assert(exceptionThrown);
+        System.assert(exceptionThrown, 'test Register Dirty Throw Exception On New Record should satisfy exceptionThrown');
     }
 
     @IsTest
@@ -151,7 +151,7 @@ opportunity, product
         {
 opportunity, product
         }
-, mockDML.recordsForDelete);
+, mockDML.recordsForDelete, 'test Register Deleted should produce new List<SObject> { opportunity, product }');
     }
 
     @IsTest
@@ -176,12 +176,12 @@ opportunity, product
         {
 opportunity, product
         }
-, mockDML.recordsForDelete);
+, mockDML.recordsForDelete, 'test Register Permanently Deleted should produce new List<SObject> { opportunity, product }');
         System.assertEquals(new List<SObject>
         {
 opportunity, product
         }
-, mockDML.recordsForRecycleBin);
+, mockDML.recordsForRecycleBin, 'test Register Permanently Deleted should produce new List<SObject> { opportunity, product }');
     }
 
     @IsTest
@@ -201,7 +201,7 @@ opportunity
         unitOfWork.commitWork();
 
         // THEN - the emptyRecycleBin action should be invoked
-        System.assertEquals(1, mockDML.recordsForRecycleBin.size());
+        System.assertEquals(1, mockDML.recordsForRecycleBin.size(), 'test Register Empty Recycle Bin should produce 1');
     }
 
     @IsTest
@@ -232,7 +232,7 @@ opportunity
             );
         }
 
-        System.assert(exceptionThrown);
+        System.assert(exceptionThrown, 'test Assert For Non Event SObject Type Throw Exception On Event Object should satisfy exceptionThrown');
     }
 
     @IsTest
@@ -263,7 +263,7 @@ opportunity
             );
         }
 
-        System.assert(exceptionThrown);
+        System.assert(exceptionThrown, 'test Assert For Event SObject Type Throw Exception On Non Event Object should satisfy exceptionThrown');
     }
 
     @IsTest
@@ -284,7 +284,7 @@ opportunity
             );
         }
 
-        System.assert(exceptionThrown);
+        System.assert(exceptionThrown, 'test Assert For Supported SObject Type throw Exception On Unsupported Type should satisfy exceptionThrown');
     }
 
     /**
@@ -497,8 +497,8 @@ caughtEx.getMessage()
         uow.registerDirty(opp2);
         uow.commitWork();
 
-        System.assertEquals(1, mockDML.recordsForUpdate.size());
-        System.assertEquals('Expected', mockDML.recordsForUpdate.get(0).get(Schema.Opportunity.Name));
+        System.assertEquals(1, mockDML.recordsForUpdate.size(), 'test Register Dirty Expect Replacement should produce 1');
+        System.assertEquals('Expected', mockDML.recordsForUpdate.get(0).get(Schema.Opportunity.Name), 'test Register Dirty Expect Replacement should produce Expected');
     }
 
     /**
@@ -529,9 +529,9 @@ Opportunity.Amount
 );
         uow.commitWork();
 
-        System.assertEquals(1, mockDML.recordsForUpdate.size());
-        System.assertEquals(nameUpdate.Name, mockDML.recordsForUpdate.get(0).get(Schema.Opportunity.Name));
-        System.assertEquals(amountUpdate.Amount, mockDML.recordsForUpdate.get(0).get(Schema.Opportunity.Amount));
+        System.assertEquals(1, mockDML.recordsForUpdate.size(), 'test Register Dirty field should produce 1');
+        System.assertEquals(nameUpdate.Name, mockDML.recordsForUpdate.get(0).get(Schema.Opportunity.Name), 'test Register Dirty field should produce nameUpdate.Name');
+        System.assertEquals(amountUpdate.Amount, mockDML.recordsForUpdate.get(0).get(Schema.Opportunity.Amount), 'test Register Dirty field should produce amountUpdate.Amount');
     }
 
     /**
@@ -593,7 +593,7 @@ Opportunity.Amount
         {
             byId.put(row.Id, row);
         }
-        System.assert(byId.containsKey(opportunityA.Id) && byId.containsKey(opportunityB.Id));
+        System.assert(byId.containsKey(opportunityA.Id) && byId.containsKey(opportunityB.Id), 'test Register Dirty Records With Dirty Fields should satisfy byId.containsKey(opportunityA.Id) && byId.containsKey(opportunityB.Id)');
         System.assertEquals(
                 'Closed',
                 (String) byId.get(opportunityA.Id).get(Opportunity.StageName),
@@ -676,7 +676,7 @@ Opportunity.Amount
         uow.commitWork();
 
         // THEN only the first record should be registered with both changed values for Amount and StageName and the second should be the original
-        System.assertEquals(2, mockDML.recordsForUpdate.size());
+        System.assertEquals(2, mockDML.recordsForUpdate.size(), 'Opportunity should produce 2');
         Map<Id, SObject> byId = new Map<Id, SObject>();
         for (SObject row : mockDML.recordsForUpdate)
         {
@@ -735,8 +735,8 @@ existingOpp, newOpportunity
         uow.commitWork();
         Test.stopTest();
 
-        System.assertEquals(1, mockDML.recordsForUpdate.size());
-        System.assertEquals(1, mockDML.recordsForInsert.size());
+        System.assertEquals(1, mockDML.recordsForUpdate.size(), 'test Register Upsert should produce 1');
+        System.assertEquals(1, mockDML.recordsForInsert.size(), 'test Register Upsert should produce 1');
     }
 
     @IsTest
@@ -748,8 +748,8 @@ existingOpp, newOpportunity
 
         existingOpp.StageName = 'Closed';
 
-        System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
-        System.assertEquals(0, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed']);
+        System.assertEquals(1, [SELECT COUNT() FROM Opportunity], 'test Register Upsert By External Id should produce 1');
+        System.assertEquals(0, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed'], 'test Register Upsert By External Id should produce 0');
 
         Test.startTest();
             fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
@@ -761,8 +761,8 @@ existingOpp
             uow.commitWork();
         Test.stopTest();
 
-        System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
-        System.assertEquals(1, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed']);
+        System.assertEquals(1, [SELECT COUNT() FROM Opportunity], 'test Register Upsert By External Id should produce 1');
+        System.assertEquals(1, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed'], 'test Register Upsert By External Id should produce 1');
     }
 
     @IsTest
@@ -783,7 +783,7 @@ existingOpp
         uow.commitWork();
         Test.stopTest();
 
-        System.assertEquals(1, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed']);
+        System.assertEquals(1, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed'], 'test Register Upsert By External Id When User Mode DML Expect Upsert In User Mode should produce 1');
     }
 
     @IsTest
@@ -795,8 +795,8 @@ existingOpp
 
         existingOpp.StageName = 'Closed';
 
-        System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
-        System.assertEquals(0, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed']);
+        System.assertEquals(1, [SELECT COUNT() FROM Opportunity], 'test Register Upsert By External Id Parent Will Resolve should produce 1');
+        System.assertEquals(0, [SELECT COUNT() FROM Opportunity WHERE StageName = 'Closed'], 'test Register Upsert By External Id Parent Will Resolve should produce 0');
 
         List<Schema.SObjectType> orderWithAccounts = new List<Schema.SObjectType>();
         orderWithAccounts.add(Account.SObjectType);
@@ -812,11 +812,11 @@ existingOpp
             uow.commitWork();
         Test.stopTest();
 
-        System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
+        System.assertEquals(1, [SELECT COUNT() FROM Opportunity], 'test Register Upsert By External Id Parent Will Resolve should produce 1');
 
         Opportunity updatedOpp = [SELECT StageName, Account.Name FROM Opportunity];
-        System.assertEquals('Closed', updatedOpp.StageName);
-        System.assertEquals(accName, updatedOpp.Account.Name );
+        System.assertEquals('Closed', updatedOpp.StageName, 'test Register Upsert By External Id Parent Will Resolve should produce Closed');
+        System.assertEquals(accName, updatedOpp.Account.Name , 'test Register Upsert By External Id Parent Will Resolve should produce accName');
     }
 
 
@@ -844,11 +844,11 @@ existingOpp
             uow.commitWork();
         Test.stopTest();
 
-        System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
+        System.assertEquals(1, [SELECT COUNT() FROM Opportunity], 'test Register Upsert By External Id Child Will Resolve should produce 1');
 
         Opportunity updatedOpp = [SELECT StageName, Account.Name FROM Opportunity];
-        System.assertEquals('Closed', updatedOpp.StageName);
-        System.assertEquals(accName, updatedOpp.Account.Name );
+        System.assertEquals('Closed', updatedOpp.StageName, 'test Register Upsert By External Id Child Will Resolve should produce Closed');
+        System.assertEquals(accName, updatedOpp.Account.Name , 'test Register Upsert By External Id Child Will Resolve should produce accName');
     }
 
 
@@ -872,11 +872,11 @@ existingOpp
             uow.commitWork();
         Test.stopTest();
 
-        System.assertEquals(1, [SELECT COUNT() FROM Opportunity]);
+        System.assertEquals(1, [SELECT COUNT() FROM Opportunity], 'test Register Upsert By External Id Both Will Resolve should produce 1');
 
         Opportunity updatedOpp = [SELECT StageName, Account.Name FROM Opportunity];
-        System.assertEquals('Closed', updatedOpp.StageName);
-        System.assertEquals(accName, updatedOpp.Account.Name );
+        System.assertEquals('Closed', updatedOpp.StageName, 'test Register Upsert By External Id Both Will Resolve should produce Closed');
+        System.assertEquals(accName, updatedOpp.Account.Name , 'test Register Upsert By External Id Both Will Resolve should produce accName');
     }
 
     @IsTest
@@ -903,7 +903,7 @@ existingOpp
         }
 catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
         {
-            Assert.areEqual('Upsert by external ID requires IDMLUpsertable implementation. Current IDML implementation does not support this feature.',e.getMessage());
+            Assert.areEqual('Upsert by external ID requires IDMLUpsertable implementation. Current IDML implementation does not support this feature.',e.getMessage(), 'test Register Upsert By External Id When Custom IDMLNot IDMLUpsertable Expect Exception should produce Upsert by external ID requires IDMLUpsertable implementation. Current...');
         }
     }
 
@@ -993,14 +993,14 @@ catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
     private static void constructUserModeDML_When_DefaultConstructor_Expect_UserMode()
     {
         fflib_SObjectUnitOfWork.UserModeDML dml = new fflib_SObjectUnitOfWork.UserModeDML();
-        System.assertEquals(AccessLevel.USER_MODE,dml.m_accessLevel);
+        System.assertEquals(AccessLevel.USER_MODE,dml.m_accessLevel, 'construct User Mode DML When Default Constructor Expect User Mode should produce AccessLevel.USER_MODE');
     }
 
     @IsTest
     private static void constructUserModeDML_When_AccessLevelSupplied_Expect_SameAccessLevel()
     {
         fflib_SObjectUnitOfWork.UserModeDML dml = new fflib_SObjectUnitOfWork.UserModeDML(AccessLevel.SYSTEM_MODE);
-        System.assertEquals(AccessLevel.SYSTEM_MODE,dml.m_accessLevel);
+        System.assertEquals(AccessLevel.SYSTEM_MODE,dml.m_accessLevel, 'construct User Mode DML When Access Level Supplied Expect Same Access Level should produce AccessLevel.SYSTEM_MODE');
     }
 
     @IsTest

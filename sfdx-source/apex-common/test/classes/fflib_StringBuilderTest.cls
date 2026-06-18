@@ -38,7 +38,7 @@ private with sharing class fflib_StringBuilderTest
 ', which is made',' up from\r ','a number of smaller strings', '. 5 in this case!'
         }
 );
-        system.assertEquals(sb.getStringValue(),'this is a string, which is made up from\r a number of smaller strings. 5 in this case!');
+        system.assertEquals(sb.getStringValue(),'this is a string, which is made up from\r a number of smaller strings. 5 in this case!', 'testfflib String Builder1 should produce sb.getStringValue()');
     }
 
     @IsTest
@@ -55,7 +55,7 @@ private with sharing class fflib_StringBuilderTest
 ', which is made',' up from\r ','a number of smaller strings', '. 5 in this case!'
         }
 );
-        system.assertEquals(sb.getStringValue(),'apples and pears: stairs. this is a string, which is made up from\r a number of smaller strings. 5 in this case!');
+        system.assertEquals(sb.getStringValue(),'apples and pears: stairs. this is a string, which is made up from\r a number of smaller strings. 5 in this case!', 'testfflib String Builder2 should produce sb.getStringValue()');
     }
 
     @IsTest
@@ -68,7 +68,7 @@ private with sharing class fflib_StringBuilderTest
 'b','c','d'
         }
 );
-        system.assertEquals(sb.getStringValue(),'a,b,c,d');
+        system.assertEquals(sb.getStringValue(),'a,b,c,d', 'test Comma Delimited Builder1 should produce sb.getStringValue()');
     }
 
     @IsTest
@@ -85,7 +85,7 @@ private with sharing class fflib_StringBuilderTest
 'b','c','d'
         }
 );
-        system.assertEquals(sb.getStringValue(),'x,y,a,b,c,d');
+        system.assertEquals(sb.getStringValue(),'x,y,a,b,c,d', 'test Comma Delimited Builder2 should produce sb.getStringValue()');
     }
 
     @IsTest
@@ -102,7 +102,7 @@ private with sharing class fflib_StringBuilderTest
 'b','c','d'
         }
 );
-        system.assertEquals(sb.getStringValue('$'),'$x,$y,$a,$b,$c,$d');
+        system.assertEquals(sb.getStringValue('$'),'$x,$y,$a,$b,$c,$d', 'test Comman Delimited Builder With Item Prefix should produce sb.getStringValue($)');
     }
 
     @IsTest
@@ -120,7 +120,7 @@ private with sharing class fflib_StringBuilderTest
 'b','c','d'
         }
 );
-        system.assertEquals(sb.getStringValue(),'x;y;a;b;c;d');
+        system.assertEquals(sb.getStringValue(),'x;y;a;b;c;d', 'test Comman Delimited Builder With Alternative Delimiter should produce sb.getStringValue()');
     }
 
     @IsTest
@@ -139,7 +139,7 @@ private with sharing class fflib_StringBuilderTest
 'b','c','d'
         }
 );
-        system.assertEquals(sb.getStringValue(),'#x:#y:#a:#b:#c:#d');
+        system.assertEquals(sb.getStringValue(),'#x:#y:#a:#b:#c:#d', 'test Comman Delimited Builder With Alternative Delimiter And Prefix should produce sb.getStringValue()');
     }
 
     @IsTest
@@ -153,11 +153,11 @@ Account.Name, Account.Id, Account.AccountNumber, Account.AccountNumber, Account.
         fflib_StringBuilder.FieldListBuilder sb = new fflib_StringBuilder.FieldListBuilder(fields);
         List<String> fieldList = sb.getStringValue().split(',');
         Set<String> fieldSet = new Set<String>(fieldList);
-        system.assertEquals(4, fieldSet.size());
-        system.assert(fieldSet.contains('Name'));
-        system.assert(fieldSet.contains('Id'));
-        system.assert(fieldSet.contains('AccountNumber'));
-        system.assert(fieldSet.contains('AnnualRevenue'));
+        system.assertEquals(4, fieldSet.size(), 'test Field List Builder should produce 4');
+        system.assert(fieldSet.contains('Name'), 'test Field List Builder should satisfy fieldSet.contains(Name)');
+        system.assert(fieldSet.contains('Id'), 'test Field List Builder should satisfy fieldSet.contains(Id)');
+        system.assert(fieldSet.contains('AccountNumber'), 'test Field List Builder should satisfy fieldSet.contains(AccountNumber)');
+        system.assert(fieldSet.contains('AnnualRevenue'), 'test Field List Builder should satisfy fieldSet.contains(AnnualRevenue)');
     }
 
     @IsTest
@@ -171,13 +171,13 @@ Account.Name, Account.Id, Account.AccountNumber, Account.AnnualRevenue
         fflib_StringBuilder.MultiCurrencyFieldListBuilder sb = new fflib_StringBuilder.MultiCurrencyFieldListBuilder(fields);
         List<String> fieldList = sb.getStringValue().split(',');
         Set<String> fieldSet = new Set<String>(fieldList);
-        system.assert(fieldSet.contains('Name'));
-        system.assert(fieldSet.contains('Id'));
-        system.assert(fieldSet.contains('AccountNumber'));
-        system.assert(fieldSet.contains('AnnualRevenue'));
+        system.assert(fieldSet.contains('Name'), 'test Multi Currency Field List Builder should satisfy fieldSet.contains(Name)');
+        system.assert(fieldSet.contains('Id'), 'test Multi Currency Field List Builder should satisfy fieldSet.contains(Id)');
+        system.assert(fieldSet.contains('AccountNumber'), 'test Multi Currency Field List Builder should satisfy fieldSet.contains(AccountNumber)');
+        system.assert(fieldSet.contains('AnnualRevenue'), 'test Multi Currency Field List Builder should satisfy fieldSet.contains(AnnualRevenue)');
         if(UserInfo.isMultiCurrencyOrganization())
         {
-            system.assert(fieldSet.contains('CurrencyIsoCode'));
+            system.assert(fieldSet.contains('CurrencyIsoCode'), 'test Multi Currency Field List Builder should satisfy fieldSet.contains(CurrencyIsoCode)');
         }
     }
 }

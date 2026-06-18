@@ -25,7 +25,7 @@
 **/
 
 @IsTest
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.FieldNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.AvoidDeeplyNestedIfStmts')
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.FieldNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.AvoidDeeplyNestedIfStmts, PMD.StdCyclomaticComplexity')
 private class fflib_ApplicationTest
 {
     @IsTest
@@ -42,8 +42,8 @@ new Account(
                         Name = 'Test Account')
                         }
 );
-        System.assert(domainObjectAcct instanceof AccountsDomain);
-        System.assertEquals(testAccountId, getFirstSObject(domainObjectAcct).Id);
+        System.assert(domainObjectAcct instanceof AccountsDomain, 'Account should satisfy domainObjectAcct instanceof AccountsDomain');
+        System.assertEquals(testAccountId, getFirstSObject(domainObjectAcct).Id, 'Account should produce testAccountId');
 
         // Registered Accounts domain class by SObject List
         testAccountId = fflib_SObjectsTest.generateTestRecordId(Account.SObjectType);
@@ -56,8 +56,8 @@ new Account(
                         Name = 'Test Account')
                         }
                 , Account.SObjectType);
-        System.assert(domainObjectAcct instanceof AccountsDomain);
-        System.assertEquals(testAccountId, getFirstSObject(domainObjectAcct).Id);
+        System.assert(domainObjectAcct instanceof AccountsDomain, 'Account should satisfy domainObjectAcct instanceof AccountsDomain');
+        System.assertEquals(testAccountId, getFirstSObject(domainObjectAcct).Id, 'Account should produce testAccountId');
 
         // Registered Opportunities domain class by SObject List
         Id testOpportunityId = fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType);
@@ -70,8 +70,8 @@ new Opportunity(
                         Name = 'Test Opportunity')
                         }
 );
-        System.assertEquals(testOpportunityId, getFirstSObject(domainObjectOpp).Id);
-        System.assert(domainObjectOpp instanceof OpportuntiesDomain);
+        System.assertEquals(testOpportunityId, getFirstSObject(domainObjectOpp).Id, 'Opportunity should produce testOpportunityId');
+        System.assert(domainObjectOpp instanceof OpportuntiesDomain, 'Opportunity should satisfy domainObjectOpp instanceof OpportuntiesDomain');
 
         // Test failure for creating new instance using IConstructable2
         // for domain class that does not support it
@@ -85,8 +85,8 @@ new Opportunity(
                         Name = 'Test Opportunity')
                         }
                 , Opportunity.SObjectType);
-        System.assertEquals(testOpportunityId, getFirstSObject(domainObjectOpp).Id);
-        System.assert(domainObjectOpp instanceof OpportuntiesDomain);
+        System.assertEquals(testOpportunityId, getFirstSObject(domainObjectOpp).Id, 'Opportunity should produce testOpportunityId');
+        System.assert(domainObjectOpp instanceof OpportuntiesDomain, 'Opportunity should satisfy domainObjectOpp instanceof OpportuntiesDomain');
 
         // Given — domain factory mock (Apex Stub API)
         fflib_ISObjectDomain domainMock = newDomainStub(Account.SObjectType, new List<SObject>());
@@ -104,7 +104,7 @@ new Account(
 );
 
         // Then — stub is not a real fflib_SObjectDomain subclass
-        System.assert(!(domainObjectAcct instanceof fflib_SObjectDomain));
+        System.assert(!(domainObjectAcct instanceof fflib_SObjectDomain), 'Account should satisfy !(domainObjectAcct instanceof fflib_SObjectDomain)');
 
         // When
         domainObjectAcct =
@@ -118,7 +118,7 @@ new Account(
                 , Account.SObjectType);
 
         // Then
-        System.assert(!(domainObjectAcct instanceof fflib_SObjectDomain));
+        System.assert(!(domainObjectAcct instanceof fflib_SObjectDomain), 'Account should satisfy !(domainObjectAcct instanceof fflib_SObjectDomain)');
     }
 
     private static SObject getFirstSObject(fflib_IDomain domainObjectAcct)
@@ -151,11 +151,11 @@ testAccountId
 
         // Then
         List<Account> assertAccounts = (List<Account>) domainObjectAcc.getObjects();
-        System.assert(domainObjectAcc instanceof AccountsDomain);
-        System.assertEquals(testAccountId, getFirstSObject(domainObjectAcc).Id);
-        System.assertEquals(1, assertAccounts.size());
-        System.assertEquals(testAccountId, assertAccounts[0].Id);
-        System.assertEquals('Test Account', assertAccounts[0].Name);
+        System.assert(domainObjectAcc instanceof AccountsDomain, 'Account should satisfy domainObjectAcc instanceof AccountsDomain');
+        System.assertEquals(testAccountId, getFirstSObject(domainObjectAcc).Id, 'Account should produce testAccountId');
+        System.assertEquals(1, assertAccounts.size(), 'Account should produce 1');
+        System.assertEquals(testAccountId, assertAccounts[0].Id, 'Account should produce testAccountId');
+        System.assertEquals('Test Account', assertAccounts[0].Name, 'Account should produce Test Account');
     }
 
     @IsTest
@@ -168,7 +168,7 @@ testAccountId
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('Unable to determine SObjectType', e.getMessage());
+            System.assertEquals('Unable to determine SObjectType', e.getMessage(), 'calling Domain Factory With Generic List Should Give Exception should produce Unable to determine SObjectType');
         }
     }
 
@@ -182,7 +182,7 @@ catch (fflib_Application.DeveloperException e)
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('Must specify sObjectType', e.getMessage());
+            System.assertEquals('Must specify sObjectType', e.getMessage(), 'calling Domain Factory With No SObject Type Should Give Exception should produce Must specify sObjectType');
         }
     }
 
@@ -200,7 +200,7 @@ new Product2(Name = 'Test Product')
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('Domain constructor class not found for SObjectType Product2', e.getMessage());
+            System.assertEquals('Domain constructor class not found for SObjectType Product2', e.getMessage(), 'calling Domain Factory With In Accessable Constructor Should Give Exception should produce Domain constructor class not found for SObjectType Product2');
         }
 
         try
@@ -214,7 +214,7 @@ new Product2(Name = 'Test Product')
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('Domain constructor class not found for SObjectType Product2', e.getMessage());
+            System.assertEquals('Domain constructor class not found for SObjectType Product2', e.getMessage(), 'calling Domain Factory With In Accessable Constructor Should Give Exception should produce Domain constructor class not found for SObjectType Product2');
         }
     }
 
@@ -257,11 +257,11 @@ catch (System.TypeException e)
     private static void callingUnitOfWorkFactoryShouldGivenStandardImplsAndMockImpls()
     {
         // Standard behaviour
-        System.assert(UnitOfWork.newInstance() instanceof fflib_SObjectUnitOfWork);
+        System.assert(UnitOfWork.newInstance() instanceof fflib_SObjectUnitOfWork, 'calling Unit Of Work Factory Should Given Standard Impls And Mock Impls should satisfy UnitOfWork.newInstance() instanceof fflib_SObjectUnitOfWork');
 
         // Mocking behaviour
         UnitOfWork.setMock(newUnitOfWorkStub());
-        System.assert(!(UnitOfWork.newInstance() instanceof fflib_SObjectUnitOfWork));
+        System.assert(!(UnitOfWork.newInstance() instanceof fflib_SObjectUnitOfWork), 'calling Unit Of Work Factory Should Given Standard Impls And Mock Impls should satisfy !(UnitOfWork.newInstance() instanceof fflib_SObjectUnitOfWork)');
     }
 
     @IsTest
@@ -274,7 +274,7 @@ catch (System.TypeException e)
                         {
 Account.SObjectType
                         }
-                ) instanceof fflib_SObjectUnitOfWork);
+                ) instanceof fflib_SObjectUnitOfWork, 'calling Unit Of Work Factory With Custom Types Should Given Standard Impls And Mock Impls should satisfy UnitOfWork.newInstance( new List<SObjectType> { Account.SObjectType }...');
 
         // Mocking behaviour
         UnitOfWork.setMock(newUnitOfWorkStub());
@@ -284,15 +284,15 @@ Account.SObjectType
                         {
 Account.SObjectType
                         }
-                ) instanceof fflib_SObjectUnitOfWork));
+                ) instanceof fflib_SObjectUnitOfWork), 'calling Unit Of Work Factory With Custom Types Should Given Standard Impls And Mock Impls should satisfy !(UnitOfWork.newInstance( new List<SObjectType> { Account.SObjectType...');
     }
 
     @IsTest
     private static void callingServiceFactoryShouldGiveRegisteredImplsAndMockImpls()
     {
         // Standard behaviour
-        System.assert(Service.newInstance(IAccountService.class) instanceof AccountsServiceImpl);
-        System.assert(Service.newInstance(IOpportunitiesService.class) instanceof OpportunitiesServiceImpl);
+        System.assert(Service.newInstance(IAccountService.class) instanceof AccountsServiceImpl, 'calling Service Factory Should Give Registered Impls And Mock Impls should satisfy Service.newInstance(IAccountService.class) instanceof AccountsService...');
+        System.assert(Service.newInstance(IOpportunitiesService.class) instanceof OpportunitiesServiceImpl, 'calling Service Factory Should Give Registered Impls And Mock Impls should satisfy Service.newInstance(IOpportunitiesService.class) instanceof Opportuni...');
         try
         {
             Service.newInstance(IContactService.class);
@@ -300,21 +300,21 @@ Account.SObjectType
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('No implementation registered for service interface ' + IContactService.class.getName(), e.getMessage());
+            System.assertEquals('No implementation registered for service interface ' + IContactService.class.getName(), e.getMessage(), 'calling Service Factory Should Give Registered Impls And Mock Impls should produce No implementation registered for service interface + IContactService....');
         }
 
         // Mocking behaviour
         Service.setMock(IAccountService.class, new AccountsServiceMock());
-        System.assert(Service.newInstance(IOpportunitiesService.class) instanceof OpportunitiesServiceImpl);
-        System.assert(Service.newInstance(IAccountService.class) instanceof AccountsServiceMock);
+        System.assert(Service.newInstance(IOpportunitiesService.class) instanceof OpportunitiesServiceImpl, 'calling Service Factory Should Give Registered Impls And Mock Impls should satisfy Service.newInstance(IOpportunitiesService.class) instanceof Opportuni...');
+        System.assert(Service.newInstance(IAccountService.class) instanceof AccountsServiceMock, 'calling Service Factory Should Give Registered Impls And Mock Impls should satisfy Service.newInstance(IAccountService.class) instanceof AccountsService...');
     }
 
     @IsTest
     private static void callingSelectorFactoryShouldGiveRegisteredImpls()
     {
         // Standard behaviour
-        System.assert(Selector.newInstance(Account.SObjectType) instanceof AccountsSelector);
-        System.assert(Selector.newInstance(Opportunity.SObjectType) instanceof OpportuntiesSelector);
+        System.assert(Selector.newInstance(Account.SObjectType) instanceof AccountsSelector, 'calling Selector Factory Should Give Registered Impls should satisfy Selector.newInstance(Account.SObjectType) instanceof AccountsSelector');
+        System.assert(Selector.newInstance(Opportunity.SObjectType) instanceof OpportuntiesSelector, 'calling Selector Factory Should Give Registered Impls should satisfy Selector.newInstance(Opportunity.SObjectType) instanceof Opportunties...');
         try
         {
             Selector.newInstance(User.SObjectType);
@@ -322,7 +322,7 @@ catch (fflib_Application.DeveloperException e)
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('Selector class not found for SObjectType User', e.getMessage());
+            System.assertEquals('Selector class not found for SObjectType User', e.getMessage(), 'calling Selector Factory Should Give Registered Impls should produce Selector class not found for SObjectType User');
         }
     }
 
@@ -336,7 +336,7 @@ catch (fflib_Application.DeveloperException e)
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('Invalid record Id\'s set', e.getMessage());
+            System.assertEquals('Invalid record Id\'s set', e.getMessage(), 'calling Selector Factory Select By Id With Empty List Should Give Exception should produce Invalid record Ids set');
         }
         try
         {
@@ -345,7 +345,7 @@ catch (fflib_Application.DeveloperException e)
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('Invalid record Id\'s set', e.getMessage());
+            System.assertEquals('Invalid record Id\'s set', e.getMessage(), 'calling Selector Factory Select By Id With Empty List Should Give Exception should produce Invalid record Ids set');
         }
     }
 
@@ -365,7 +365,7 @@ catch (fflib_Application.DeveloperException e)
         }
 catch (fflib_Application.DeveloperException e)
         {
-            System.assertEquals('Unable to determine SObjectType, Set contains Id\'s from different SObject types', e.getMessage());
+            System.assertEquals('Unable to determine SObjectType, Set contains Id\'s from different SObject types', e.getMessage(), 'calling Selector Factory Select By Id With Mixed Id Type List Should Give Exception should produce Unable to determine SObjectType, Set contains Ids from different SObj...');
         }
     }
 
@@ -390,11 +390,11 @@ new Account(
         List<Account> assertAccounts = Selector.selectById(accountIds);
 
         // Then
-        System.assert(!(Selector.newInstance(Account.SObjectType) instanceof fflib_SObjectSelector));
-        System.assertEquals(1, assertAccounts.size());
-        System.assertEquals(testAccountId, assertAccounts[0].Id);
-        System.assertEquals('Test Account', assertAccounts[0].Name);
-        System.assert(Selector.newInstance(Opportunity.SObjectType) instanceof OpportuntiesSelector);
+        System.assert(!(Selector.newInstance(Account.SObjectType) instanceof fflib_SObjectSelector), 'Account should satisfy !(Selector.newInstance(Account.SObjectType) instanceof fflib_SObjectS...');
+        System.assertEquals(1, assertAccounts.size(), 'Account should produce 1');
+        System.assertEquals(testAccountId, assertAccounts[0].Id, 'Account should produce testAccountId');
+        System.assertEquals('Test Account', assertAccounts[0].Name, 'Account should produce Test Account');
+        System.assert(Selector.newInstance(Opportunity.SObjectType) instanceof OpportuntiesSelector, 'Account should satisfy Selector.newInstance(Opportunity.SObjectType) instanceof Opportunties...');
     }
 
 
@@ -432,11 +432,11 @@ new Opportunity(
         List<Account> assertAccounts = Selector.selectByRelationship(opportunties, Opportunity.AccountId);
 
         // Then
-        System.assert(!(Selector.newInstance(Account.SObjectType) instanceof fflib_SObjectSelector));
-        System.assertEquals(1, assertAccounts.size());
-        System.assertEquals(testAccountId, assertAccounts[0].Id);
-        System.assertEquals('Test Account', assertAccounts[0].Name);
-        System.assert(Selector.newInstance(Opportunity.SObjectType) instanceof OpportuntiesSelector);
+        System.assert(!(Selector.newInstance(Account.SObjectType) instanceof fflib_SObjectSelector), 'Opportunity should satisfy !(Selector.newInstance(Account.SObjectType) instanceof fflib_SObjectS...');
+        System.assertEquals(1, assertAccounts.size(), 'Opportunity should produce 1');
+        System.assertEquals(testAccountId, assertAccounts[0].Id, 'Opportunity should produce testAccountId');
+        System.assertEquals('Test Account', assertAccounts[0].Name, 'Opportunity should produce Test Account');
+        System.assert(Selector.newInstance(Opportunity.SObjectType) instanceof OpportuntiesSelector, 'Opportunity should satisfy Selector.newInstance(Opportunity.SObjectType) instanceof Opportunties...');
     }
 
 
