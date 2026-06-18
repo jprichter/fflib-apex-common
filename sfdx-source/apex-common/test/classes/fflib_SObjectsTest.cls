@@ -25,7 +25,7 @@
 **/
 
 @IsTest
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions')
 public class fflib_SObjectsTest
 {
     private static Integer testFakeIdSequence = 0;
@@ -38,7 +38,8 @@ public class fflib_SObjectsTest
      * @param sobjectType The type whose key prefix the fake Id should use
      */
     @TestVisible
-    private static Id generateTestRecordId(Schema.SObjectType sobjectType) {
+    private static Id generateTestRecordId(Schema.SObjectType sobjectType)
+    {
         String keyPrefix = fflib_SObjectDescribe.getDescribe(sobjectType).getDescribe().getKeyPrefix();
         testFakeIdSequence++;
         String prefix = TEST_FAKE_ID_PADDING.substring(
@@ -52,7 +53,11 @@ public class fflib_SObjectsTest
     static void itShouldClearTheField()
     {
         Account record = new Account(ShippingCountry = 'Holland');
-        DomainAccounts domain = new DomainAccounts(new List<Account>{ record });
+        DomainAccounts domain = new DomainAccounts(new List<Account>
+        {
+record
+        }
+);
         System.assert(!domain.selectByShippingCountry('Holland').isEmpty(), 'Incorrect test data');
 
         domain.clearField(Schema.Account.ShippingCountry);
@@ -95,7 +100,11 @@ public class fflib_SObjectsTest
                 }
         );
 
-        Set<Id> recordIds = new Set<Id> {idA, idB, idC};
+        Set<Id> recordIds = new Set<Id>
+        {
+idA, idB, idC
+        }
+;
         System.assert(
                 domain.getRecordIds().equals(recordIds),
                 'The domain should return all the record Ids'
@@ -174,7 +183,8 @@ public class fflib_SObjectsTest
                 'Ireland',
                 'UK',
                 'USA'
-        };
+        }
+;
         System.assert(
                 domain.getStringFieldValues(Schema.Account.ShippingCountry).equals(expected)
         );
@@ -196,7 +206,8 @@ public class fflib_SObjectsTest
                 10,
                 20,
                 30
-        };
+        }
+;
 
         System.assert(
                 domain.getFieldValues(Schema.Account.NumberOfEmployees)
@@ -251,11 +262,19 @@ public class fflib_SObjectsTest
     {
         Account recordA = new Account(Name = 'A', ShippingCountry = 'USA');
         Account recordB = new Account(Name = 'B', ShippingCountry = 'Canada');
-        DomainAccounts domain = new DomainAccounts(new List<Account>{ recordA, recordB });
+        DomainAccounts domain = new DomainAccounts(new List<Account>
+        {
+recordA, recordB
+        }
+);
 
         domain.addError('Bulk record error');
         domain.addError(Schema.Account.Name, 'Bulk field error');
-        domain.clearFields(new Set<Schema.SObjectField>{ Schema.Account.ShippingCountry });
+        domain.clearFields(new Set<Schema.SObjectField>
+        {
+Schema.Account.ShippingCountry
+        }
+);
 
         System.assertEquals(2, domain.getRecords().size());
         System.assertEquals(null, recordA.ShippingCountry);
@@ -268,7 +287,11 @@ public class fflib_SObjectsTest
         // Test static helpers for raise none domain object instance errors
         final String errorMessage = 'Test Error';
         Account record = new Account();
-        DomainAccounts domain = new DomainAccounts(new List<Account>{ record });
+        DomainAccounts domain = new DomainAccounts(new List<Account>
+        {
+record
+        }
+);
         domain.addNameError(errorMessage);
 
         System.assertEquals(1, fflib_SObjects.Errors.getAll().size());
@@ -320,7 +343,10 @@ public class fflib_SObjectsTest
         {
             return (List<Account>) getRecordsByFieldValues(
                 Schema.Account.ShippingCountry,
-                new Set<Object>{ country }
+                new Set<Object>
+                {
+country
+                }
             );
         }
 

@@ -25,10 +25,13 @@
 **/
 
 @IsTest @TestVisible
-private class fflib_SecurityUtilsTest {
+@SuppressWarnings('PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.ExcessiveParameterList')
+private class fflib_SecurityUtilsTest
+{
 
     @TestSetup @TestVisible
-    static void testSetup() {
+    static void testSetup()
+    {
         // #315 Create a Permission Set that grants "Read" access to Account, Contact and Lead. We will use this in
         // Spring '21 orgs that lack the "Read Only" Profile. See:
         // https://help.salesforce.com/articleView?id=release-notes.rn_profiles_and_perms_read_only_new.htm&release=230&type=5).
@@ -49,13 +52,15 @@ private class fflib_SecurityUtilsTest {
         insert fieldPerms;
     }
 
-    static Profile getProfile(String profileName) {
+    static Profile getProfile(String profileName)
+    {
         return [SELECT Id, Name FROM Profile WHERE Name = :profileName];
     }
 
     static ObjectPermissions createObjectPermissions(
         Id permSetId, String objectType, Boolean canCreate, Boolean canRead,  Boolean canUpdate, Boolean canDelete
-    ) {
+    )
+    {
         return new ObjectPermissions(
             ParentId = permSetId,
             SobjectType = objectType,
@@ -68,7 +73,8 @@ private class fflib_SecurityUtilsTest {
 
     static FieldPermissions createFieldPermissions(
         Id permSetId, String objectType, String fieldName, Boolean canRead, Boolean canEdit
-    ) {
+    )
+    {
         return new FieldPermissions(
             ParentId = permSetId,
             SobjectType = objectType,
@@ -79,28 +85,39 @@ private class fflib_SecurityUtilsTest {
     }
 
     @TestVisible
-    static User setupTestUser(Boolean limitedAccess){
+    static User setupTestUser(Boolean limitedAccess)
+    {
         Profile p;
 
-        if (limitedAccess) {
-            try {
+        if (limitedAccess)
+        {
+            try
+            {
                 p = getProfile('Minimum Access - Salesforce');
-            } catch (QueryException ex) {
-                if (ex.getMessage().contains('List has no rows for assignment to SObject')) {
+            }
+catch (QueryException ex)
+            {
+                if (ex.getMessage().contains('List has no rows for assignment to SObject'))
+                {
                     //#440 - not ideal, but we'll fall back to the rather liberally permissioned 'Read Only' profile that exists in very old orgs
                     p = getProfile('Read Only');
                 }
             }
-        } else {
+        }
+else
+        {
             p = getProfile('System Administrator');
         }
 
         //username global uniqueness is still enforced in tests
         //make sure we get something unique to avoid issues with parallel tests
         String uniqueness = DateTime.now()+':'+Math.random();
-        try{
+        try
+        {
             throw new NullPointerException();
-        }catch(Exception e){
+        }
+catch(Exception e)
+        {
             uniqueness += e.getStackTraceString(); //includes the top level test method name without having to pass it
         }
         User usr = new User(
@@ -116,7 +133,8 @@ private class fflib_SecurityUtilsTest {
         );
         insert usr;
 
-        if (limitedAccess) {
+        if (limitedAccess)
+        {
             // #315 We need to assign the Perm Set to grant Account "Read" access
             PermissionSet accountReadPS = [SELECT Id FROM PermissionSet WHERE Name = 'ReadOnlyPermissionSet'];
             PermissionSetAssignment psa = new PermissionSetAssignment(AssigneeId = usr.Id, PermissionSetId = accountReadPS.Id);
@@ -126,14 +144,19 @@ private class fflib_SecurityUtilsTest {
     }
 
     @IsTest
-    static void readonly_field_access() {
+    static void readonly_field_access()
+    {
         User testUser = setupTestUser(true);
-        System.runAs(testUser){
+        System.runAs(testUser)
+        {
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkFieldIsInsertable(Account.SObjectType, 'naMe');
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertNotEquals(null, ex, 'Read only profile should not be able to insert Account.Name');
@@ -141,18 +164,24 @@ private class fflib_SecurityUtilsTest {
             }
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkFieldIsReadable(Contact.SObjectType, 'LastNAME');
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertEquals(null, ex, 'Read only profile should be able to read Contact.LastName');
             }
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkFieldIsUpdateable(Lead.SObjectType, 'cOMPANY');
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertNotEquals(null, ex, 'Read only profile should not be able to update Lead.Company');
@@ -160,7 +189,8 @@ private class fflib_SecurityUtilsTest {
             }
 
             fflib_SecurityUtils.BYPASS_INTERNAL_FLS_AND_CRUD = true;
-            { //no exceptions, despite no rights
+            {
+//no exceptions, despite no rights
                 fflib_SecurityUtils.checkFieldIsInsertable(Account.SObjectType, 'naMe');
                 fflib_SecurityUtils.checkFieldIsReadable(Contact.SObjectType, 'LastNAME');
                 fflib_SecurityUtils.checkFieldIsUpdateable(Lead.SObjectType, 'cOMPANY');
@@ -169,14 +199,19 @@ private class fflib_SecurityUtilsTest {
     }
 
     @IsTest
-    static void readonly_object_access() {
+    static void readonly_object_access()
+    {
         User testUser = setupTestUser(true);
-        System.runAs(testUser){
+        System.runAs(testUser)
+        {
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkObjectIsInsertable(Account.SObjectType);
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertNotEquals(null, ex, 'Read only profile should not be able to insert Account');
@@ -184,18 +219,24 @@ private class fflib_SecurityUtilsTest {
             }
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkObjectIsReadable(Contact.SObjectType);
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertEquals(null, ex, 'Read only profile should be able to read Contact');
             }
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkObjectIsUpdateable(Lead.SObjectType);
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertNotEquals(null, ex, 'Read only profile should not be able to update Lead');
@@ -203,9 +244,12 @@ private class fflib_SecurityUtilsTest {
             }
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkObjectIsDeletable(Opportunity.SObjectType);
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertNotEquals(null, ex, 'Read only profile should not be able to delete Opportunity');
@@ -213,7 +257,8 @@ private class fflib_SecurityUtilsTest {
             }
 
             fflib_SecurityUtils.BYPASS_INTERNAL_FLS_AND_CRUD = true;
-            { //no exceptions, despite no rights
+            {
+//no exceptions, despite no rights
                 fflib_SecurityUtils.checkObjectIsInsertable(Account.SObjectType);
                 fflib_SecurityUtils.checkObjectIsReadable(Contact.SObjectType);
                 fflib_SecurityUtils.checkObjectIsUpdateable(Lead.SObjectType);
@@ -223,21 +268,27 @@ private class fflib_SecurityUtilsTest {
     }
 
     @IsTest
-    static void readonly_objectAndField_access() {
+    static void readonly_objectAndField_access()
+    {
         User testUser = setupTestUser(true);
-        System.runAs(testUser){
+        System.runAs(testUser)
+        {
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkInsert(
                         Account.SObjectType,
-                        new List<String>{
+                        new List<String>
+                        {
                             'Name',
                             'ParentId',
                             'ownerId'
                         }
                     );
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertNotEquals(null, ex, 'Read only profile should not be able to insert Account');
@@ -245,32 +296,40 @@ private class fflib_SecurityUtilsTest {
             }
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkRead(
                         Contact.SObjectType,
-                        new List<String>{
+                        new List<String>
+                        {
                             'LastName',
                             'eMaiL',
                             'BirthDATE'
                         }
                     );
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertEquals(null, ex, 'Read only profile should be able to read Contact');
             }
             {
                 fflib_SecurityUtils.SecurityException ex;
-                try{
+                try
+                {
                     fflib_SecurityUtils.checkUpdate(
                         Lead.SObjectType,
-                        new List<String>{
+                        new List<String>
+                        {
                             'LastName',
                             'FirstNAMe',
                             'cOMPANY'
                         }
                     );
-                }catch(fflib_SecurityUtils.SecurityException e){
+                }
+catch(fflib_SecurityUtils.SecurityException e)
+                {
                     ex = e;
                 }
                 System.assertNotEquals(null, ex, 'Read only profile should not be able to update Lead');
@@ -278,10 +337,12 @@ private class fflib_SecurityUtilsTest {
             }
 
             fflib_SecurityUtils.BYPASS_INTERNAL_FLS_AND_CRUD = true;
-            { //no exceptions, despite no rights
+            {
+//no exceptions, despite no rights
                 fflib_SecurityUtils.checkInsert(
                     Account.SObjectType,
-                    new List<String>{
+                    new List<String>
+                    {
                         'Name',
                         'Type',
                         'ownerId'
@@ -289,7 +350,8 @@ private class fflib_SecurityUtilsTest {
                 );
                 fflib_SecurityUtils.checkRead(
                     Contact.SObjectType,
-                    new List<String>{
+                    new List<String>
+                    {
                         'LastName',
                         'accountId',
                         'ownerId'
@@ -297,7 +359,8 @@ private class fflib_SecurityUtilsTest {
                 );
                 fflib_SecurityUtils.checkUpdate(
                     Lead.SObjectType,
-                    new List<String>{
+                    new List<String>
+                    {
                         'LastName',
                         'FirstNAMe',
                         'cOMPANY'
@@ -308,12 +371,16 @@ private class fflib_SecurityUtilsTest {
     }
 
     @IsTest
-    static void sysadmin_objectAndField_access() {
+    static void sysadmin_objectAndField_access()
+    {
         User testUser = setupTestUser(false);
-        System.runAs(testUser){
+        Boolean completed = false;
+        System.runAs(testUser)
+        {
             fflib_SecurityUtils.checkInsert(
                 Account.SObjectType,
-                new List<Schema.SObjectField>{
+                new List<Schema.SObjectField>
+                {
                     Account.SObjectType.fields.Name,
                     Account.SObjectType.fields.ParentId,
                     Account.SObjectType.fields.ownerId
@@ -321,7 +388,8 @@ private class fflib_SecurityUtilsTest {
             );
             fflib_SecurityUtils.checkRead(
                 Contact.SObjectType,
-                new List<Schema.SObjectField>{
+                new List<Schema.SObjectField>
+                {
                     Contact.SObjectType.fields.LastName,
                     Contact.SObjectType.fields.accountId,
                     Contact.SObjectType.fields.ownerId
@@ -329,13 +397,16 @@ private class fflib_SecurityUtilsTest {
             );
             fflib_SecurityUtils.checkUpdate(
                 Lead.SObjectType,
-                new List<Schema.SObjectField>{
+                new List<Schema.SObjectField>
+                {
                     Lead.SObjectType.fields.LastName,
                     Lead.SObjectType.fields.FirstNAMe,
                     Lead.SObjectType.fields.cOMPANY
                 }
             );
+            completed = true;
         }
+        System.assert(completed, 'System administrator object and field access checks should not throw.');
     }
 
 }

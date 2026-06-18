@@ -43,7 +43,9 @@ public virtual class fflib_Application
         /**
          * Constructs a Unit Of Work factory
          **/
-        public UnitOfWorkFactory() { }
+        public UnitOfWorkFactory()
+        {
+        }
 
         /**
          * Constructs a Unit Of Work factory
@@ -140,7 +142,9 @@ public virtual class fflib_Application
         /**
          * Constructs a simple Service Factory
          **/
-        public ServiceFactory() { }
+        public ServiceFactory()
+        {
+        }
 
         /**
          * Constructs a simple Service Factory,
@@ -199,7 +203,9 @@ public virtual class fflib_Application
         /**
          * Constructs a simple Selector Factory
          **/
-        public SelectorFactory() { }
+        public SelectorFactory()
+        {
+        }
 
         /**
          * Constructs a Selector Factory linking SObjectType's with Apex Classes implement the fflib_ISObjectSelector interface
@@ -322,7 +328,9 @@ public virtual class fflib_Application
         /**
          * Constructs a Domain factory
          **/
-        public DomainFactory() { }
+        public DomainFactory()
+        {
+        }
 
         /**
          * Constructs a Domain factory, using an instance of the Selector Factory
@@ -483,10 +491,14 @@ public virtual class fflib_Application
         }
     }
 
-    public class ApplicationException extends Exception { }
+    public class ApplicationException extends Exception
+    {
+    }
 
     /**
      * Exception representing a developer coding error, not intended for end user eyes
      **/
-    public class DeveloperException extends Exception { }
+    public class DeveloperException extends Exception
+    {
+    }
 }

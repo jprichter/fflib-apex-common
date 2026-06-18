@@ -25,7 +25,7 @@
 **/
 
 @IsTest
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.NcssCount')
 private with sharing class fflib_SObjectDomainTest
 {
     private static final String TEST_ID_PADDING = '000000000000';
@@ -34,7 +34,7 @@ private with sharing class fflib_SObjectDomainTest
     @TestVisible
     private static Id generateTestRecordId(Schema.SObjectType sObjectType)
     {
-        String keyPrefix = sObjectType.getDescribe().getKeyPrefix();
+        String keyPrefix = sObjectType.getDescribe(SObjectDescribeOptions.DEFERRED).getKeyPrefix();
         testIdSequence++;
         String prefix = TEST_ID_PADDING.substring(0, TEST_ID_PADDING.length() - String.valueOf(testIdSequence).length());
         return Id.valueOf(keyPrefix + prefix + testIdSequence);
@@ -43,13 +43,21 @@ private with sharing class fflib_SObjectDomainTest
     @IsTest
     private static void testValidationWithoutDML()
     {
-        fflib_SObjectDomain.TestSObjectDomain opps = new fflib_SObjectDomain.TestSObjectDomain(new Opportunity[] { new Opportunity ( Name = 'Test', Type = 'Existing Account' ) } );
+        fflib_SObjectDomain.TestSObjectDomain opps = new fflib_SObjectDomain.TestSObjectDomain(new Opportunity[]
+        {
+new Opportunity ( Name = 'Test', Type = 'Existing Account' )
+        }
+);
         opps.onValidate();
         System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
         System.assertEquals('You must provide an Account for Opportunities for existing Customers.', fflib_SObjectDomain.Errors.getAll()[0].message);
         System.assertEquals(Opportunity.AccountId, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field);
 
-        opps = new fflib_SObjectDomain.TestSObjectDomain(new SObject[] { new Opportunity ( Name = 'Test', Type = 'Existing Account' ) }, Opportunity.SObjectType );
+        opps = new fflib_SObjectDomain.TestSObjectDomain(new SObject[]
+        {
+new Opportunity ( Name = 'Test', Type = 'Existing Account' )
+        }
+, Opportunity.SObjectType );
         System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
         System.assertEquals('You must provide an Account for Opportunities for existing Customers.', fflib_SObjectDomain.Errors.getAll()[0].message);
         System.assertEquals(Opportunity.AccountId, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field);
@@ -60,7 +68,11 @@ private with sharing class fflib_SObjectDomainTest
     {
         Opportunity opp = new Opportunity ( Name = 'Test', Type = 'Existing Account' );
         System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
-        fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[] { opp } );
+        fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[]
+        {
+opp
+        }
+);
         System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
         System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
@@ -78,7 +90,15 @@ private with sharing class fflib_SObjectDomainTest
         newOpp.Name = 'Test';
         newOpp.Type = 'New Account';
         System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
-        fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[] { newOpp }, new Map<Id, SObject> { newOpp.Id => oldOpp } );
+        fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[]
+        {
+newOpp
+        }
+, new Map<Id, SObject>
+        {
+newOpp.Id => oldOpp
+        }
+);
         System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
         System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
@@ -93,7 +113,11 @@ private with sharing class fflib_SObjectDomainTest
         opp.Name = 'Test';
         opp.Type = 'Existing Account';
         System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
-        fflib_SObjectDomain.Test.Database.onDelete(new Map<ID, Opportunity> { opp.Id => opp } );
+        fflib_SObjectDomain.Test.Database.onDelete(new Map<ID, Opportunity>
+        {
+opp.Id => opp
+        }
+);
         System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
         System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
@@ -107,7 +131,11 @@ private with sharing class fflib_SObjectDomainTest
         opp.Name = 'Test';
         opp.Type = 'Existing Account';
         System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
-        fflib_SObjectDomain.Test.Database.onUndelete(new list<Opportunity> { opp } );
+        fflib_SObjectDomain.Test.Database.onUndelete(new list<Opportunity>
+        {
+opp
+        }
+);
         System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
     }
@@ -125,11 +153,18 @@ private with sharing class fflib_SObjectDomainTest
         {
             // Test Create object security
             Opportunity opp = new Opportunity ( Name = 'Test', Type = 'Existing Account' );
-            fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[] { opp } );
-            try {
+            fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[]
+            {
+opp
+            }
+);
+            try
+            {
                 fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
                 System.assert(false, 'Expected access denied exception');
-            } catch (Exception e) {
+            }
+catch (Exception e)
+            {
                 System.assertEquals('Permission to create an Opportunity denied.', e.getMessage());
             }
 
@@ -137,20 +172,38 @@ private with sharing class fflib_SObjectDomainTest
             Opportunity existingOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
             existingOpp.Name = 'Test';
             existingOpp.Type = 'Existing Account';
-            fflib_SObjectDomain.Test.Database.onUpdate(new List<Opportunity> { opp }, new Map<Id, Opportunity> { opp.Id => opp } );
-            try {
+            fflib_SObjectDomain.Test.Database.onUpdate(new List<Opportunity>
+            {
+opp
+            }
+, new Map<Id, Opportunity>
+            {
+opp.Id => opp
+            }
+);
+            try
+            {
                 fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
                 System.assert(false, 'Expected access denied exception');
-            } catch (Exception e) {
+            }
+catch (Exception e)
+            {
                 System.assertEquals('Permission to update an Opportunity denied.', e.getMessage());
             }
 
             // Test Delete object security
-            fflib_SObjectDomain.Test.Database.onDelete(new Map<Id, Opportunity> { opp.Id => opp });
-            try {
+            fflib_SObjectDomain.Test.Database.onDelete(new Map<Id, Opportunity>
+            {
+opp.Id => opp
+            }
+);
+            try
+            {
                 fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
                 System.assert(false, 'Expected access denied exception');
-            } catch (Exception e) {
+            }
+catch (Exception e)
+            {
                 System.assertEquals('Permission to delete an Opportunity denied.', e.getMessage());
             }
         }
@@ -175,7 +228,11 @@ private with sharing class fflib_SObjectDomainTest
     private static void testTriggerState()
     {
         Opportunity opp = new Opportunity ( Name = 'Test', Type = 'Existing Account' );
-        fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[] { opp } );
+        fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[]
+        {
+opp
+        }
+);
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectStatefulDomainConstructor.class);
         System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
         System.assertEquals('Error on Record Test', fflib_SObjectDomain.Errors.getAll()[0].message);
@@ -185,7 +242,11 @@ private with sharing class fflib_SObjectDomainTest
     private static void testRecursiveTriggerState()
     {
         Opportunity opp = new Opportunity ( Name = 'Test Recursive 1', Type = 'Existing Account' );
-        fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[] { opp } );
+        fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[]
+        {
+opp
+        }
+);
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectStatefulDomainConstructor.class);
         System.assertEquals(2, fflib_SObjectDomain.Errors.getAll().size());
         System.assertEquals('Error on Record Test Recursive 2', fflib_SObjectDomain.Errors.getAll()[0].message);
@@ -201,8 +262,17 @@ private with sharing class fflib_SObjectDomainTest
             Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
         newOpp.Name = 'Test Default Behaviour';
         newOpp.Type = 'New Account';
-        fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[] { newOpp }, new Map<Id, SObject> { newOpp.Id => oldOpp } );
+        fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[]
+        {
+newOpp
+        }
+, new Map<Id, SObject>
+        {
+newOpp.Id => oldOpp
+        }
+);
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectOnValidateBehaviourConstructor.class);
+        System.assertEquals(0, fflib_SObjectDomain.Errors.getAll().size());
     }
 
     @IsTest
@@ -214,11 +284,22 @@ private with sharing class fflib_SObjectDomainTest
             Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
         newOpp.Name = 'Test Enable Old Behaviour';
         newOpp.Type = 'New Account';
-        fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[] { newOpp }, new Map<Id, SObject> { newOpp.Id => oldOpp } );
-        try {
+        fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[]
+        {
+newOpp
+        }
+, new Map<Id, SObject>
+        {
+newOpp.Id => oldOpp
+        }
+);
+        try
+        {
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectOnValidateBehaviourConstructor.class);
             System.assert(false, 'Expected exception');
-        } catch (Exception e) {
+        }
+catch (Exception e)
+        {
             System.assertEquals('onValidate called', e.getMessage());
         }
     }
@@ -229,15 +310,24 @@ private with sharing class fflib_SObjectDomainTest
         Account acct1 = new Account ( Id = generateTestRecordId(Account.SObjectType), Name = 'Test1', AccountNumber = '12345', Site = 'Here'),
                 acct2 = new Account ( Id = generateTestRecordId(Account.SObjectType), Name = 'Test2', AccountNumber = '54321', Site = 'There');
         System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
-        fflib_SObjectDomain.Test.Database.onInsert(new Account[] { acct1, acct2 } );
+        fflib_SObjectDomain.Test.Database.onInsert(new Account[]
+        {
+acct1, acct2
+        }
+);
         System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectChangedRecordsConstructor.class);
         Account acct1changed = acct1.clone(),
                 acct2changed = acct2.clone();
         acct1changed.Name = 'Test1changed';
         fflib_SObjectDomain.Test.Database.onUpdate(
-            new Account[]{ acct1, acct2},
-            new Map<Id, Account>{
+            new Account[]
+            {
+acct1, acct2
+            }
+,
+            new Map<Id, Account>
+            {
                 acct1changed.Id => acct1,
                 acct2changed.Id => acct2
             }
@@ -258,7 +348,8 @@ private with sharing class fflib_SObjectDomainTest
                 new Account(Id = idLuke, Name = 'Luke', Description = 'Jedi'),
                 new Account(Id = idHan, Name = 'Han', Description = 'Pilot'),
                 new Account(Id = idLeia, Name = 'Leia')
-        };
+        }
+;
 
         List<Account> newRecords = oldRecords.deepClone(true, true, true);
         newRecords.get(0).Name = 'Luke SkyWalker';
@@ -296,7 +387,8 @@ private with sharing class fflib_SObjectDomainTest
                 new Account(Id = idLuke, Name = 'Luke', Description = 'Jedi'),
                 new Account(Id = idHan, Name = 'Han', Description = 'Pilot'),
                 new Account(Id = idLeia, Name = 'Leia')
-        };
+        }
+;
 
         List<Account> newRecords = oldRecords.deepClone(true, true, true);
         newRecords.get(0).Name = 'Luke SkyWalker';
@@ -337,9 +429,12 @@ private with sharing class fflib_SObjectDomainTest
         // Can only proceed with test if we can successfully insert a test user
         String testUsername = System.now().format('yyyyMMddhhmmss') + '@testorg.com';
         User testUser = new User(Alias = 'test1', Email='testuser1@testorg.com', EmailEncodingKey='UTF-8', LastName='Testing', LanguageLocaleKey='en_US', LocaleSidKey='en_US', ProfileId = testProfiles[0].Id, TimeZoneSidKey='America/Los_Angeles', UserName=testUsername);
-        try {
+        try
+        {
             insert testUser;
-        } catch (Exception e) {
+        }
+catch (Exception e)
+        {
             return null;
         }
         return testUser;
@@ -370,7 +465,11 @@ private with sharing class fflib_SObjectDomainTest
         try
         {
             fflib_SObjectDomain.getTriggerEvent(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class).disableAll();
-            fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[] { newOpp } );
+            fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[]
+            {
+newOpp
+            }
+);
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class);
         }
         catch (Exception e)
@@ -386,7 +485,11 @@ private with sharing class fflib_SObjectDomainTest
         {
             // now lets go after insert and then before
             fflib_SObjectDomain.getTriggerEvent(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class).enableAfterInsert();
-            fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[] { newOpp } );
+            fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[]
+            {
+newOpp
+            }
+);
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class);
         }
         catch (Exception e)
@@ -400,7 +503,11 @@ private with sharing class fflib_SObjectDomainTest
         {
             // now lets go after insert and then before
             fflib_SObjectDomain.getTriggerEvent(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class).enableBeforeInsert();
-            fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[] { newOpp } );
+            fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[]
+            {
+newOpp
+            }
+);
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class);
         }
         catch (Exception e)
@@ -416,7 +523,15 @@ private with sharing class fflib_SObjectDomainTest
         {
             // now lets go after insert and then before
             fflib_SObjectDomain.getTriggerEvent(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class).enableAfterUpdate();
-            fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[] { newOpp }, new Map<Id, SObject> { newOpp.Id => oldOpp } );
+            fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[]
+            {
+newOpp
+            }
+, new Map<Id, SObject>
+            {
+newOpp.Id => oldOpp
+            }
+);
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class);
         }
         catch (Exception e)
@@ -430,7 +545,15 @@ private with sharing class fflib_SObjectDomainTest
         {
             // now lets go after insert and then before
             fflib_SObjectDomain.getTriggerEvent(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class).enableBeforeUpdate();
-            fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[] { newOpp }, new Map<Id, SObject> { newOpp.Id => oldOpp } );
+            fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[]
+            {
+newOpp
+            }
+, new Map<Id, SObject>
+            {
+newOpp.Id => oldOpp
+            }
+);
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class);
         }
         catch (Exception e)
@@ -446,7 +569,11 @@ private with sharing class fflib_SObjectDomainTest
         {
             // now lets go after insert and then before
             fflib_SObjectDomain.getTriggerEvent(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class).enableAfterDelete();
-            fflib_SObjectDomain.Test.Database.onDelete(new Map<Id, Opportunity> { newOpp.Id => newOpp } );
+            fflib_SObjectDomain.Test.Database.onDelete(new Map<Id, Opportunity>
+            {
+newOpp.Id => newOpp
+            }
+);
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class);
         }
         catch (Exception e)
@@ -460,7 +587,11 @@ private with sharing class fflib_SObjectDomainTest
         {
             // now lets go after insert and then before
             fflib_SObjectDomain.getTriggerEvent(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class).enableBeforeDelete();
-            fflib_SObjectDomain.Test.Database.onDelete(new Map<Id, Opportunity> { newOpp.Id => newOpp } );
+            fflib_SObjectDomain.Test.Database.onDelete(new Map<Id, Opportunity>
+            {
+newOpp.Id => newOpp
+            }
+);
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class);
         }
         catch (Exception e)
@@ -476,7 +607,11 @@ private with sharing class fflib_SObjectDomainTest
         {
             // now lets go after insert and then before
             fflib_SObjectDomain.getTriggerEvent(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class).enableAfterUndelete();
-            fflib_SObjectDomain.Test.Database.onUndelete(new Opportunity[] { newOpp });
+            fflib_SObjectDomain.Test.Database.onUndelete(new Opportunity[]
+            {
+newOpp
+            }
+);
             fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDisableBehaviourConstructor.class);
         }
         catch (Exception e)

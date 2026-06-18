@@ -46,7 +46,8 @@ public virtual with sharing class fflib_SObjectDomain
     /**
      * Provides access to the data represented by this domain class
      **/
-    public List<SObject> Records {
+    public List<SObject> Records
+    {
         get
         {
             return getRecords();
@@ -83,17 +84,26 @@ public virtual with sharing class fflib_SObjectDomain
     /**
      * Exposes the configuration for this domain class instance
      **/
-    public Configuration Configuration {get; private set;}
+    public Configuration Configuration
+    {
+get; private set;
+    }
 
     /**
      * DEPRECATED, This property has been moved to fflib_SObjects
      **/
-    public static fflib_SObjectDomain.ErrorFactory Errors {get; private set;}
+    public static fflib_SObjectDomain.ErrorFactory Errors
+    {
+get; private set;
+    }
 
     /**
      * Useful during unit testing to access mock support for database inserts and updates (testing without DML)
      **/
-    public static TestFactory Test  {get; private set;}
+    public static TestFactory Test
+    {
+get; private set;
+    }
 
     /**
      * Retains instances of domain classes implementing trigger stateful
@@ -148,52 +158,72 @@ public virtual with sharing class fflib_SObjectDomain
     /**
      * Override this to apply defaults to the records, this is called by the handleBeforeInsert method
      **/
-    public virtual void onApplyDefaults() { }
+    public virtual void onApplyDefaults()
+    {
+    }
 
     /**
      * Override this to apply general validation to be performed during insert or update, called by the handleAfterInsert and handleAfterUpdate methods
      **/
-    public virtual void onValidate() {  }
+    public virtual void onValidate()
+    {
+    }
 
     /**
      * Override this to apply validation to be performed during insert, called by the handleAfterUpdate method
      **/
-    public virtual void onValidate(Map<Id,SObject> existingRecords) { }
+    public virtual void onValidate(Map<Id,SObject> existingRecords)
+    {
+    }
 
     /**
      * Override this to perform processing during the before insert phase, this is called by the handleBeforeInsert method
      **/
-    public virtual void onBeforeInsert() { }
+    public virtual void onBeforeInsert()
+    {
+    }
 
     /**
      * Override this to perform processing during the before update phase, this is called by the handleBeforeUpdate method
      **/
-    public virtual void onBeforeUpdate(Map<Id,SObject> existingRecords) { }
+    public virtual void onBeforeUpdate(Map<Id,SObject> existingRecords)
+    {
+    }
 
     /**
      * Override this to perform processing during the before delete phase, this is called by the handleBeforeDelete method
      **/
-    public virtual void onBeforeDelete() { }
+    public virtual void onBeforeDelete()
+    {
+    }
 
     /**
      * Override this to perform processing during the after insert phase, this is called by the handleAfterInsert method
      **/
-    public virtual void onAfterInsert() { }
+    public virtual void onAfterInsert()
+    {
+    }
 
     /**
      * Override this to perform processing during the after update phase, this is called by the handleAfterUpdate method
      **/
-    public virtual void onAfterUpdate(Map<Id,SObject> existingRecords) { }
+    public virtual void onAfterUpdate(Map<Id,SObject> existingRecords)
+    {
+    }
 
     /**
      * Override this to perform processing during the after delete phase, this is called by the handleAfterDelete method
      **/
-    public virtual void onAfterDelete() { }
+    public virtual void onAfterDelete()
+    {
+    }
 
     /**
      * Override this to perform processing during the after undelete phase, this is called by the handleAfterDelete method
      **/
-    public virtual void onAfterUndelete() { }
+    public virtual void onAfterUndelete()
+    {
+    }
 
     /**
      * Base handler for the Apex Trigger event Before Insert, calls the onApplyDefaults method, followed by onBeforeInsert
@@ -424,10 +454,22 @@ public virtual with sharing class fflib_SObjectDomain
             IConstructable domainConstructor = (IConstructable) constructableClass.newInstance();
 
             // Construct the domain class with the approprite record set
-            if(isInsert) { domainObject = domainConstructor.construct(newRecords); }
-            else if(isUpdate) { domainObject = domainConstructor.construct(newRecords); }
-            else if(isDelete) { domainObject = domainConstructor.construct(oldRecordsMap.values()); }
-            else if(isUndelete) { domainObject = domainConstructor.construct(newRecords); }
+            if(isInsert)
+            {
+domainObject = domainConstructor.construct(newRecords);
+            }
+            else if(isUpdate)
+            {
+domainObject = domainConstructor.construct(newRecords);
+            }
+            else if(isDelete)
+            {
+domainObject = domainConstructor.construct(oldRecordsMap.values());
+            }
+            else if(isUndelete)
+            {
+domainObject = domainConstructor.construct(newRecords);
+            }
 
             // Should this instance be reused on the next trigger invocation?
             if(domainObject.Configuration.TriggerStateEnabled)
@@ -446,16 +488,37 @@ public virtual with sharing class fflib_SObjectDomain
         // Invoke the applicable handler
         if(isBefore)
         {
-            if(isInsert) { domainObject.handleBeforeInsert(); }
-            else if(isUpdate) { domainObject.handleBeforeUpdate(oldRecordsMap); }
-            else if(isDelete) { domainObject.handleBeforeDelete(); }
+            if(isInsert)
+            {
+domainObject.handleBeforeInsert();
+            }
+            else if(isUpdate)
+            {
+domainObject.handleBeforeUpdate(oldRecordsMap);
+            }
+            else if(isDelete)
+            {
+domainObject.handleBeforeDelete();
+            }
         }
         else
         {
-            if(isInsert) { domainObject.handleAfterInsert(); }
-            else if(isUpdate) { domainObject.handleAfterUpdate(oldRecordsMap); }
-            else if(isDelete) { domainObject.handleAfterDelete(); }
-            else if(isUndelete) { domainObject.handleAfterUndelete(); }
+            if(isInsert)
+            {
+domainObject.handleAfterInsert();
+            }
+            else if(isUpdate)
+            {
+domainObject.handleAfterUpdate(oldRecordsMap);
+            }
+            else if(isDelete)
+            {
+domainObject.handleAfterDelete();
+            }
+            else if(isUndelete)
+            {
+domainObject.handleAfterUndelete();
+            }
         }
     }
 
@@ -500,14 +563,35 @@ public virtual with sharing class fflib_SObjectDomain
 
     public class TriggerEvent
     {
-        public boolean BeforeInsertEnabled {get; private set;}
-        public boolean BeforeUpdateEnabled {get; private set;}
-        public boolean BeforeDeleteEnabled {get; private set;}
+        public boolean BeforeInsertEnabled
+        {
+get; private set;
+        }
+        public boolean BeforeUpdateEnabled
+        {
+get; private set;
+        }
+        public boolean BeforeDeleteEnabled
+        {
+get; private set;
+        }
 
-        public boolean AfterInsertEnabled {get; private set;}
-        public boolean AfterUpdateEnabled {get; private set;}
-        public boolean AfterDeleteEnabled {get; private set;}
-        public boolean AfterUndeleteEnabled {get; private set;}
+        public boolean AfterInsertEnabled
+        {
+get; private set;
+        }
+        public boolean AfterUpdateEnabled
+        {
+get; private set;
+        }
+        public boolean AfterDeleteEnabled
+        {
+get; private set;
+        }
+        public boolean AfterUndeleteEnabled
+        {
+get; private set;
+        }
 
         public TriggerEvent()
         {
@@ -515,25 +599,67 @@ public virtual with sharing class fflib_SObjectDomain
         }
 
         // befores
-        public TriggerEvent enableBeforeInsert() {BeforeInsertEnabled = true; return this;}
-        public TriggerEvent enableBeforeUpdate() {BeforeUpdateEnabled = true; return this;}
-        public TriggerEvent enableBeforeDelete() {BeforeDeleteEnabled = true; return this;}
+        public TriggerEvent enableBeforeInsert()
+        {
+BeforeInsertEnabled = true; return this;
+        }
+        public TriggerEvent enableBeforeUpdate()
+        {
+BeforeUpdateEnabled = true; return this;
+        }
+        public TriggerEvent enableBeforeDelete()
+        {
+BeforeDeleteEnabled = true; return this;
+        }
 
-        public TriggerEvent disableBeforeInsert() {BeforeInsertEnabled = false; return this;}
-        public TriggerEvent disableBeforeUpdate() {BeforeUpdateEnabled = false; return this;}
-        public TriggerEvent disableBeforeDelete() {BeforeDeleteEnabled = false; return this;}
+        public TriggerEvent disableBeforeInsert()
+        {
+BeforeInsertEnabled = false; return this;
+        }
+        public TriggerEvent disableBeforeUpdate()
+        {
+BeforeUpdateEnabled = false; return this;
+        }
+        public TriggerEvent disableBeforeDelete()
+        {
+BeforeDeleteEnabled = false; return this;
+        }
 
         // afters
-        public TriggerEvent enableAfterInsert()     {AfterInsertEnabled     = true; return this;}
-        public TriggerEvent enableAfterUpdate()     {AfterUpdateEnabled     = true; return this;}
-        public TriggerEvent enableAfterDelete()     {AfterDeleteEnabled     = true; return this;}
-        public TriggerEvent enableAfterUndelete() {AfterUndeleteEnabled     = true; return this;}
+        public TriggerEvent enableAfterInsert()
+        {
+AfterInsertEnabled     = true; return this;
+        }
+        public TriggerEvent enableAfterUpdate()
+        {
+AfterUpdateEnabled     = true; return this;
+        }
+        public TriggerEvent enableAfterDelete()
+        {
+AfterDeleteEnabled     = true; return this;
+        }
+        public TriggerEvent enableAfterUndelete()
+        {
+AfterUndeleteEnabled     = true; return this;
+        }
 
 
-        public TriggerEvent disableAfterInsert()    {AfterInsertEnabled     = false; return this;}
-        public TriggerEvent disableAfterUpdate()    {AfterUpdateEnabled     = false; return this;}
-        public TriggerEvent disableAfterDelete()    {AfterDeleteEnabled     = false; return this;}
-        public TriggerEvent disableAfterUndelete(){AfterUndeleteEnabled     = false; return this;}
+        public TriggerEvent disableAfterInsert()
+        {
+AfterInsertEnabled     = false; return this;
+        }
+        public TriggerEvent disableAfterUpdate()
+        {
+AfterUpdateEnabled     = false; return this;
+        }
+        public TriggerEvent disableAfterDelete()
+        {
+AfterDeleteEnabled     = false; return this;
+        }
+        public TriggerEvent disableAfterUndelete()
+        {
+AfterUndeleteEnabled     = false; return this;
+        }
 
         public TriggerEvent enableAll()
         {
@@ -569,16 +695,37 @@ public virtual with sharing class fflib_SObjectDomain
         {
             if(isBefore)
             {
-                if(isInsert) { return BeforeInsertEnabled; }
-                else if(isUpdate) { return BeforeUpdateEnabled; }
-                else if(isDelete) { return BeforeDeleteEnabled; }
+                if(isInsert)
+                {
+return BeforeInsertEnabled;
+                }
+                else if(isUpdate)
+                {
+return BeforeUpdateEnabled;
+                }
+                else if(isDelete)
+                {
+return BeforeDeleteEnabled;
+                }
             }
             else if(isAfter)
             {
-                if(isInsert) { return AfterInsertEnabled; }
-                else if(isUpdate) { return AfterUpdateEnabled; }
-                else if(isDelete) { return AfterDeleteEnabled; }
-                else if(isUndelete) { return AfterUndeleteEnabled; }
+                if(isInsert)
+                {
+return AfterInsertEnabled;
+                }
+                else if(isUpdate)
+                {
+return AfterUpdateEnabled;
+                }
+                else if(isDelete)
+                {
+return AfterDeleteEnabled;
+                }
+                else if(isUndelete)
+                {
+return AfterUndeleteEnabled;
+                }
             }
             return true; // shouldnt ever get here!
         }
@@ -592,16 +739,25 @@ public virtual with sharing class fflib_SObjectDomain
         /**
          * Backwards compatibility mode for handleAfterUpdate routing to onValidate()
          **/
-        public Boolean OldOnUpdateValidateBehaviour {get; private set;}
+        public Boolean OldOnUpdateValidateBehaviour
+        {
+get; private set;
+        }
         /**
          * True if the base class is checking the users CRUD requirements before invoking trigger methods
          **/
-        public Boolean EnforcingTriggerCRUDSecurity {get; private set;}
+        public Boolean EnforcingTriggerCRUDSecurity
+        {
+get; private set;
+        }
 
         /**
          * Enables reuse of the same Domain instance between before and after trigger phases (subject to recursive scenarios)
          **/
-        public Boolean TriggerStateEnabled {get; private set;}
+        public Boolean TriggerStateEnabled
+        {
+get; private set;
+        }
 
         /**
          * Default configuration
@@ -1103,37 +1259,44 @@ public virtual with sharing class fflib_SObjectDomain
             super(sObjectList);
         }
 
-        public override void onAfterInsert() {
+        public override void onAfterInsert()
+        {
             // Throw exception to give the test somethign to assert on
             throw new DomainException('onAfterInsert called');
         }
 
-        public override void onBeforeInsert() {
+        public override void onBeforeInsert()
+        {
             // Throw exception to give the test somethign to assert on
             throw new DomainException('onBeforeInsert called');
         }
 
-        public override void onAfterUpdate(map<id, SObject> existing) {
+        public override void onAfterUpdate(map<id, SObject> existing)
+        {
             // Throw exception to give the test somethign to assert on
             throw new DomainException('onAfterUpdate called');
         }
 
-        public override void onBeforeUpdate(map<id, SObject> existing) {
+        public override void onBeforeUpdate(map<id, SObject> existing)
+        {
             // Throw exception to give the test somethign to assert on
             throw new DomainException('onBeforeUpdate called');
         }
 
-        public override void onAfterDelete() {
+        public override void onAfterDelete()
+        {
             // Throw exception to give the test somethign to assert on
             throw new DomainException('onAfterDelete called');
         }
 
-        public override void onBeforeDelete() {
+        public override void onBeforeDelete()
+        {
             // Throw exception to give the test somethign to assert on
             throw new DomainException('onBeforeDelete called');
         }
 
-        public override void onAfterUndelete() {
+        public override void onAfterUndelete()
+        {
             // Throw exception to give the test somethign to assert on
             throw new DomainException('onAfterUndelete called');
         }

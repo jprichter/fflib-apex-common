@@ -27,19 +27,25 @@
 /**
  * Class providing common database query support for abstracting and encapsulating query logic
  **/
-@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.LocalVariableNamingConventions, PMD.ApexDoc')
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.LocalVariableNamingConventions, PMD.ApexDoc, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.ExcessivePublicCount')
 public abstract with sharing class fflib_SObjectSelector
     implements fflib_ISObjectSelector
 {
-    public enum DataAccess{LEGACY, USER_MODE, SYSTEM_MODE}
+    public enum DataAccess
+    {
+LEGACY, USER_MODE, SYSTEM_MODE
+    }
 
     /**
      * Indicates whether the sObject has the currency ISO code field for organisations which have multi-currency
      * enabled.
      **/
-    private Boolean CURRENCY_ISO_CODE_ENABLED {
-        get {
-            if(CURRENCY_ISO_CODE_ENABLED == null){
+    private Boolean CURRENCY_ISO_CODE_ENABLED
+    {
+        get
+        {
+            if(CURRENCY_ISO_CODE_ENABLED == null)
+            {
                 CURRENCY_ISO_CODE_ENABLED = describeWrapper.getFieldsMap().keySet().contains('currencyisocode');
             }
             return CURRENCY_ISO_CODE_ENABLED;
@@ -78,8 +84,10 @@ public abstract with sharing class fflib_SObjectSelector
     /**
      * Describe helper
      **/
-    private fflib_SObjectDescribe describeWrapper {
-    get {
+    private fflib_SObjectDescribe describeWrapper
+    {
+    get
+    {
         if(describeWrapper == null)
         {
             describeWrapper = fflib_SObjectDescribe.getDescribe(getSObjectType());
@@ -107,7 +115,9 @@ public abstract with sharing class fflib_SObjectSelector
     /**
      * Constructs the Selector with the default settings
      **/
-    public fflib_SObjectSelector() { }
+    public fflib_SObjectSelector()
+    {
+    }
 
     /**
      * Constructs the Selector
@@ -183,13 +193,15 @@ public abstract with sharing class fflib_SObjectSelector
             else
             {
                 m_orderBy = DEFAULT_SORT_FIELD;
-                try {
+                try
+                {
                     if (describeWrapper.getField(m_orderBy) == null)
                     {
                         m_orderBy = SF_ID_FIELD;
                     }
                 }
-                catch(fflib_QueryFactory.InvalidFieldException ex) {
+                catch(fflib_QueryFactory.InvalidFieldException ex)
+                {
                     m_orderBy = SF_ID_FIELD;
                 }
             }
@@ -233,11 +245,13 @@ public abstract with sharing class fflib_SObjectSelector
         return this;
     }
 
-    public fflib_SObjectSelector setDataAccess(DataAccess access){
+    public fflib_SObjectSelector setDataAccess(DataAccess access)
+    {
         this.m_dataAccess = access;
 
         //You can't mix and match the legacy enforceFls and assertCRUD with the SYSTEM_MODE or USER_MODE
-        if(this.m_dataAccess != DataAccess.LEGACY){
+        if(this.m_dataAccess != DataAccess.LEGACY)
+        {
             ignoreCRUD();
             m_enforceFLS = false;
         }
@@ -269,7 +283,8 @@ public abstract with sharing class fflib_SObjectSelector
         return m_enforceCRUD;
     }
 
-    public DataAccess getDataAccess(){
+    public DataAccess getDataAccess()
+    {
         return m_dataAccess;
     }
 
@@ -433,11 +448,13 @@ public abstract with sharing class fflib_SObjectSelector
      public void configureQueryFactoryFields(fflib_QueryFactory queryFactory, String relationshipFieldPath)
      {
     // Add fields from selector prefixing the relationship path
-        for(SObjectField field : getSObjectFieldList()) {
+        for(SObjectField field : getSObjectFieldList())
+        {
             queryFactory.selectField(relationshipFieldPath + '.' + field.getDescribe().getName(), this.getSObjectType());
         }
         // Automatically select the CurrencyIsoCode for MC orgs (unless the object is a known exception to the rule)
-        if(isCurrencyIsoCodeAvailable()){
+        if(isCurrencyIsoCodeAvailable())
+        {
             queryFactory.selectField(relationshipFieldPath+'.CurrencyIsoCode', getSObjectType());
         }
      }
@@ -502,10 +519,13 @@ public abstract with sharing class fflib_SObjectSelector
         // Legacy CRUD enforcement required?
         if (assertCRUD)
         {
-            try {
+            try
+            {
                 // Leverage QueryFactory for CRUD checking
                 queryFactory.assertIsAccessible();
-            } catch (fflib_SecurityUtils.CrudException e) {
+            }
+catch (fflib_SecurityUtils.CrudException e)
+            {
                 // Marshal exception into DomainException for backwards compatibility
                 throw new fflib_SObjectDomain.DomainException(
                     'Permission to access an ' + getSObjectType().getDescribe().getName() + ' denied.');
@@ -513,13 +533,16 @@ public abstract with sharing class fflib_SObjectSelector
         }
 
         fflib_QueryFactory.FLSEnforcement fls = fflib_QueryFactory.FLSEnforcement.NONE;
-        if(access == DataAccess.USER_MODE){
+        if(access == DataAccess.USER_MODE)
+        {
             fls = fflib_QueryFactory.FLSEnforcement.USER_MODE;
         }
-        else if(access == DataAccess.SYSTEM_MODE){
+        else if(access == DataAccess.SYSTEM_MODE)
+        {
             fls = fflib_QueryFactory.FLSEnforcement.SYSTEM_MODE;
         }
-        else if(enforceFLS){
+        else if(enforceFLS)
+        {
             fls = fflib_QueryFactory.FLSEnforcement.LEGACY;
         }
 
@@ -578,7 +601,8 @@ public abstract with sharing class fflib_SObjectSelector
      * Returns true if the CurrencyIsoCode field is available on this SObject
      */
     @TestVisible
-    private Boolean isCurrencyIsoCodeAvailable() {
+    private Boolean isCurrencyIsoCodeAvailable()
+    {
         return UserInfo.isMultiCurrencyOrganization() && CURRENCY_ISO_CODE_ENABLED;
     }
 }

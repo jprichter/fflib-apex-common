@@ -37,7 +37,9 @@ public virtual class fflib_StringBuilder
     /**
      * Construct an empty StringBuilder
      **/
-    public fflib_StringBuilder() {}
+    public fflib_StringBuilder()
+    {
+    }
 
     /**
      * Construct a StringBuilder with the given values
@@ -84,7 +86,9 @@ public virtual class fflib_StringBuilder
         String itemPrefix = '';
         String delimiter = ',';
 
-        public CommaDelimitedListBuilder() {}
+        public CommaDelimitedListBuilder()
+        {
+        }
 
         public CommaDelimitedListBuilder(List<String> values)
         {

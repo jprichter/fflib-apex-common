@@ -25,7 +25,7 @@
 **/
 
 @IsTest
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.PropertyNamingConventions')
 private class fflib_ObjectsTest
 {
     private static final fflib_ObjectsTest.DataTransferObject TRANSFER_OBJECT_A = new DataTransferObject('Test A');
@@ -88,7 +88,8 @@ private class fflib_ObjectsTest
                 {
                         TRANSFER_OBJECT_A,
                         TRANSFER_OBJECT_B
-                });
+                }
+);
 
         System.assert(
                 dtoDomain.containsNot(
@@ -96,7 +97,8 @@ private class fflib_ObjectsTest
                         {
                                 TRANSFER_OBJECT_C,
                                 TRANSFER_OBJECT_D
-                        }),
+                        }
+),
                 'The set of objects should not have been part of the domain'
         );
         System.assert(
@@ -105,7 +107,8 @@ private class fflib_ObjectsTest
                         {
                                 TRANSFER_OBJECT_C,
                                 TRANSFER_OBJECT_D
-                        }),
+                        }
+),
                 'The list of objects should not have been part of the domain'
         );
     }
@@ -171,7 +174,8 @@ private class fflib_ObjectsTest
                 TRANSFER_OBJECT_A,
                 TRANSFER_OBJECT_B,
                 TRANSFER_OBJECT_C
-        };
+        }
+;
     }
 
     private class Domain extends fflib_Objects
@@ -189,7 +193,10 @@ private class fflib_ObjectsTest
 
     private class DataTransferObject
     {
-        public String MyProperty { get; set; }
+        public String MyProperty
+        {
+get; set;
+        }
 
         public DataTransferObject(String property)
         {
