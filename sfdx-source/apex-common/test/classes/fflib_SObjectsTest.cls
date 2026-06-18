@@ -121,7 +121,7 @@ idA, idB, idC
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectByShippingCountry('USA').size() == 1);
+        System.assert(domain.selectByShippingCountry('USA').size() == 1, 'it Should Return Records With Field Values should satisfy domain.selectByShippingCountry(USA).size() == 1');
     }
 
     @IsTest
@@ -129,14 +129,14 @@ idA, idB, idC
     {
         DomainAccounts domain = generateDomain();
 
-        System.assertEquals(3, domain.selectWithoutShippingCountry().size());
+        System.assertEquals(3, domain.selectWithoutShippingCountry().size(), 'it Should Return Records Without Field Values should produce 3');
     }
     @IsTest
     static void itShouldReturnRecordsWithoutFieldValuesForNonStringFields()
     {
         DomainAccounts domain = generateDomain();
 
-        System.assertEquals(4, domain.selectWithoutNumberOfEmployees().size());
+        System.assertEquals(4, domain.selectWithoutNumberOfEmployees().size(), 'it Should Return Records Without Field Values For Non String Fields should produce 4');
     }
 
     @IsTest
@@ -144,7 +144,7 @@ idA, idB, idC
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectWithEmptyRecord().size() == 1);
+        System.assert(domain.selectWithEmptyRecord().size() == 1, 'it Should Return Records Without All Field Values should satisfy domain.selectWithEmptyRecord().size() == 1');
     }
 
     @IsTest
@@ -152,14 +152,14 @@ idA, idB, idC
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectWithShippingCountry().size() == 4);
+        System.assert(domain.selectWithShippingCountry().size() == 4, 'it Should Return Records With Shipping Country should satisfy domain.selectWithShippingCountry().size() == 4');
     }
     @IsTest
     static void itShouldReturnRecordsWithNumberOfEmployees()
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectWithNumberOfEmployees().size() == 3);
+        System.assert(domain.selectWithNumberOfEmployees().size() == 3, 'it Should Return Records With Number Of Employees should satisfy domain.selectWithNumberOfEmployees().size() == 3');
     }
 
     @IsTest
@@ -167,7 +167,7 @@ idA, idB, idC
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectPopulatedRecords().size() == 2);
+        System.assert(domain.selectPopulatedRecords().size() == 2, 'it Should Return Records With All Field Values should satisfy domain.selectPopulatedRecords().size() == 2');
     }
 
     @IsTest
@@ -187,12 +187,12 @@ idA, idB, idC
 ;
         System.assert(
                 domain.getStringFieldValues(Schema.Account.ShippingCountry).equals(expected)
-        );
+        , 'it Should Return Field Values should satisfy domain.getStringFieldValues(Schema.Account.ShippingCountry).equals(ex...');
 
         System.assert(
                 domain.getFieldValues(Schema.Account.ShippingCountry)
                         .equals(expected)
-        );
+        , 'it Should Return Field Values should satisfy domain.getFieldValues(Schema.Account.ShippingCountry) .equals(expected)');
     }
 
     @IsTest
@@ -212,7 +212,7 @@ idA, idB, idC
         System.assert(
                 domain.getFieldValues(Schema.Account.NumberOfEmployees)
                         .equals(expectedOriginalType)
-        );
+        , 'it Should Return Field Values For Non String Fields should satisfy domain.getFieldValues(Schema.Account.NumberOfEmployees) .equals(expec...');
     }
 
     @IsTest
@@ -239,7 +239,7 @@ idA, idB, idC
         String country = 'Holland';
         domain.setShippingCountry(country);
 
-        System.assert(domain.selectByShippingCountry(country).size() == 7);
+        System.assert(domain.selectByShippingCountry(country).size() == 7, 'it Should Set Field Value should satisfy domain.selectByShippingCountry(country).size() == 7');
     }
 
 
@@ -254,7 +254,7 @@ idA, idB, idC
                 }
         );
 
-        System.assert(domain.selectByRating('Hot').size() == 1);
+        System.assert(domain.selectByRating('Hot').size() == 1, 'it Should Set Field Value By Condition should satisfy domain.selectByRating(Hot).size() == 1');
     }
 
     @IsTest
@@ -276,9 +276,9 @@ Schema.Account.ShippingCountry
         }
 );
 
-        System.assertEquals(2, domain.getRecords().size());
-        System.assertEquals(null, recordA.ShippingCountry);
-        System.assertEquals(null, recordB.ShippingCountry);
+        System.assertEquals(2, domain.getRecords().size(), 'it Should Allow Bulk Mutators From Outside Domain Hierarchy should produce 2');
+        System.assertEquals(null, recordA.ShippingCountry, 'it Should Allow Bulk Mutators From Outside Domain Hierarchy should produce null');
+        System.assertEquals(null, recordB.ShippingCountry, 'it Should Allow Bulk Mutators From Outside Domain Hierarchy should produce null');
     }
 
     @IsTest
@@ -294,9 +294,9 @@ record
 );
         domain.addNameError(errorMessage);
 
-        System.assertEquals(1, fflib_SObjects.Errors.getAll().size());
-        System.assertEquals(errorMessage, fflib_SObjects.Errors.getAll()[0].message);
-        System.assertEquals(Account.Name, ((fflib_SObjects.FieldError) fflib_SObjects.Errors.getAll()[0]).field);
+        System.assertEquals(1, fflib_SObjects.Errors.getAll().size(), 'test Domain Error Logging should produce 1');
+        System.assertEquals(errorMessage, fflib_SObjects.Errors.getAll()[0].message, 'test Domain Error Logging should produce errorMessage');
+        System.assertEquals(Account.Name, ((fflib_SObjects.FieldError) fflib_SObjects.Errors.getAll()[0]).field, 'test Domain Error Logging should produce Account.Name');
     }
 
     @IsTest
@@ -306,12 +306,12 @@ record
         Opportunity opp = new Opportunity ( Name = 'Test', Type = 'Existing Account' );
         fflib_SObjects.Errors.error('Error', opp);
         fflib_SObjects.Errors.error('Error', opp, Opportunity.Type);
-        System.assertEquals(2, fflib_SObjects.Errors.getAll().size());
-        System.assertEquals('Error', fflib_SObjects.Errors.getAll()[0].message);
-        System.assertEquals('Error', fflib_SObjects.Errors.getAll()[1].message);
-        System.assertEquals(Opportunity.Type, ((fflib_SObjects.FieldError) fflib_SObjects.Errors.getAll()[1]).field);
+        System.assertEquals(2, fflib_SObjects.Errors.getAll().size(), 'test Error Logging should produce 2');
+        System.assertEquals('Error', fflib_SObjects.Errors.getAll()[0].message, 'test Error Logging should produce Error');
+        System.assertEquals('Error', fflib_SObjects.Errors.getAll()[1].message, 'test Error Logging should produce Error');
+        System.assertEquals(Opportunity.Type, ((fflib_SObjects.FieldError) fflib_SObjects.Errors.getAll()[1]).field, 'test Error Logging should produce Opportunity.Type');
         fflib_SObjects.Errors.clearAll();
-        System.assertEquals(0, fflib_SObjects.Errors.getAll().size());
+        System.assertEquals(0, fflib_SObjects.Errors.getAll().size(), 'test Error Logging should produce 0');
     }
 
     private static DomainAccounts generateDomain()

@@ -25,7 +25,7 @@
 **/
 
 @IsTest
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.NcssCount')
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.NcssCount, PMD.NcssMethodCount')
 private with sharing class fflib_SObjectDomainTest
 {
     private static final String TEST_ID_PADDING = '000000000000';
@@ -49,35 +49,35 @@ new Opportunity ( Name = 'Test', Type = 'Existing Account' )
         }
 );
         opps.onValidate();
-        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
-        System.assertEquals('You must provide an Account for Opportunities for existing Customers.', fflib_SObjectDomain.Errors.getAll()[0].message);
-        System.assertEquals(Opportunity.AccountId, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field);
+        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size(), 'test Validation Without DML should produce 1');
+        System.assertEquals('You must provide an Account for Opportunities for existing Customers.', fflib_SObjectDomain.Errors.getAll()[0].message, 'test Validation Without DML should produce You must provide an Account for Opportunities for existing Customers.');
+        System.assertEquals(Opportunity.AccountId, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field, 'test Validation Without DML should produce Opportunity.AccountId');
 
         opps = new fflib_SObjectDomain.TestSObjectDomain(new SObject[]
         {
 new Opportunity ( Name = 'Test', Type = 'Existing Account' )
         }
 , Opportunity.SObjectType );
-        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
-        System.assertEquals('You must provide an Account for Opportunities for existing Customers.', fflib_SObjectDomain.Errors.getAll()[0].message);
-        System.assertEquals(Opportunity.AccountId, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field);
+        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size(), 'test Validation Without DML should produce 1');
+        System.assertEquals('You must provide an Account for Opportunities for existing Customers.', fflib_SObjectDomain.Errors.getAll()[0].message, 'test Validation Without DML should produce You must provide an Account for Opportunities for existing Customers.');
+        System.assertEquals(Opportunity.AccountId, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field, 'test Validation Without DML should produce Opportunity.AccountId');
     }
 
     @IsTest
     private static void testInsertValidationFailedWithoutDML()
     {
         Opportunity opp = new Opportunity ( Name = 'Test', Type = 'Existing Account' );
-        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords(), 'test Insert Validation Failed Without DML should produce false');
         fflib_SObjectDomain.Test.Database.onInsert(new Opportunity[]
         {
 opp
         }
 );
-        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords(), 'test Insert Validation Failed Without DML should produce true');
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
-        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
-        System.assertEquals('You must provide an Account for Opportunities for existing Customers.', fflib_SObjectDomain.Errors.getAll()[0].message);
-        System.assertEquals(Opportunity.AccountId, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field);
+        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size(), 'test Insert Validation Failed Without DML should produce 1');
+        System.assertEquals('You must provide an Account for Opportunities for existing Customers.', fflib_SObjectDomain.Errors.getAll()[0].message, 'test Insert Validation Failed Without DML should produce You must provide an Account for Opportunities for existing Customers.');
+        System.assertEquals(Opportunity.AccountId, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field, 'test Insert Validation Failed Without DML should produce Opportunity.AccountId');
     }
 
     @IsTest
@@ -89,7 +89,7 @@ opp
             Opportunity newOpp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
         newOpp.Name = 'Test';
         newOpp.Type = 'New Account';
-        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords(), 'test Update Validation Failed Without DML should produce false');
         fflib_SObjectDomain.Test.Database.onUpdate(new Opportunity[]
         {
 newOpp
@@ -99,11 +99,11 @@ newOpp
 newOpp.Id => oldOpp
         }
 );
-        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords(), 'test Update Validation Failed Without DML should produce true');
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
-        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
-        System.assertEquals('You cannot change the Opportunity type once it has been created.', fflib_SObjectDomain.Errors.getAll()[0].message);
-        System.assertEquals(Opportunity.Type, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field);
+        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size(), 'test Update Validation Failed Without DML should produce 1');
+        System.assertEquals('You cannot change the Opportunity type once it has been created.', fflib_SObjectDomain.Errors.getAll()[0].message, 'test Update Validation Failed Without DML should produce You cannot change the Opportunity type once it has been created.');
+        System.assertEquals(Opportunity.Type, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[0]).field, 'test Update Validation Failed Without DML should produce Opportunity.Type');
     }
 
     @IsTest
@@ -112,16 +112,16 @@ newOpp.Id => oldOpp
             Opportunity opp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
         opp.Name = 'Test';
         opp.Type = 'Existing Account';
-        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords(), 'test On Before Delete Without DML should produce false');
         fflib_SObjectDomain.Test.Database.onDelete(new Map<ID, Opportunity>
         {
 opp.Id => opp
         }
 );
-        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords(), 'test On Before Delete Without DML should produce true');
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
-        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
-        System.assertEquals('You cannot delete this Opportunity.', fflib_SObjectDomain.Errors.getAll()[0].message);
+        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size(), 'test On Before Delete Without DML should produce 1');
+        System.assertEquals('You cannot delete this Opportunity.', fflib_SObjectDomain.Errors.getAll()[0].message, 'test On Before Delete Without DML should produce You cannot delete this Opportunity.');
     }
 
     @IsTest
@@ -130,13 +130,13 @@ opp.Id => opp
             Opportunity opp = (Opportunity) Opportunity.sObjectType.newSObject(generateTestRecordId(Opportunity.SObjectType));
         opp.Name = 'Test';
         opp.Type = 'Existing Account';
-        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords(), 'test On After Undelete Without DML should produce false');
         fflib_SObjectDomain.Test.Database.onUndelete(new list<Opportunity>
         {
 opp
         }
 );
-        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords(), 'test On After Undelete Without DML should produce true');
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectDomainConstructor.class);
     }
 
@@ -165,7 +165,7 @@ opp
             }
 catch (Exception e)
             {
-                System.assertEquals('Permission to create an Opportunity denied.', e.getMessage());
+                System.assertEquals('Permission to create an Opportunity denied.', e.getMessage(), 'test Object Security should produce Permission to create an Opportunity denied.');
             }
 
             // Test Update object security
@@ -188,7 +188,7 @@ opp.Id => opp
             }
 catch (Exception e)
             {
-                System.assertEquals('Permission to update an Opportunity denied.', e.getMessage());
+                System.assertEquals('Permission to update an Opportunity denied.', e.getMessage(), 'test Object Security should produce Permission to update an Opportunity denied.');
             }
 
             // Test Delete object security
@@ -204,7 +204,7 @@ opp.Id => opp
             }
 catch (Exception e)
             {
-                System.assertEquals('Permission to delete an Opportunity denied.', e.getMessage());
+                System.assertEquals('Permission to delete an Opportunity denied.', e.getMessage(), 'test Object Security should produce Permission to delete an Opportunity denied.');
             }
         }
     }
@@ -216,12 +216,12 @@ catch (Exception e)
         Opportunity opp = new Opportunity ( Name = 'Test', Type = 'Existing Account' );
         fflib_SObjectDomain.Errors.error('Error', opp);
         fflib_SObjectDomain.Errors.error('Error', opp, Opportunity.Type);
-        System.assertEquals(2, fflib_SObjectDomain.Errors.getAll().size());
-        System.assertEquals('Error', fflib_SObjectDomain.Errors.getAll()[0].message);
-        System.assertEquals('Error', fflib_SObjectDomain.Errors.getAll()[1].message);
-        System.assertEquals(Opportunity.Type, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[1]).field);
+        System.assertEquals(2, fflib_SObjectDomain.Errors.getAll().size(), 'test Error Logging should produce 2');
+        System.assertEquals('Error', fflib_SObjectDomain.Errors.getAll()[0].message, 'test Error Logging should produce Error');
+        System.assertEquals('Error', fflib_SObjectDomain.Errors.getAll()[1].message, 'test Error Logging should produce Error');
+        System.assertEquals(Opportunity.Type, ((fflib_SObjectDomain.FieldError)fflib_SObjectDomain.Errors.getAll()[1]).field, 'test Error Logging should produce Opportunity.Type');
         fflib_SObjectDomain.Errors.clearAll();
-        System.assertEquals(0, fflib_SObjectDomain.Errors.getAll().size());
+        System.assertEquals(0, fflib_SObjectDomain.Errors.getAll().size(), 'test Error Logging should produce 0');
     }
 
     @IsTest
@@ -234,8 +234,8 @@ opp
         }
 );
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectStatefulDomainConstructor.class);
-        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size());
-        System.assertEquals('Error on Record Test', fflib_SObjectDomain.Errors.getAll()[0].message);
+        System.assertEquals(1, fflib_SObjectDomain.Errors.getAll().size(), 'test Trigger State should produce 1');
+        System.assertEquals('Error on Record Test', fflib_SObjectDomain.Errors.getAll()[0].message, 'test Trigger State should produce Error on Record Test');
     }
 
     @IsTest
@@ -248,9 +248,9 @@ opp
         }
 );
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectStatefulDomainConstructor.class);
-        System.assertEquals(2, fflib_SObjectDomain.Errors.getAll().size());
-        System.assertEquals('Error on Record Test Recursive 2', fflib_SObjectDomain.Errors.getAll()[0].message);
-        System.assertEquals('Error on Record Test Recursive 1', fflib_SObjectDomain.Errors.getAll()[1].message);
+        System.assertEquals(2, fflib_SObjectDomain.Errors.getAll().size(), 'test Recursive Trigger State should produce 2');
+        System.assertEquals('Error on Record Test Recursive 2', fflib_SObjectDomain.Errors.getAll()[0].message, 'test Recursive Trigger State should produce Error on Record Test Recursive 2');
+        System.assertEquals('Error on Record Test Recursive 1', fflib_SObjectDomain.Errors.getAll()[1].message, 'test Recursive Trigger State should produce Error on Record Test Recursive 1');
     }
 
     @IsTest
@@ -272,7 +272,7 @@ newOpp.Id => oldOpp
         }
 );
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectOnValidateBehaviourConstructor.class);
-        System.assertEquals(0, fflib_SObjectDomain.Errors.getAll().size());
+        System.assertEquals(0, fflib_SObjectDomain.Errors.getAll().size(), 'test On Validate Behavior Default should produce 0');
     }
 
     @IsTest
@@ -300,7 +300,7 @@ newOpp.Id => oldOpp
         }
 catch (Exception e)
         {
-            System.assertEquals('onValidate called', e.getMessage());
+            System.assertEquals('onValidate called', e.getMessage(), 'test On Validate Behavior Old should produce onValidate called');
         }
     }
 
@@ -309,13 +309,13 @@ catch (Exception e)
     {
         Account acct1 = new Account ( Id = generateTestRecordId(Account.SObjectType), Name = 'Test1', AccountNumber = '12345', Site = 'Here'),
                 acct2 = new Account ( Id = generateTestRecordId(Account.SObjectType), Name = 'Test2', AccountNumber = '54321', Site = 'There');
-        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(false, fflib_SObjectDomain.Test.Database.hasRecords(), 'test Get Changed Fields As Strings should produce false');
         fflib_SObjectDomain.Test.Database.onInsert(new Account[]
         {
 acct1, acct2
         }
 );
-        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords());
+        System.assertEquals(true, fflib_SObjectDomain.Test.Database.hasRecords(), 'test Get Changed Fields As Strings should produce true');
         fflib_SObjectDomain.triggerHandler(fflib_SObjectDomain.TestSObjectChangedRecordsConstructor.class);
         Account acct1changed = acct1.clone(),
                 acct2changed = acct2.clone();
@@ -369,9 +369,9 @@ acct1, acct2
 
         // THEN it should only return the changed records
         Map<Id, SObject> resultMap = new Map<Id, SObject>(result);
-        System.assertEquals(2, result.size());
-        System.assert(resultMap.containsKey(idLuke));
-        System.assert(resultMap.containsKey(idHan));
+        System.assertEquals(2, result.size(), 'it Should Return The Changed Records By SObject Fields should produce 2');
+        System.assert(resultMap.containsKey(idLuke), 'it Should Return The Changed Records By SObject Fields should satisfy resultMap.containsKey(idLuke)');
+        System.assert(resultMap.containsKey(idHan), 'it Should Return The Changed Records By SObject Fields should satisfy resultMap.containsKey(idHan)');
     }
 
     @IsTest
@@ -408,9 +408,9 @@ acct1, acct2
 
         // THEN it should only return the changed records
         Map<Id, SObject> resultMap = new Map<Id, SObject>(result);
-        System.assertEquals(2, result.size());
-        System.assert(resultMap.containsKey(idLuke));
-        System.assert(resultMap.containsKey(idHan));
+        System.assertEquals(2, result.size(), 'it Should Return The Changed Records By String Fields should produce 2');
+        System.assert(resultMap.containsKey(idLuke), 'it Should Return The Changed Records By String Fields should satisfy resultMap.containsKey(idLuke)');
+        System.assert(resultMap.containsKey(idHan), 'it Should Return The Changed Records By String Fields should satisfy resultMap.containsKey(idHan)');
     }
 
 
