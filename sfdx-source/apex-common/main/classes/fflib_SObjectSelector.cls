@@ -2,22 +2,22 @@
  * Copyright (c), FinancialForce.com, inc
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, 
+ * Redistribution and use in source and binary forms, with or without modification,
  *   are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice, 
+ * - Redistributions of source code must retain the above copyright notice,
  *      this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *      this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *      this list of conditions and the following disclaimer in the documentation
  *      and/or other materials provided with the distribution.
- * - Neither the name of the FinancialForce.com, inc nor the names of its contributors 
- *      may be used to endorse or promote products derived from this software without 
+ * - Neither the name of the FinancialForce.com, inc nor the names of its contributors
+ *      may be used to endorse or promote products derived from this software without
  *      specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -27,30 +27,37 @@
 /**
  * Class providing common database query support for abstracting and encapsulating query logic
  **/
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.LocalVariableNamingConventions, PMD.ApexDoc, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.ExcessivePublicCount, PMD.StdCyclomaticComplexity, PMD.NcssMethodCount')
 public abstract with sharing class fflib_SObjectSelector
-	implements fflib_ISObjectSelector
+    implements fflib_ISObjectSelector
 {
-    public enum DataAccess{LEGACY, USER_MODE, SYSTEM_MODE}
+    public enum DataAccess
+    {
+        LEGACY, USER_MODE, SYSTEM_MODE
+    }
 
     /**
      * Indicates whether the sObject has the currency ISO code field for organisations which have multi-currency
-     * enabled. 
+     * enabled.
      **/
-    private Boolean CURRENCY_ISO_CODE_ENABLED {
-        get {
-            if(CURRENCY_ISO_CODE_ENABLED == null){
+    private Boolean CURRENCY_ISO_CODE_ENABLED
+    {
+        get
+        {
+            if(CURRENCY_ISO_CODE_ENABLED == null)
+            {
                 CURRENCY_ISO_CODE_ENABLED = describeWrapper.getFieldsMap().keySet().contains('currencyisocode');
             }
             return CURRENCY_ISO_CODE_ENABLED;
         }
-		set;
+        set;
     }
-     
+
     /**
      * Should this selector automatically include the FieldSet fields when building queries?
      **/
     private Boolean m_includeFieldSetFields = false;
-    
+
     /**
      * Enforce FLS Security
      **/
@@ -60,7 +67,7 @@ public abstract with sharing class fflib_SObjectSelector
      * Enforce CRUD Security
      **/
     private Boolean m_enforceCRUD = true;
-   	
+
     /**
      * Order by field
      **/
@@ -77,14 +84,18 @@ public abstract with sharing class fflib_SObjectSelector
     /**
      * Describe helper
      **/
-    private fflib_SObjectDescribe describeWrapper {
-	get {
-		if(describeWrapper == null)
-			describeWrapper = fflib_SObjectDescribe.getDescribe(getSObjectType());
-		return describeWrapper;
-	}
-	set;
-   	}
+    private fflib_SObjectDescribe describeWrapper
+    {
+        get
+        {
+            if(describeWrapper == null)
+            {
+                describeWrapper = fflib_SObjectDescribe.getDescribe(getSObjectType());
+            }
+            return describeWrapper;
+        }
+        set;
+    }
     /**
      * static variables
      **/
@@ -95,7 +106,7 @@ public abstract with sharing class fflib_SObjectSelector
      * Implement this method to inform the base class of the SObject (custom or standard) to be queried
      **/
     abstract Schema.SObjectType getSObjectType();
-    
+
     /**
      * Implement this method to inform the base class of the common fields to be queried or listed by the base class methods
      **/
@@ -104,12 +115,14 @@ public abstract with sharing class fflib_SObjectSelector
     /**
      * Constructs the Selector with the default settings
      **/
-    public fflib_SObjectSelector() { }
-    
+    public fflib_SObjectSelector()
+    {
+    }
+
     /**
      * Constructs the Selector
      *
-     * @param includeFieldSetFields Set to true if the Selector queries are to include Fieldset fields as well 
+     * @param includeFieldSetFields Set to true if the Selector queries are to include Fieldset fields as well
      **/
     public fflib_SObjectSelector(Boolean includeFieldSetFields)
     {
@@ -135,7 +148,7 @@ public abstract with sharing class fflib_SObjectSelector
     /**
      * Constructs the Selector
      *
-     * @param includeFieldSetFields Set to true if the Selector queries are to include Fieldset fields as well 
+     * @param includeFieldSetFields Set to true if the Selector queries are to include Fieldset fields as well
      * @param enforceCRUD Enforce CRUD security
      * @param enforceFLS Enforce Field Level Security
      * @param sortSelectFields Set to false if selecting many columns to skip sorting select fields and improve performance
@@ -180,13 +193,15 @@ public abstract with sharing class fflib_SObjectSelector
             else
             {
                 m_orderBy = DEFAULT_SORT_FIELD;
-                try {
+                try
+                {
                     if (describeWrapper.getField(m_orderBy) == null)
                     {
                         m_orderBy = SF_ID_FIELD;
                     }
                 }
-                catch(fflib_QueryFactory.InvalidFieldException ex) {
+                catch(fflib_QueryFactory.InvalidFieldException ex)
+                {
                     m_orderBy = SF_ID_FIELD;
                 }
             }
@@ -230,11 +245,13 @@ public abstract with sharing class fflib_SObjectSelector
         return this;
     }
 
-    public fflib_SObjectSelector setDataAccess(DataAccess access){
+    public fflib_SObjectSelector setDataAccess(DataAccess access)
+    {
         this.m_dataAccess = access;
 
         //You can't mix and match the legacy enforceFls and assertCRUD with the SYSTEM_MODE or USER_MODE
-        if(this.m_dataAccess != DataAccess.LEGACY){
+        if(this.m_dataAccess != DataAccess.LEGACY)
+        {
             ignoreCRUD();
             m_enforceFLS = false;
         }
@@ -245,28 +262,29 @@ public abstract with sharing class fflib_SObjectSelector
     /**
      * Returns True if this Selector instance has been instructed by the caller to include Field Set fields
      **/
-    public Boolean isIncludeFieldSetFields() 
+    public Boolean isIncludeFieldSetFields()
     {
         return m_includeFieldSetFields;
     }
-    
+
     /**
      * Returns True if this Selector is enforcing FLS
      **/
     public Boolean isEnforcingFLS()
     {
-    	return m_enforceFLS;
+        return m_enforceFLS;
     }
-    
+
     /**
      * Returns True if this Selector is enforcing CRUD Security
      **/
     public Boolean isEnforcingCRUD()
     {
-    	return m_enforceCRUD;
+        return m_enforceCRUD;
     }
 
-    public DataAccess getDataAccess(){
+    public DataAccess getDataAccess()
+    {
         return m_dataAccess;
     }
 
@@ -278,17 +296,17 @@ public abstract with sharing class fflib_SObjectSelector
      **/
     public fflib_StringBuilder.CommaDelimitedListBuilder getFieldListBuilder()
     {
-        return 
+        return
             new fflib_StringBuilder.CommaDelimitedListBuilder(
                 new List<String>(newQueryFactory().getSelectedFields()));
     }
 
     /**
-     * Use this method to override the default FieldListBuilder (created on demand via getFieldListBuilder) with a custom one, 
+     * Use this method to override the default FieldListBuilder (created on demand via getFieldListBuilder) with a custom one,
      *   warning, this will bypass anything getSObjectFieldList or getSObjectFieldSetList returns
      *
      * @depricated See newQueryFactory
-     **/    
+     **/
     public void setFieldListBuilder(fflib_StringBuilder.FieldListBuilder fieldListBuilder)
     {
         // TODO: Consider if given the known use cases for this (dynamic selector optimisation) if it's OK to leave this as a null operation
@@ -298,18 +316,18 @@ public abstract with sharing class fflib_SObjectSelector
      * Returns in string form a comma delimited list of fields as defined via getSObjectFieldList and optionally getSObjectFieldSetList
      *
      * @deprecated See newQueryFactory
-     **/    
+     **/
     public String getFieldListString()
     {
         return getFieldListBuilder().getStringValue();
     }
-    
+
     /**
      * Returns in string form a comma delimited list of fields as defined via getSObjectFieldList and optionally getSObjectFieldSetList
      * @param relation Will prefix fields with the given relation, e.g. MyLookupField__r
      *
      * @depricated See newQueryFactory
-     **/    
+     **/
     public String getRelatedFieldListString(String relation)
     {
         return getFieldListBuilder().getStringValue(relation + '.');
@@ -322,10 +340,10 @@ public abstract with sharing class fflib_SObjectSelector
     {
         return describeWrapper.getDescribe().getName();
     }
-    
+
     /**
-     * Performs a SOQL query, 
-     *   - Selecting the fields described via getSObjectFieldsList and getSObjectFieldSetList (if included) 
+     * Performs a SOQL query,
+     *   - Selecting the fields described via getSObjectFieldsList and getSObjectFieldSetList (if included)
      *   - From the SObject described by getSObjectType
      *   - Where the Id's match those provided in the set
      *   - Ordered by the fields returned via getOrderBy
@@ -335,10 +353,10 @@ public abstract with sharing class fflib_SObjectSelector
     {
         return Database.query(buildQuerySObjectById());
     }
-        
+
     /**
-     * Performs a SOQL query, 
-     *   - Selecting the fields described via getSObjectFieldsList and getSObjectFieldSetList (if included) 
+     * Performs a SOQL query,
+     *   - Selecting the fields described via getSObjectFieldsList and getSObjectFieldSetList (if included)
      *   - From the SObject described by getSObjectType
      *   - Where the Id's match those provided in the set
      *   - Ordered by the fields returned via getOrderBy
@@ -348,7 +366,7 @@ public abstract with sharing class fflib_SObjectSelector
     {
         return Database.getQueryLocator(buildQuerySObjectById());
     }
-    
+
     /**
      * Throws an exception if the SObject indicated by getSObjectType is not accessible to the current user (read access)
      *
@@ -357,8 +375,10 @@ public abstract with sharing class fflib_SObjectSelector
     public void assertIsAccessible()
     {
         if(!getSObjectType().getDescribe().isAccessible())
-           throw new fflib_SObjectDomain.DomainException(
-                'Permission to access an ' + getSObjectType().getDescribe().getName() + ' denied.');       
+        {
+            throw new fflib_SObjectDomain.DomainException(
+                'Permission to access an ' + getSObjectType().getDescribe().getName() + ' denied.');
+        }
     }
 
     /**
@@ -378,20 +398,20 @@ public abstract with sharing class fflib_SObjectSelector
     {
         return getSObjectType();
     }
-    
+
     /**
      * Returns a QueryFactory configured with the Selectors object, fields, fieldsets and default order by
      **/
     public fflib_QueryFactory newQueryFactory()
-    {    
+    {
         return newQueryFactory(m_enforceCRUD, m_enforceFLS, true, m_DataAccess);
     }
-    
+
     /**
      * Returns a QueryFactory configured with the Selectors object, fields, fieldsets and default order by
      **/
     public fflib_QueryFactory newQueryFactory(Boolean includeSelectorFields)
-    {    
+    {
         return newQueryFactory(m_enforceCRUD, m_enforceFLS, includeSelectorFields, m_DataAccess);
     }
 
@@ -427,45 +447,47 @@ public abstract with sharing class fflib_SObjectSelector
       **/
      public void configureQueryFactoryFields(fflib_QueryFactory queryFactory, String relationshipFieldPath)
      {
-	// Add fields from selector prefixing the relationship path		
-		for(SObjectField field : getSObjectFieldList()) {
-			queryFactory.selectField(relationshipFieldPath + '.' + field.getDescribe().getName(), this.getSObjectType());
-		}
-		// Automatically select the CurrencyIsoCode for MC orgs (unless the object is a known exception to the rule)
-		if(isCurrencyIsoCodeAvailable()){
-			queryFactory.selectField(relationshipFieldPath+'.CurrencyIsoCode', getSObjectType());
-		}
+    // Add fields from selector prefixing the relationship path
+        for(SObjectField field : getSObjectFieldList())
+        {
+            queryFactory.selectField(relationshipFieldPath + '.' + field.getDescribe().getName(), this.getSObjectType());
+        }
+        // Automatically select the CurrencyIsoCode for MC orgs (unless the object is a known exception to the rule)
+        if(isCurrencyIsoCodeAvailable())
+        {
+            queryFactory.selectField(relationshipFieldPath+'.CurrencyIsoCode', getSObjectType());
+        }
      }
-    
+
     /**
      * Adds a subselect QueryFactory based on this selector to the given QueryFactor, returns the child QueryFactory
      **/
     public fflib_QueryFactory addQueryFactorySubselect(fflib_QueryFactory parentQueryFactory)
-    {    
-    	return addQueryFactorySubselect(parentQueryFactory, true);
+    {
+        return addQueryFactorySubselect(parentQueryFactory, true);
     }
-        
+
     /**
      * Adds a subselect QueryFactory based on this selector to the given QueryFactor
      **/
     public fflib_QueryFactory addQueryFactorySubselect(fflib_QueryFactory parentQueryFactory, Boolean includeSelectorFields)
     {
-    	fflib_QueryFactory subSelectQueryFactory =
-    		parentQueryFactory.subselectQuery(getSObjectType2());
-    	return configureQueryFactory(
-    		subSelectQueryFactory,
-    		m_enforceCRUD,
-    		m_enforceFLS,
-    		includeSelectorFields,
-    		m_dataAccess);
+        fflib_QueryFactory subSelectQueryFactory =
+            parentQueryFactory.subselectQuery(getSObjectType2());
+        return configureQueryFactory(
+            subSelectQueryFactory,
+            m_enforceCRUD,
+            m_enforceFLS,
+            includeSelectorFields,
+            m_dataAccess);
     }
-        
+
      /**
       * Adds a subselect QueryFactory based on this selector to the given QueryFactor, returns the child QueryFactory
       **/
      public fflib_QueryFactory addQueryFactorySubselect(fflib_QueryFactory parentQueryFactory, String relationshipName)
      {
-	return addQueryFactorySubselect(parentQueryFactory, relationshipName, TRUE);
+        return addQueryFactorySubselect(parentQueryFactory, relationshipName, TRUE);
      }
 
      /**
@@ -479,15 +501,15 @@ public abstract with sharing class fflib_SObjectSelector
 
     /**
      * Constructs the default SOQL query for this selector, see selectSObjectsById and queryLocatorById
-     **/    
+     **/
     protected String buildQuerySObjectById()
-    {   
+    {
         return newQueryFactory().setCondition('id in :idSet').toSOQL();
     }
-    	
+
     /**
      * Configures a QueryFactory instance according to the configuration of this selector
-     **/        
+     **/
     private fflib_QueryFactory configureQueryFactory(fflib_QueryFactory queryFactory,
             Boolean assertCRUD,
             Boolean enforceFLS,
@@ -497,45 +519,57 @@ public abstract with sharing class fflib_SObjectSelector
         // Legacy CRUD enforcement required?
         if (assertCRUD)
         {
-        	try { 
-        		// Leverage QueryFactory for CRUD checking 
-        		queryFactory.assertIsAccessible();
-        	} catch (fflib_SecurityUtils.CrudException e) {
-        		// Marshal exception into DomainException for backwards compatibility
-				throw new fflib_SObjectDomain.DomainException(
-	                'Permission to access an ' + getSObjectType().getDescribe().getName() + ' denied.');               		
-        	}
+            try
+            {
+                // Leverage QueryFactory for CRUD checking
+                queryFactory.assertIsAccessible();
+            }
+catch (fflib_SecurityUtils.CrudException e)
+            {
+                // Marshal exception into DomainException for backwards compatibility
+                throw new fflib_SObjectDomain.DomainException(
+                    'Permission to access an ' + getSObjectType().getDescribe().getName() + ' denied.');
+            }
         }
 
         fflib_QueryFactory.FLSEnforcement fls = fflib_QueryFactory.FLSEnforcement.NONE;
-        if(access == DataAccess.USER_MODE){
+        if(access == DataAccess.USER_MODE)
+        {
             fls = fflib_QueryFactory.FLSEnforcement.USER_MODE;
         }
-        else if(access == DataAccess.SYSTEM_MODE){
+        else if(access == DataAccess.SYSTEM_MODE)
+        {
             fls = fflib_QueryFactory.FLSEnforcement.SYSTEM_MODE;
         }
-        else if(enforceFLS){
+        else if(enforceFLS)
+        {
             fls = fflib_QueryFactory.FLSEnforcement.LEGACY;
         }
 
         queryFactory.setEnforceFLS(fls);
-                
-        // Configure the QueryFactory with the Selector fields?        
+
+        // Configure the QueryFactory with the Selector fields?
         if(includeSelectorFields)
         {
-	        // select the Selector fields and Fieldsets and set order
+            // select the Selector fields and Fieldsets and set order
             queryFactory.selectFields(getSObjectFieldList());
 
-	        List<Schema.FieldSet> fieldSetList = getSObjectFieldSetList();
-	        if(m_includeFieldSetFields && fieldSetList != null)
-	            for(Schema.FieldSet fieldSet : fieldSetList)
-	                queryFactory.selectFieldSet(fieldSet);
-	
-	        // Automatically select the CurrencyIsoCode for MC orgs (unless the object is a known exception to the rule)
-	        if(isCurrencyIsoCodeAvailable())
-	            queryFactory.selectField('CurrencyIsoCode', getSObjectType());
+            List<Schema.FieldSet> fieldSetList = getSObjectFieldSetList();
+            if(m_includeFieldSetFields && fieldSetList != null)
+            {
+                for(Schema.FieldSet fieldSet : fieldSetList)
+                {
+                    queryFactory.selectFieldSet(fieldSet);
+                }
+            }
+
+            // Automatically select the CurrencyIsoCode for MC orgs (unless the object is a known exception to the rule)
+            if(isCurrencyIsoCodeAvailable())
+            {
+                queryFactory.selectField('CurrencyIsoCode', getSObjectType());
+            }
         }
-        
+
         // Parse the getOrderBy()
         for(String orderBy : getOrderBy().split(','))
         {
@@ -544,24 +578,31 @@ public abstract with sharing class fflib_SObjectSelector
             String fieldSortOrderPart = orderByParts.size() > 1 ? orderByParts[1] : null;
             fflib_QueryFactory.SortOrder fieldSortOrder = fflib_QueryFactory.SortOrder.ASCENDING;
             if(fieldSortOrderPart==null)
+            {
                 fieldSortOrder = fflib_QueryFactory.SortOrder.ASCENDING;
+            }
             else if(fieldSortOrderPart.equalsIgnoreCase('DESC'))
+            {
                 fieldSortOrder = fflib_QueryFactory.SortOrder.DESCENDING;
+            }
             else if(fieldSortOrderPart.equalsIgnoreCase('ASC'))
+            {
                 fieldSortOrder = fflib_QueryFactory.SortOrder.ASCENDING;
+            }
             queryFactory.addOrdering(fieldNamePart, fieldSortOrder, orderBy.containsIgnoreCase('NULLS LAST'));
-        }           
-        
-        queryFactory.setSortSelectFields(m_sortSelectFields);           
+        }
 
-        return queryFactory;    
+        queryFactory.setSortSelectFields(m_sortSelectFields);
+
+        return queryFactory;
     }
 
     /**
      * Returns true if the CurrencyIsoCode field is available on this SObject
      */
     @TestVisible
-    private Boolean isCurrencyIsoCodeAvailable() {
+    private Boolean isCurrencyIsoCodeAvailable()
+    {
         return UserInfo.isMultiCurrencyOrganization() && CURRENCY_ISO_CODE_ENABLED;
     }
 }
