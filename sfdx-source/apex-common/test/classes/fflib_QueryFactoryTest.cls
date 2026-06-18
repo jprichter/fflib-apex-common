@@ -35,23 +35,10 @@ private class fflib_QueryFactoryTest
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('firstName');
         qf.selectField(Schema.Contact.SObjectType.fields.lastName);
-        qf.selectFields( new Set<String>
-        {
-'acCounTId', 'account.name'
-        }
-);
-        qf.selectFields( new List<String>
-        {
-'homePhonE','fAX'
-        }
-);
-        qf.selectFields( new List<Schema.SObjectField>
-        {
-Contact.Email, Contact.Title
-        }
-);
-        System.assertEquals(new Set<String>
-        {
+        qf.selectFields( new Set<String>{ 'acCounTId', 'account.name' });
+        qf.selectFields( new List<String>{ 'homePhonE','fAX' });
+        qf.selectFields( new List<Schema.SObjectField>{ Contact.Email, Contact.Title });
+        System.assertEquals(new Set<String>{
             'FirstName',
             'LastName',
             'AccountId',
@@ -69,11 +56,7 @@ Contact.Email, Contact.Title
     static void simpleFieldSelection()
     {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
-        qf.selectField('NAMe').selectFields( new Set<String>
-        {
-'naMe', 'email'
-        }
-);
+        qf.selectField('NAMe').selectFields( new Set<String>{ 'naMe', 'email' });
         String query = qf.toSOQL();
         System.assert( Pattern.matches('SELECT.*Name.*FROM.*',query), 'Expected Name field in query, got '+query);
         System.assert( Pattern.matches('SELECT.*Email.*FROM.*',query), 'Expected Name field in query, got '+query);
@@ -99,11 +82,7 @@ Contact.Email, Contact.Title
     static void duplicateFieldSelection()
     {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
-        qf.selectField('NAMe').selectFields( new Set<String>
-        {
-'naMe', 'email'
-        }
-);
+        qf.selectField('NAMe').selectFields( new Set<String>{ 'naMe', 'email' });
         String query = qf.toSOQL();
         System.assertEquals(1, query.countMatches('Name'), 'Expected one name field in query: '+query );
     }
@@ -120,15 +99,7 @@ Contact.Email, Contact.Title
         qf2.selectField('NAmE');
         System.assertEquals(qf1,qf2, 'equality Check should produce qf1');
         System.assertEquals(qf1.hashCode(), qf2.hashCode(), 'equality Check should produce qf1.hashCode()');
-        qf1.selectField('name').selectFields( new Set<String>
-        {
-'NAME', 'name'
-        }
-).selectFields( new Set<Schema.SObjectField>
-        {
-Contact.Name, Contact.Name
-        }
-);
+        qf1.selectField('name').selectFields( new Set<String>{ 'NAME', 'name' }).selectFields( new Set<Schema.SObjectField>{ Contact.Name, Contact.Name });
         System.assertEquals(qf1,qf2, 'equality Check should produce qf1');
         System.assertEquals(qf1.hashCode(), qf2.hashCode(), 'equality Check should produce qf1.hashCode()');
     }
@@ -180,11 +151,7 @@ catch(fflib_QueryFactory.InvalidFieldException e)
         }
         try
         {
-            qf.selectFields( new Set<String>
-            {
-'Not_a_field','alsoNotreal'
-            }
-);
+            qf.selectFields( new Set<String>{ 'Not_a_field','alsoNotreal' });
         }
 catch(fflib_QueryFactory.InvalidFieldException e)
         {
@@ -192,11 +159,7 @@ catch(fflib_QueryFactory.InvalidFieldException e)
         }
         try
         {
-            qf.selectFields( new Set<Schema.SObjectField>
-            {
-null
-            }
-);
+            qf.selectFields( new Set<Schema.SObjectField>{ null });
         }
 catch(fflib_QueryFactory.InvalidFieldException e)
         {
@@ -204,11 +167,7 @@ catch(fflib_QueryFactory.InvalidFieldException e)
         }
         try
         {
-            qf.selectFields( new List<Schema.SObjectField>
-            {
-null, Contact.title
-            }
-);
+            qf.selectFields( new List<Schema.SObjectField>{ null, Contact.title });
         }
 catch(fflib_QueryFactory.InvalidFieldException e)
         {
@@ -304,11 +263,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         Exception e;
         try
         {
-            qf.selectFields( new List<String>
-            {
-'not_a__field'
-            }
-);
+            qf.selectFields( new List<String>{ 'not_a__field' });
         }
 catch(fflib_QueryFactory.InvalidFieldException ex)
         {
@@ -341,11 +296,7 @@ catch(fflib_QueryFactory.InvalidFieldException ex)
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         Exception e;
-        List<Schema.SObjectField> token = new List<Schema.SObjectField>
-        {
-            null
-        }
-;
+        List<Schema.SObjectField> token = new List<Schema.SObjectField>{ null };
         try
         {
             qf.selectFields( token );
@@ -556,25 +507,13 @@ catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex)
           .setEnforceFLS(true)
           .selectField('createdby.name')
           .selectField(Contact.LastModifiedById)
-          .selectFields(new List<SObjectField>
-          {
-Contact.LastModifiedDate
-          }
-)
+          .selectFields(new List<SObjectField>{ Contact.LastModifiedDate })
           .setEnforceFLS(false)
           .selectField(Contact.LastName)
-          .selectFields(new List<SObjectField>
-          {
-Contact.Id
-          }
-)
+          .selectFields(new List<SObjectField>{ Contact.Id })
           .setCondition( 'name like \'%test%\'' )
           .setEnforceFLS(true)
-          .selectFields(new Set<SObjectField>
-          {
-Contact.FirstName
-          }
-)
+          .selectFields(new Set<SObjectField>{ Contact.FirstName })
           .addOrdering(new fflib_QueryFactory.Ordering('Contact','name',fflib_QueryFactory.SortOrder.ASCENDING) )
           .addOrdering(Contact.LastModifiedDate,fflib_QueryFactory.SortOrder.DESCENDING)
           .addOrdering(Contact.CreatedDate,fflib_QueryFactory.SortOrder.DESCENDING, true);
@@ -582,8 +521,7 @@ Contact.FirstName
         fflib_QueryFactory.Ordering ordering = new fflib_QueryFactory.Ordering('Contact','name',fflib_QueryFactory.SortOrder.ASCENDING);
         System.assertEquals('Name',ordering.getField(), 'check Field Object Read Sort success should produce Name');
 
-        System.assertEquals(new Set<String>
-        {
+        System.assertEquals(new Set<String>{
             'CreatedBy.Name',
             'LastModifiedById',
             'LastModifiedDate',
@@ -662,14 +600,9 @@ catch (fflib_SecurityUtils.FlsException e)
     {
         fflib_QueryFactory qf1 = new fflib_QueryFactory(User.SObjectType);
         fflib_QueryFactory qf2 = new fflib_QueryFactory(User.SObjectType);
-        for(fflib_QueryFactory qf:new List<fflib_QueryFactory>
+        for(fflib_QueryFactory qf:new List<fflib_QueryFactory>{ qf1,qf2 })
         {
-qf1,qf2
-        }
-)
-        {
-            qf.selectFields(new List<String>
-            {
+            qf.selectFields(new List<String>{
                 'Id',
                 'FirstName',
                 'LastName',
@@ -806,8 +739,7 @@ qf1,qf2
     {
         //Given
         fflib_QueryFactory qf = new fflib_QueryFactory(User.SObjectType);
-        qf.selectFields(new List<String>
-        {
+        qf.selectFields(new List<String>{
             'Id',
             'FirstName',
             'LastName',

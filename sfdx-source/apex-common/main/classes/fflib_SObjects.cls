@@ -118,11 +118,7 @@ get; private set;
      */
     public virtual void clearField(Schema.SObjectField field)
     {
-        clearFields(new Set<Schema.SObjectField>
-        {
-field
-        }
-);
+        clearFields(new Set<Schema.SObjectField>{ field });
     }
 
     /**
@@ -223,11 +219,7 @@ field
      */
     protected virtual List<SObject> getRecordsByFieldValue(Schema.SObjectField field, Object value)
     {
-        return getRecordsByFieldValues(field, new Set<Object>
-        {
-value
-        }
-);
+        return getRecordsByFieldValues(field, new Set<Object>{ value });
     }
 
     /**
@@ -257,11 +249,7 @@ value
     protected virtual List<SObject> getRecordsWithBlankFieldValues(Schema.SObjectField field)
     {
         return getRecordsWithBlankFieldValues(
-                new Set<Schema.SObjectField>
-                {
-field
-                }
-        );
+                new Set<Schema.SObjectField>{ field });
     }
 
     /**
@@ -323,11 +311,7 @@ result.add(record);
     protected virtual List<SObject> getRecordsWithNotBlankFieldValues(Schema.SObjectField field)
     {
         return getRecordsWithNotBlankFieldValues(
-                new Set<Schema.SObjectField>
-                {
-field
-                }
-        );
+                new Set<Schema.SObjectField>{ field });
     }
 
     /**

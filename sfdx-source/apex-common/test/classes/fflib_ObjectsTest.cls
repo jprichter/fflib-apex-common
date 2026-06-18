@@ -37,8 +37,7 @@ private class fflib_ObjectsTest
     static void itShouldReturnTheCorrectType()
     {
         fflib_ObjectsTest.Domain dtoDomain = new Domain(
-                new List<DataTransferObject>
-                {
+                new List<DataTransferObject>{
                         TRANSFER_OBJECT_A,
                         TRANSFER_OBJECT_B
                 }
@@ -56,8 +55,7 @@ private class fflib_ObjectsTest
     {
         fflib_ObjectsTest.DataTransferObject transferObject = TRANSFER_OBJECT_A;
         fflib_ObjectsTest.Domain dtoDomain = new Domain(
-                new List<DataTransferObject>
-                {
+                new List<DataTransferObject>{
                         transferObject,
                         TRANSFER_OBJECT_B
                 }
@@ -84,8 +82,7 @@ private class fflib_ObjectsTest
     static void itShouldNotContainTheObjects()
     {
         fflib_ObjectsTest.Domain dtoDomain = new Domain(
-                new List<Object>
-                {
+                new List<Object>{
                         TRANSFER_OBJECT_A,
                         TRANSFER_OBJECT_B
                 }
@@ -93,8 +90,7 @@ private class fflib_ObjectsTest
 
         System.assert(
                 dtoDomain.containsNot(
-                        new Set<Object>
-                        {
+                        new Set<Object>{
                                 TRANSFER_OBJECT_C,
                                 TRANSFER_OBJECT_D
                         }
@@ -103,8 +99,7 @@ private class fflib_ObjectsTest
         );
         System.assert(
                 dtoDomain.containsNot(
-                        new List<Object>
-                        {
+                        new List<Object>{
                                 TRANSFER_OBJECT_C,
                                 TRANSFER_OBJECT_D
                         }
@@ -135,8 +130,7 @@ private class fflib_ObjectsTest
 
         System.assert(
                 dtoDomain.containsAll(
-                        new List<DataTransferObject>
-                        {
+                        new List<DataTransferObject>{
                                 TRANSFER_OBJECT_A,
                                 TRANSFER_OBJECT_B
                         }
@@ -145,8 +139,7 @@ private class fflib_ObjectsTest
         );
         System.assert(
                 dtoDomain.containsAll(
-                        new Set<Object>
-                        {
+                        new Set<Object>{
                                 TRANSFER_OBJECT_A,
                                 TRANSFER_OBJECT_B
                         }
@@ -169,8 +162,7 @@ private class fflib_ObjectsTest
 
     private static List<DataTransferObject> generateDataTransferObjects()
     {
-        return new List<DataTransferObject>
-        {
+        return new List<DataTransferObject>{
                 TRANSFER_OBJECT_A,
                 TRANSFER_OBJECT_B,
                 TRANSFER_OBJECT_C

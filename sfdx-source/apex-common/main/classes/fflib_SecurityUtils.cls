@@ -80,11 +80,7 @@ CREATE, READ, MODIFY, DEL
             this.setMessage(
                 String.format(
                     this.getMessage(),
-                    new List<String>
-                    {
-                        objectType.getDescribe().getName()
-                    }
-                )
+                    new List<String>{ objectType.getDescribe().getName() })
             );
         }
     }
@@ -117,8 +113,7 @@ CREATE, READ, MODIFY, DEL
             this.setMessage(
                 String.format(
                     this.getMessage(),
-                    new List<String>
-                    {
+                    new List<String>{
                         objectType.getDescribe().getName(),
                         fieldToken.getDescribe().getName()
                     }

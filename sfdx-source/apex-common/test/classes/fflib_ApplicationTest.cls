@@ -35,8 +35,7 @@ private class fflib_ApplicationTest
         Id testAccountId = fflib_SObjectsTest.generateTestRecordId(Account.SObjectType);
         fflib_IDomain domainObjectAcct =
             Domain.newInstance(
-                new List<Account>
-                    {
+                new List<Account>{
 new Account(
                         Id = testAccountId,
                         Name = 'Test Account')
@@ -49,8 +48,7 @@ new Account(
         testAccountId = fflib_SObjectsTest.generateTestRecordId(Account.SObjectType);
         domainObjectAcct =
             Domain.newInstance(
-                new List<SObject>
-                    {
+                new List<SObject>{
 new Account(
                         Id = testAccountId,
                         Name = 'Test Account')
@@ -63,8 +61,7 @@ new Account(
         Id testOpportunityId = fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType);
         fflib_IDomain domainObjectOpp =
             Domain.newInstance(
-                new List<Opportunity>
-                    {
+                new List<Opportunity>{
 new Opportunity(
                         Id = testOpportunityId,
                         Name = 'Test Opportunity')
@@ -78,8 +75,7 @@ new Opportunity(
         testOpportunityId = fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType);
         domainObjectOpp =
             Domain.newInstance(
-                new List<SObject>
-                    {
+                new List<SObject>{
 new Opportunity(
                         Id = testOpportunityId,
                         Name = 'Test Opportunity')
@@ -95,8 +91,7 @@ new Opportunity(
         // When
         domainObjectAcct =
             Domain.newInstance(
-                new List<Account>
-                    {
+                new List<Account>{
 new Account(
                         Id = testAccountId,
                         Name = 'Test Account')
@@ -109,8 +104,7 @@ new Account(
         // When
         domainObjectAcct =
             Domain.newInstance(
-                new List<SObject>
-                    {
+                new List<SObject>{
 new Account(
                         Id = testAccountId,
                         Name = 'Test Account')
@@ -132,8 +126,7 @@ new Account(
         // Given
         Id testAccountId = fflib_SObjectsTest.generateTestRecordId(Account.SObjectType);
         List<Account> accounts =
-            new List<Account>
-                {
+            new List<Account>{
 new Account(
                     Id = testAccountId,
                     Name = 'Test Account')
@@ -143,11 +136,7 @@ new Account(
 
         // When
         Selector.setMock(selectorMock);
-        fflib_IDomain domainObjectAcc = Domain.newInstance(new Set<Id>
-        {
-testAccountId
-        }
-);
+        fflib_IDomain domainObjectAcc = Domain.newInstance(new Set<Id>{ testAccountId });
 
         // Then
         List<Account> assertAccounts = (List<Account>) domainObjectAcc.getObjects();
@@ -191,11 +180,7 @@ catch (fflib_Application.DeveloperException e)
     {
         try
         {
-            Domain.newInstance(new List<Product2>
-            {
-new Product2(Name = 'Test Product')
-            }
-);
+            Domain.newInstance(new List<Product2>{ new Product2(Name = 'Test Product') });
             System.assert(false, 'Expected exception');
         }
 catch (fflib_Application.DeveloperException e)
@@ -205,11 +190,7 @@ catch (fflib_Application.DeveloperException e)
 
         try
         {
-            Domain.newInstance(new List<SObject>
-            {
-new Product2(Name = 'Test Product')
-            }
-, Product2.SObjectType);
+            Domain.newInstance(new List<SObject>{ new Product2(Name = 'Test Product') }, Product2.SObjectType);
             System.assert(false, 'Expected exception');
         }
 catch (fflib_Application.DeveloperException e)
@@ -223,11 +204,7 @@ catch (fflib_Application.DeveloperException e)
     {
         try
         {
-            Domain.newInstance(new List<Contact>
-            {
-new Contact(LastName = 'TestContactLName')
-            }
-);
+            Domain.newInstance(new List<Contact>{ new Contact(LastName = 'TestContactLName') });
             System.assert(false, 'Expected exception');
         }
 catch (System.TypeException e)
@@ -239,11 +216,7 @@ catch (System.TypeException e)
 
         try
         {
-            Domain.newInstance(new List<SObject>
-            {
-new Contact(LastName = 'TestContactLName')
-            }
-, Contact.SObjectType);
+            Domain.newInstance(new List<SObject>{ new Contact(LastName = 'TestContactLName') }, Contact.SObjectType);
             System.assert(false, 'Expected exception');
         }
 catch (System.TypeException e)
@@ -270,21 +243,13 @@ catch (System.TypeException e)
         // Standard behaviour
         System.assert(
                 UnitOfWork.newInstance(
-                        new List<SObjectType>
-                        {
-Account.SObjectType
-                        }
-                ) instanceof fflib_SObjectUnitOfWork, 'calling Unit Of Work Factory With Custom Types Should Given Standard Impls And Mock Impls should satisfy UnitOfWork.newInstance( new List<SObjectType> { Account.SObjectType }...');
+                        new List<SObjectType>{ Account.SObjectType }) instanceof fflib_SObjectUnitOfWork, 'calling Unit Of Work Factory With Custom Types Should Given Standard Impls And Mock Impls should satisfy UnitOfWork.newInstance( new List<SObjectType> { Account.SObjectType }...');
 
         // Mocking behaviour
         UnitOfWork.setMock(newUnitOfWorkStub());
         System.assert(
                 !(UnitOfWork.newInstance(
-                        new List<SObjectType>
-                        {
-Account.SObjectType
-                        }
-                ) instanceof fflib_SObjectUnitOfWork), 'calling Unit Of Work Factory With Custom Types Should Given Standard Impls And Mock Impls should satisfy !(UnitOfWork.newInstance( new List<SObjectType> { Account.SObjectType...');
+                        new List<SObjectType>{ Account.SObjectType }) instanceof fflib_SObjectUnitOfWork), 'calling Unit Of Work Factory With Custom Types Should Given Standard Impls And Mock Impls should satisfy !(UnitOfWork.newInstance( new List<SObjectType> { Account.SObjectType...');
     }
 
     @IsTest
@@ -355,8 +320,7 @@ catch (fflib_Application.DeveloperException e)
         try
         {
             Selector.selectById(
-                new Set<Id>
-                {
+                new Set<Id>{
                     fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType),
                     fflib_SObjectsTest.generateTestRecordId(Account.SObjectType)
                     }
@@ -375,8 +339,7 @@ catch (fflib_Application.DeveloperException e)
         // Given
         Id testAccountId = fflib_SObjectsTest.generateTestRecordId(Account.SObjectType);
         List<Account> accounts =
-            new List<Account>
-                {
+            new List<Account>{
 new Account(
                     Id = testAccountId,
                     Name = 'Test Account')
@@ -405,8 +368,7 @@ new Account(
         Id testAccountId = fflib_SObjectsTest.generateTestRecordId(Account.SObjectType);
         Id testOpportunityId = fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType);
         List<Account> accounts =
-            new List<Account>
-                {
+            new List<Account>{
 new Account(
                     Id = testAccountId,
                     Name = 'Test Account')
@@ -417,8 +379,7 @@ new Account(
 
         // When
         List<Opportunity> opportunties =
-            new List<Opportunity>
-                {
+            new List<Opportunity>{
 new Opportunity(
                         Id = testOpportunityId,
                         Account = accounts[0],
@@ -483,11 +444,7 @@ new Opportunity(
 
         // When the unit of work is instantiated from the Application Class and the record is registered and commited
         fflib_ISObjectUnitOfWork unitOfWork = UnitOfWork.newInstance(
-                new List<SObjectType>
-                {
-Account.SObjectType
-                }
-,
+                new List<SObjectType>{ Account.SObjectType },
                 customDML
         );
         unitOfWork.registerNew(myAccount);
@@ -507,11 +464,7 @@ Account.SObjectType
         // When the unit of work is instantiated from the Application Class and the record is registered and commited
         UnitOfWork.setMock(newUnitOfWorkStub());
         fflib_ISObjectUnitOfWork uow = UnitOfWork.newInstance(
-                new List<SObjectType>
-                {
-Account.SObjectType
-                }
-,
+                new List<SObjectType>{ Account.SObjectType },
                 customDML
         );
         uow.registerNew(myAccount);
@@ -707,8 +660,7 @@ Account.SObjectType
     // Configure and create the ServiceFactory for this Application
     public static final fflib_Application.ServiceFactory Service =
         new fflib_Application.ServiceFactory(
-            new Map<Type, Type>
-            {
+            new Map<Type, Type>{
                     IOpportunitiesService.class => OpportunitiesServiceImpl.class,
                     IAccountService.class => AccountsServiceImpl.class
                     }
@@ -717,8 +669,7 @@ Account.SObjectType
     // Configure and create the UnitOfWorkFactory for this Application
     public static final fflib_Application.UnitOfWorkFactory UnitOfWork =
         new fflib_Application.UnitOfWorkFactory(
-                new List<SObjectType>
-                {
+                new List<SObjectType>{
                     Account.SObjectType,
                     Opportunity.SObjectType,
                     OpportunityLineItem.SObjectType
@@ -728,8 +679,7 @@ Account.SObjectType
     // Configure and create the SelectorFactory for this Application
     public static final fflib_Application.SelectorFactory Selector =
         new fflib_Application.SelectorFactory(
-            new Map<SObjectType, Type>
-            {
+            new Map<SObjectType, Type>{
                     Account.SObjectType => AccountsSelector.class,
                     Opportunity.SObjectType => OpportuntiesSelector.class
                     }
@@ -739,8 +689,7 @@ Account.SObjectType
     public static final fflib_Application.DomainFactory Domain =
         new fflib_Application.DomainFactory(
             fflib_ApplicationTest.Selector,
-            new Map<SObjectType, Type>
-            {
+            new Map<SObjectType, Type>{
                     Account.SObjectType => AccountsConstructor.class,
                     Opportunity.SObjectType => OpportuntiesConstructor.class,
                     Contact.SObjectType => ContactsConstructor.class
@@ -822,8 +771,7 @@ Account.SObjectType
     {
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                 Opportunity.Name,
                 Opportunity.Id
             }
@@ -840,8 +788,7 @@ Account.SObjectType
     {
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                 Account.Name,
                 Account.Id,
                 Account.AccountNumber,

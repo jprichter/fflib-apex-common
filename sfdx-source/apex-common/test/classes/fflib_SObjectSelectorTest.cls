@@ -46,8 +46,7 @@ private with sharing class fflib_SObjectSelectorTest
     static void testSelectSObjectsById()
     {
         // Inserting in reverse order so that we can test the order by of select
-        List<Account> accountList = new List<Account>
-        {
+        List<Account> accountList = new List<Account>{
             new Account(Name='TestAccount2',AccountNumber='A2',AnnualRevenue=12345.67),
             new Account(Name='TestAccount1',AccountNumber='A1',AnnualRevenue=76543.21)
             }
@@ -77,8 +76,7 @@ private with sharing class fflib_SObjectSelectorTest
     static void testQueryLocatorById()
     {
         // Inserting in reverse order so that we can test the order by of select
-        List<Account> accountList = new List<Account>
-        {
+        List<Account> accountList = new List<Account>{
             new Account(Name='TestAccount2',AccountNumber='A2',AnnualRevenue=12345.67),
             new Account(Name='TestAccount1',AccountNumber='A1',AnnualRevenue=76543.21)
             }
@@ -112,8 +110,7 @@ private with sharing class fflib_SObjectSelectorTest
     @IsTest
     static void testAssertIsAccessible()
     {
-        List<Account> accountList = new List<Account>
-        {
+        List<Account> accountList = new List<Account>{
             new Account(Name='TestAccount2',AccountNumber='A2',AnnualRevenue=12345.67),
             new Account(Name='TestAccount1',AccountNumber='A1',AnnualRevenue=76543.21)
             }
@@ -149,8 +146,7 @@ private with sharing class fflib_SObjectSelectorTest
     @IsTest
     static void testCRUDOff()
     {
-        List<Account> accountList = new List<Account>
-        {
+        List<Account> accountList = new List<Account>{
             new Account(Name='TestAccount2',AccountNumber='A2',AnnualRevenue=12345.67),
             new Account(Name='TestAccount1',AccountNumber='A1',AnnualRevenue=76543.21)
             }
@@ -201,11 +197,7 @@ private with sharing class fflib_SObjectSelectorTest
         DefaultSortingAccountSelector selector = new DefaultSortingAccountSelector(false);
         String soql = selector.newQueryFactory().toSOQL();
         Pattern p = Pattern.compile(String.format('SELECT (.*) FROM Account ORDER BY {0} ASC NULLS FIRST ',
-            new List<String>
-            {
-selector.getOrderBy()
-            }
-));
+            new List<String>{ selector.getOrderBy() }));
         Matcher m = p.matcher(soql);
         System.assert(m.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
         System.assertEquals(1, m.groupCount(), 'Unexpected number of groups captured.');
@@ -256,11 +248,7 @@ selector.getOrderBy()
         AccountSelector selector = new AccountSelector(false, false, false, false);
         fflib_QueryFactory qf = selector.newQueryFactory();
 
-        Set<String> expectedSelectFields = new Set<String>
-        {
-'Name', 'Id', 'AccountNumber', 'AnnualRevenue'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'AccountNumber', 'AnnualRevenue' };
         if (UserInfo.isMultiCurrencyOrganization())
         {
             expectedSelectFields.add('CurrencyIsoCode');
@@ -287,11 +275,7 @@ selector.getOrderBy()
         fflib_QueryFactory qf = selector.newQueryFactory();
 
         // Add in the expected fields
-        Set<String> expectedSelectFields = new Set<String>
-        {
-'Name', 'Id', 'AccountNumber', 'AnnualRevenue'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'AccountNumber', 'AnnualRevenue' };
         if (UserInfo.isMultiCurrencyOrganization())
         {
             expectedSelectFields.add('CurrencyIsoCode');
@@ -313,11 +297,7 @@ selector.getOrderBy()
         Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
         fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
 
-        Set<String> expectedSelectFields = new Set<String>
-        {
-'Owner.Name', 'Owner.Id', 'Owner.Username', 'Owner.LastLoginDate'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Owner.Name', 'Owner.Id', 'Owner.Username', 'Owner.LastLoginDate' };
         if (UserInfo.isMultiCurrencyOrganization())
         {
             expectedSelectFields.add('Owner.CurrencyIsoCode');
@@ -343,11 +323,7 @@ selector.getOrderBy()
         Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
         fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
 
-        Set<String> expectedSelectFields = new Set<String>
-        {
-'Name', 'Id', 'Username', 'LastLoginDate'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'Username', 'LastLoginDate' };
         if (UserInfo.isMultiCurrencyOrganization())
         {
             expectedSelectFields.add('CurrencyIsoCode');
@@ -358,11 +334,7 @@ selector.getOrderBy()
 
         //Then
         String soql = qf.toSOQL();
-        Pattern soqlPattern = Pattern.compile(String.format('SELECT Id, \\(SELECT (.*) FROM Users ORDER BY {0} ASC NULLS FIRST \\) +FROM Account',new List<String>
-        {
-selector.getOrderBy()
-        }
-));
+        Pattern soqlPattern = Pattern.compile(String.format('SELECT Id, \\(SELECT (.*) FROM Users ORDER BY {0} ASC NULLS FIRST \\) +FROM Account',new List<String>{ selector.getOrderBy() }));
         Matcher soqlMatcher = soqlPattern.matcher(soql);
         System.assert(soqlMatcher.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
 
@@ -377,11 +349,7 @@ selector.getOrderBy()
         Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
         fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
 
-        Set<String> expectedSelectFields = new Set<String>
-        {
-'Name', 'Id', 'Username', 'LastLoginDate'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'Username', 'LastLoginDate' };
         if (UserInfo.isMultiCurrencyOrganization())
         {
             expectedSelectFields.add('CurrencyIsoCode');
@@ -393,11 +361,7 @@ selector.getOrderBy()
         //Then
         String soql = qf.toSOQL();
         Pattern soqlPattern = Pattern.compile(String.format('SELECT Id, \\(SELECT (.*) FROM Users ORDER BY {0} ASC NULLS FIRST \\) +FROM Account',
-            new List<String>
-            {
-selector.getOrderBy()
-            }
-));
+            new List<String>{ selector.getOrderBy() }));
         Matcher soqlMatcher = soqlPattern.matcher(soql);
         System.assert(soqlMatcher.matches(), 'Generated SOQL does not match expected pattern. Here is the generated SOQL: ' + soql);
 
@@ -411,11 +375,7 @@ selector.getOrderBy()
         //Given
         Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
 
-        Set<String> expectedSelectFields = new Set<String>
-        {
-'Name', 'Id', 'Username', 'LastLoginDate'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Name', 'Id', 'Username', 'LastLoginDate' };
         if (UserInfo.isMultiCurrencyOrganization())
         {
             expectedSelectFields.add('CurrencyIsoCode');
@@ -435,11 +395,7 @@ selector.getOrderBy()
         //Given
         Testfflib_UserSObjectSelector selector = new Testfflib_UserSObjectSelector();
 
-        Set<String> expectedSelectFields = new Set<String>
-        {
-'Owner.Name', 'Owner.Id', 'Owner.Username', 'Owner.LastLoginDate'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Owner.Name', 'Owner.Id', 'Owner.Username', 'Owner.LastLoginDate' };
         if (UserInfo.isMultiCurrencyOrganization())
         {
             expectedSelectFields.add('Owner.CurrencyIsoCode');
@@ -464,11 +420,7 @@ selector.getOrderBy()
         {
             try
             {
-                sel.selectSObjectsById(new Set<Id>
-                {
-fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType)
-                }
-);
+                sel.selectSObjectsById(new Set<Id>{ fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType) });
                 Assert.fail('Expected a QueryException due to read only user not having access to Opportunity');
             }
             catch(QueryException qe)
@@ -490,11 +442,7 @@ fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType)
         User u = getMinimumAccessUser();
         System.runAs(u)
         {
-            List<Opportunity> opportunities = sel.selectSObjectsById(new Set<Id>
-            {
-fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType)
-            }
-);
+            List<Opportunity> opportunities = sel.selectSObjectsById(new Set<Id>{ fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType) });
             System.assertEquals(0, opportunities.size(), 'to SOQL When System Mode And User Cannnot Read Object Expect Success should produce 0');
         }
     }
@@ -510,11 +458,7 @@ fflib_SObjectsTest.generateTestRecordId(Opportunity.SObjectType)
         {
             try
             {
-                sel.selectSObjectsById(new Set<Id>
-                {
-fflib_SObjectsTest.generateTestRecordId(Account.SObjectType)
-                }
-);
+                sel.selectSObjectsById(new Set<Id>{ fflib_SObjectsTest.generateTestRecordId(Account.SObjectType) });
                 Assert.fail('Expected a QueryException due to read only user not having access to AnnualRevenue');
             }
             catch(QueryException qe)
@@ -538,11 +482,7 @@ fflib_SObjectsTest.generateTestRecordId(Account.SObjectType)
         User u = getMinimumAccessUser();
         System.runAs(u)
         {
-            List<Account> accounts = sel.selectSObjectsById(new Set<Id>
-            {
-fflib_SObjectsTest.generateTestRecordId(Account.SObjectType)
-            }
-);
+            List<Account> accounts = sel.selectSObjectsById(new Set<Id>{ fflib_SObjectsTest.generateTestRecordId(Account.SObjectType) });
             System.assertEquals(0, accounts.size(), 'to SOQL When System Mode And User Cannnot Read Field Expect Success should produce 0');
         }
     }
@@ -555,11 +495,7 @@ fflib_SObjectsTest.generateTestRecordId(Account.SObjectType)
         String soql = sel.createSelectAllWithAccountSOQL();
 
         String expected = String.format('SELECT name, id, amount, closedate, (currencyisocode, )?account\\.name, account\\.billingpostalcode(, currencyisocode)? FROM Opportunity WITH SYSTEM_MODE ORDER BY {0} ASC NULLS FIRST ',
-            new List<String>
-            {
-sel.getOrderBy()
-            }
-);
+            new List<String>{ sel.getOrderBy() });
         Pattern soqlPattern = Pattern.compile(expected);
         Matcher soqlMatcher = soqlPattern.matcher(soql);
         System.assert(soqlMatcher.matches(),'Expected: ' + expected + ' Actual:' + soql);
@@ -576,11 +512,7 @@ sel.getOrderBy()
 
     String expected = String.format(
       'SELECT name, id, annualrevenue, accountnumber, (currencyisocode, )?\\(SELECT name, id, amount, closedate(, currencyisocode)? FROM Opportunities ORDER BY {0} ASC NULLS FIRST \\)  FROM Account WITH SYSTEM_MODE ORDER BY {1} ASC NULLS FIRST ',
-      new List<String>
-      {
-innerSelector.getOrderBy(), sel.getOrderBy()
-      }
-    );
+      new List<String>{ innerSelector.getOrderBy(), sel.getOrderBy() });
         Pattern soqlPattern = Pattern.compile(expected);
         Matcher soqlMatcher = soqlPattern.matcher(soql);
         System.assert(soqlMatcher.matches(),'Expected: ' + expected + ' Actual:' + soql);
@@ -601,8 +533,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                 Account.Name,
                 Account.Id,
                 Account.AccountNumber,
@@ -631,8 +562,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                 User.Name,
                 User.Id,
                 User.Username,
@@ -657,8 +587,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                 Account.Name,
                 Account.Id,
                 Account.AccountNumber,
@@ -692,8 +621,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                     Opportunity.Name,
                     Opportunity.Id,
                     Opportunity.Amount,
@@ -712,8 +640,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
             qf.selectField(Opportunity.Amount); //Duplicate (as SObjectField)
 
             //Parent Relationship
-            qf.selectFields(new Set<String>
-            {
+            qf.selectFields(new Set<String>{
                     'Account.Name',
                     'Account.BillingPostalCode'
             }
@@ -748,8 +675,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                     Account.Name,
                     Account.Id,
                     Account.AnnualRevenue,
@@ -790,8 +716,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                     Contract.Id,
                     Contract.ContractNumber
             }
@@ -813,8 +738,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                     ListEmail.Id,
                     ListEmail.Name
             }
@@ -836,8 +760,7 @@ innerSelector.getOrderBy(), sel.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                     Task.Id,
                     Task.Subject
             }
@@ -889,11 +812,7 @@ catch (Exception e)
         userSelector.configureQueryFactoryFields(qf, 'Parent.Owner');
 
 
-        Set<String> expectedSelectFields = new Set<String>
-        {
-                'Id', 'CommentBody', 'Parent.Id', 'Parent.OwnerId', 'Parent.Owner.Id', 'Parent.Owner.UserRoleId'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Id', 'CommentBody', 'Parent.Id', 'Parent.OwnerId', 'Parent.Owner.Id', 'Parent.Owner.UserRoleId' };
         if (ccSelector.isCurrencyIsoCodeAvailable())
         {
             expectedSelectFields.add('CurrencyIsoCode');
@@ -912,11 +831,7 @@ catch (Exception e)
 
         //Then
         Pattern soqlPattern = Pattern.compile(String.format('SELECT (.*) FROM CaseComment ORDER BY {0} ASC NULLS FIRST ',
-        new List<String>
-        {
-ccSelector.getOrderBy()
-        }
-));
+        new List<String>{ ccSelector.getOrderBy() }));
         Matcher soqlMatcher = soqlPattern.matcher(soql);
         soqlMatcher.matches();
 
@@ -937,11 +852,7 @@ ccSelector.getOrderBy()
         groupSelector.configureQueryFactoryFields(qf, 'Parent.Owner');
 
 
-        Set<String> expectedSelectFields = new Set<String>
-        {
-            'Id', 'CommentBody', 'Parent.Id', 'Parent.OwnerId', 'Parent.Owner.Id'
-        }
-;
+        Set<String> expectedSelectFields = new Set<String>{ 'Id', 'CommentBody', 'Parent.Id', 'Parent.OwnerId', 'Parent.Owner.Id' };
         Set<String> unexpectedSelectFields = new Set<String>();
         if (ccSelector.isCurrencyIsoCodeAvailable())
         {
@@ -969,8 +880,7 @@ ccSelector.getOrderBy()
         {
             Assert.isFalse(
                 actualSelectFieldsSet.containsAll(unexpectedSelectFields),
-                String.format('The fields {0} were not expected on actualSelectFieldsSet {1}', new List<Set<String>>
-                {
+                String.format('The fields {0} were not expected on actualSelectFieldsSet {1}', new List<Set<String>>{
 unexpectedSelectFields, actualSelectFieldsSet
                 }
 )
@@ -1009,11 +919,7 @@ unexpectedSelectFields, actualSelectFieldsSet
         }
 
         String expectedSOQL = String.format('SELECT ' + String.join(expectedSelectFields,', ') + ' FROM CaseComment WITH SYSTEM_MODE ORDER BY {0} ASC NULLS FIRST ',
-            new List<String>
-            {
-ccSelector.getOrderBy()
-            }
-);
+            new List<String>{ ccSelector.getOrderBy() });
 
         //When
         String actualSOQL = qf.toSOQL();
@@ -1050,8 +956,7 @@ ccSelector.getOrderBy()
                 'FROM Opportunities ORDER BY {7} ASC NULLS FIRST )  ' +
             'FROM Contracts ORDER BY {8} ASC NULLS FIRST )  ' +
         'FROM Account WITH USER_MODE ORDER BY {9} ASC NULLS FIRST ',
-        new List<String>
-        {
+        new List<String>{
             aSel.isCurrencyIsoCodeAvailable() ? ', currencyisocode' : '',
             cSel.isCurrencyIsoCodeAvailable() ? ', currencyisocode' : '',
             oppSel.isCurrencyIsoCodeAvailable() ? ', currencyisocode' : '',
@@ -1073,8 +978,7 @@ ccSelector.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                     CaseComment.Id,
                     CaseComment.CommentBody
             }
@@ -1096,8 +1000,7 @@ ccSelector.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                     Case.OwnerId,
                     Case.Id
             }
@@ -1119,8 +1022,7 @@ ccSelector.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
+            return new List<Schema.SObjectField>{
                     User.UserRoleId,
                     User.Id
             }
@@ -1142,11 +1044,7 @@ ccSelector.getOrderBy()
 
         public List<Schema.SObjectField> getSObjectFieldList()
         {
-            return new List<Schema.SObjectField>
-            {
-                Group.Id
-            }
-;
+            return new List<Schema.SObjectField>{ Group.Id };
         }
 
         public Schema.SObjectType getSObjectType()
