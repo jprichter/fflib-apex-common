@@ -29,6 +29,7 @@
  *
  * NOTE: Aspects of this were developed before recent improvements to String handling, as such could likely be enhanced at this stage.
  **/
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc')
 public virtual class fflib_StringBuilder
 {
     protected List<String> buffer = new List<String>();

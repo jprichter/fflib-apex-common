@@ -28,6 +28,7 @@
  * Utility class for checking FLS/CRUD. NOTE: all "check" methods will throw a SecurityException (or subclass) if the
  * user does not have the proper security granted.
  **/
+@SuppressWarnings('PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.FieldDeclarationsShouldBeAtStart')
 public class fflib_SecurityUtils
 {
     @TestVisible

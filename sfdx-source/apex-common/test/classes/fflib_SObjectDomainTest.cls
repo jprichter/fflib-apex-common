@@ -25,6 +25,7 @@
 **/
 
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.NcssCount, PMD.NcssMethodCount')
 private with sharing class fflib_SObjectDomainTest
 {
     private static final String TEST_ID_PADDING = '000000000000';

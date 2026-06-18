@@ -51,6 +51,7 @@
  * TODO: Need to add some more test methods for more complex use cases and some unexpected (e.g. registerDirty and then registerDeleted)
  *
  **/
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.ExcessivePublicCount, PMD.NcssMethodCount, PMD.ExcessiveClassLength')
 public virtual inherited sharing class fflib_SObjectUnitOfWork
     implements fflib_ISObjectUnitOfWork
 {
@@ -102,6 +103,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
     }
 
     // Default DML adapter; inherits the caller's sharing context. CRUD/FLS is intentionally not enforced here (use UserModeDML for user-mode enforcement).
+    @SuppressWarnings('PMD.ApexCRUDViolation')
     public virtual inherited sharing class SimpleDML implements IDML, IDMLUpsertable
     {
         public virtual void dmlInsert(List<SObject> objList)
@@ -141,6 +143,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
     }
 
     // User-mode DML delegates CRUD/FLS enforcement to the platform; sharing is inherited from the caller.
+    @SuppressWarnings('PMD.ApexCRUDViolation')
     public virtual inherited sharing class UserModeDML extends SimpleDML
     {
         @TestVisible

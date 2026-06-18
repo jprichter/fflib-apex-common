@@ -51,6 +51,7 @@
  * There is a google doc providing additional guidance on the use of this class with field sets at
  * https://docs.google.com/a/financialforce.com/document/d/1I4cxN4xHT4UJj_3Oi0YBL_MJ5chm-KG8kMN1D1un8-g/edit?usp=sharing
 **/
+@SuppressWarnings('PMD.CognitiveComplexity, PMD.CyclomaticComplexity, PMD.ExcessivePublicCount, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.LocalVariableNamingConventions, PMD.ApexDoc, PMD.StdCyclomaticComplexity, PMD.NcssMethodCount, PMD.ExcessiveClassLength')
 public class fflib_QueryFactory
 {
     // No explicit sharing declaration - inherit from caller
@@ -510,6 +511,7 @@ public class fflib_QueryFactory
      * @exception InvalidSubqueryRelationshipException If this method is called on a subselectQuery or with an invalid relationship
      * @param related The related object type
     **/
+    @SuppressWarnings('PMD.AvoidDebugStatements')
     public fflib_QueryFactory subselectQuery(SObjectType related)
     {
         System.debug(LoggingLevel.WARN, 'fflib_QueryFactory.subselectQuery(Schema.SObjectType) is deprecated and will be removed in a future release. Use subselectQuery(String relationshipName) or subselectQuery(ChildRelationship relationship) instead.');
@@ -524,6 +526,7 @@ public class fflib_QueryFactory
      * @param related The related object type
      * @param assertIsAccessible indicates whether to check if the user has access to the subquery object
     **/
+    @SuppressWarnings('PMD.AvoidDebugStatements')
     public fflib_QueryFactory subselectQuery(SObjectType related, Boolean assertIsAccessible)
     {
         System.debug(LoggingLevel.WARN, 'fflib_QueryFactory.subselectQuery(Schema.SObjectType, Boolean) is deprecated and will be removed in a future release. Use subselectQuery(String relationshipName, Boolean assertIsAccessible) or subselectQuery(ChildRelationship relationship, Boolean assertIsAccessible) instead.');

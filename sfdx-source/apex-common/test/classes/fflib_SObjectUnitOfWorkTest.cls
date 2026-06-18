@@ -25,6 +25,7 @@
 **/
 
 @IsTest(IsParallel=true)
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.EmptyStatementBlock, PMD.FieldNamingConventions, PMD.FieldDeclarationsShouldBeAtStart')
 private with sharing class fflib_SObjectUnitOfWorkTest
 {
     // SObjects (in order of dependency) used by UnitOfWork in tests bellow

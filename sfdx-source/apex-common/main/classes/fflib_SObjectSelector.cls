@@ -27,6 +27,7 @@
 /**
  * Class providing common database query support for abstracting and encapsulating query logic
  **/
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.FieldDeclarationsShouldBeAtStart, PMD.LocalVariableNamingConventions, PMD.ApexDoc, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.ExcessivePublicCount, PMD.StdCyclomaticComplexity, PMD.NcssMethodCount')
 public abstract with sharing class fflib_SObjectSelector
     implements fflib_ISObjectSelector
 {
