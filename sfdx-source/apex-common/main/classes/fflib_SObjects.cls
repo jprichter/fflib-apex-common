@@ -23,7 +23,7 @@
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc')
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.CognitiveComplexity')
 public virtual class fflib_SObjects
         extends fflib_Objects
         implements fflib_ISObjects
@@ -41,7 +41,10 @@ public virtual class fflib_SObjects
     /**
      * Useful during unit testing to assert at a more granular and robust level for errors raised during the various trigger events
      **/
-    public static ErrorFactory Errors  {get; private set;}
+    public static ErrorFactory Errors
+    {
+get; private set;
+    }
 
     static
     {
@@ -115,7 +118,11 @@ public virtual class fflib_SObjects
      */
     public virtual void clearField(Schema.SObjectField field)
     {
-        clearFields(new Set<Schema.SObjectField>{ field });
+        clearFields(new Set<Schema.SObjectField>
+        {
+field
+        }
+);
     }
 
     /**
@@ -216,7 +223,11 @@ public virtual class fflib_SObjects
      */
     protected virtual List<SObject> getRecordsByFieldValue(Schema.SObjectField field, Object value)
     {
-        return getRecordsByFieldValues(field, new Set<Object>{value});
+        return getRecordsByFieldValues(field, new Set<Object>
+        {
+value
+        }
+);
     }
 
     /**
@@ -246,7 +257,10 @@ public virtual class fflib_SObjects
     protected virtual List<SObject> getRecordsWithBlankFieldValues(Schema.SObjectField field)
     {
         return getRecordsWithBlankFieldValues(
-                new Set<Schema.SObjectField> {field}
+                new Set<Schema.SObjectField>
+                {
+field
+                }
         );
     }
 
@@ -262,7 +276,10 @@ public virtual class fflib_SObjects
         {
             for (SObjectField field : fields)
             {
-                if (String.isNotBlank(String.valueOf(record.get(field)))) { continue; }
+                if (String.isNotBlank(String.valueOf(record.get(field))))
+                {
+continue;
+                }
 
                 result.add(record);
                 break;
@@ -290,7 +307,10 @@ public virtual class fflib_SObjects
                     break;
                 }
             }
-            if (allBlank) { result.add(record); }
+            if (allBlank)
+            {
+result.add(record);
+            }
         }
         return result;
     }
@@ -303,7 +323,10 @@ public virtual class fflib_SObjects
     protected virtual List<SObject> getRecordsWithNotBlankFieldValues(Schema.SObjectField field)
     {
         return getRecordsWithNotBlankFieldValues(
-                new Set<Schema.SObjectField> {field}
+                new Set<Schema.SObjectField>
+                {
+field
+                }
         );
     }
 
@@ -348,7 +371,10 @@ public virtual class fflib_SObjects
                     break;
                 }
             }
-            if (allNonBlank) { result.add(record); }
+            if (allNonBlank)
+            {
+result.add(record);
+            }
         }
         return result;
     }
@@ -394,7 +420,9 @@ public virtual class fflib_SObjects
     {
         private List<Error> errorList = new List<Error>();
 
-        private ErrorFactory() {    }
+        private ErrorFactory()
+        {
+        }
 
         public String error(String message, SObject record)
         {
@@ -445,7 +473,9 @@ public virtual class fflib_SObjects
     {
         public SObjectField field;
 
-        public FieldError() { }
+        public FieldError()
+        {
+        }
     }
 
     /**
@@ -455,7 +485,9 @@ public virtual class fflib_SObjects
     {
         public SObject record;
 
-        public ObjectError() { }
+        public ObjectError()
+        {
+        }
     }
 
     /**

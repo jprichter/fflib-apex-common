@@ -25,18 +25,33 @@
 **/
 
 @IsTest( isParallel = true )
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc')
-private class fflib_QueryFactoryTest {
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.CyclomaticComplexity, PMD.LocalVariableNamingConventions')
+private class fflib_QueryFactoryTest
+{
 
     @IsTest
-    static void fieldSelections(){
+    static void fieldSelections()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('firstName');
         qf.selectField(Schema.Contact.SObjectType.fields.lastName);
-        qf.selectFields( new Set<String>{'acCounTId', 'account.name'} );
-        qf.selectFields( new List<String>{'homePhonE','fAX'} );
-        qf.selectFields( new List<Schema.SObjectField>{ Contact.Email, Contact.Title } );
-        System.assertEquals(new Set<String>{
+        qf.selectFields( new Set<String>
+        {
+'acCounTId', 'account.name'
+        }
+);
+        qf.selectFields( new List<String>
+        {
+'homePhonE','fAX'
+        }
+);
+        qf.selectFields( new List<Schema.SObjectField>
+        {
+Contact.Email, Contact.Title
+        }
+);
+        System.assertEquals(new Set<String>
+        {
             'FirstName',
             'LastName',
             'AccountId',
@@ -44,14 +59,21 @@ private class fflib_QueryFactoryTest {
             'HomePhone',
             'Fax',
             'Email',
-            'Title'},
+            'Title'
+            }
+,
             qf.getSelectedFields());
     }
 
     @IsTest
-    static void simpleFieldSelection() {
+    static void simpleFieldSelection()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
-        qf.selectField('NAMe').selectFields( new Set<String>{'naMe', 'email'});
+        qf.selectField('NAMe').selectFields( new Set<String>
+        {
+'naMe', 'email'
+        }
+);
         String query = qf.toSOQL();
         System.assert( Pattern.matches('SELECT.*Name.*FROM.*',query), 'Expected Name field in query, got '+query);
         System.assert( Pattern.matches('SELECT.*Email.*FROM.*',query), 'Expected Name field in query, got '+query);
@@ -61,7 +83,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void simpleFieldCondition(){
+    static void simpleFieldCondition()
+    {
         String whereClause = 'name = \'test\'';
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
@@ -73,15 +96,21 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void duplicateFieldSelection() {
+    static void duplicateFieldSelection()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
-        qf.selectField('NAMe').selectFields( new Set<String>{'naMe', 'email'});
+        qf.selectField('NAMe').selectFields( new Set<String>
+        {
+'naMe', 'email'
+        }
+);
         String query = qf.toSOQL();
         System.assertEquals(1, query.countMatches('Name'), 'Expected one name field in query: '+query );
     }
 
     @IsTest
-    static void equalityCheck(){
+    static void equalityCheck()
+    {
         fflib_QueryFactory qf1 = new fflib_QueryFactory(Contact.SObjectType);
         fflib_QueryFactory qf2 = new fflib_QueryFactory(Contact.SObjectType);
         System.assertEquals(qf1,qf2);
@@ -91,64 +120,106 @@ private class fflib_QueryFactoryTest {
         qf2.selectField('NAmE');
         System.assertEquals(qf1,qf2);
         System.assertEquals(qf1.hashCode(), qf2.hashCode());
-        qf1.selectField('name').selectFields( new Set<String>{ 'NAME', 'name' }).selectFields( new Set<Schema.SObjectField>{ Contact.Name, Contact.Name} );
+        qf1.selectField('name').selectFields( new Set<String>
+        {
+'NAME', 'name'
+        }
+).selectFields( new Set<Schema.SObjectField>
+        {
+Contact.Name, Contact.Name
+        }
+);
         System.assertEquals(qf1,qf2);
         System.assertEquals(qf1.hashCode(), qf2.hashCode());
     }
 
     @IsTest
-    static void nonReferenceField(){
+    static void nonReferenceField()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         fflib_QueryFactory.NonReferenceFieldException e;
-        try{
+        try
+        {
             qf.selectField('name.title');
-        }catch(fflib_QueryFactory.NonReferenceFieldException ex){
+        }
+catch(fflib_QueryFactory.NonReferenceFieldException ex)
+        {
             e = ex;
         }
         System.assertNotEquals(null,e,'Cross-object notation on a non-reference field should throw NonReferenceFieldException.');
     }
 
     @IsTest
-    static void invalidCrossObjectField(){
+    static void invalidCrossObjectField()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         fflib_QueryFactory.InvalidFieldException e;
-        try{
+        try
+        {
             qf.selectField('account.NOT_A_REAL_FIELD');
-        }catch(fflib_QueryFactory.InvalidFieldException ex){
+        }
+catch(fflib_QueryFactory.InvalidFieldException ex)
+        {
             e = ex;
         }
         System.assertNotEquals(null,e,'Cross-object notation on a non-reference field should throw NonReferenceFieldException.');
     }
 
     @IsTest
-    static void invalidFieldTests(){
+    static void invalidFieldTests()
+    {
         List<fflib_QueryFactory.InvalidFieldException> exceptions = new List<fflib_QueryFactory.InvalidFieldException>();
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
-        try{
+        try
+        {
             qf.selectField('Not_a_field');
-        }catch(fflib_QueryFactory.InvalidFieldException e){
+        }
+catch(fflib_QueryFactory.InvalidFieldException e)
+        {
             exceptions.add(e);
         }
-        try{
-            qf.selectFields( new Set<String>{ 'Not_a_field','alsoNotreal'});
-        }catch(fflib_QueryFactory.InvalidFieldException e){
+        try
+        {
+            qf.selectFields( new Set<String>
+            {
+'Not_a_field','alsoNotreal'
+            }
+);
+        }
+catch(fflib_QueryFactory.InvalidFieldException e)
+        {
             exceptions.add(e);
         }
-        try{
-            qf.selectFields( new Set<Schema.SObjectField>{ null });
-        }catch(fflib_QueryFactory.InvalidFieldException e){
+        try
+        {
+            qf.selectFields( new Set<Schema.SObjectField>
+            {
+null
+            }
+);
+        }
+catch(fflib_QueryFactory.InvalidFieldException e)
+        {
             exceptions.add(e);
         }
-        try{
-            qf.selectFields( new List<Schema.SObjectField>{ null, Contact.title });
-        }catch(fflib_QueryFactory.InvalidFieldException e){
+        try
+        {
+            qf.selectFields( new List<Schema.SObjectField>
+            {
+null, Contact.title
+            }
+);
+        }
+catch(fflib_QueryFactory.InvalidFieldException e)
+        {
             exceptions.add(e);
         }
         System.assertEquals(4,exceptions.size());
     }
 
     @IsTest
-    static void ordering(){
+    static void ordering()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         qf.selectField('email');
@@ -166,7 +237,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void setOrdering_ReplacesPreviousOrderingsWithExpectedOrdering(){
+    static void setOrdering_ReplacesPreviousOrderingsWithExpectedOrdering()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         qf.selectField('email');
@@ -208,84 +280,112 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void invalidField_string(){
+    static void invalidField_string()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         Exception e;
-        try{
+        try
+        {
             qf.selectField('not_a__field');
-        }catch(fflib_QueryFactory.InvalidFieldException ex){
+        }
+catch(fflib_QueryFactory.InvalidFieldException ex)
+        {
             e = ex;
         }
         System.assertNotEquals(null,e);
     }
 
     @IsTest
-    static void invalidFields_string(){
+    static void invalidFields_string()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         Exception e;
-        try{
-            qf.selectFields( new List<String>{'not_a__field'} );
-        }catch(fflib_QueryFactory.InvalidFieldException ex){
+        try
+        {
+            qf.selectFields( new List<String>
+            {
+'not_a__field'
+            }
+);
+        }
+catch(fflib_QueryFactory.InvalidFieldException ex)
+        {
             e = ex;
         }
         System.assertNotEquals(null,e);
     }
 
     @IsTest
-    static void invalidField_nullToken(){
+    static void invalidField_nullToken()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         Exception e;
         Schema.SObjectField token = null;
-        try{
+        try
+        {
             qf.selectField( token );
-        }catch(fflib_QueryFactory.InvalidFieldException ex){
+        }
+catch(fflib_QueryFactory.InvalidFieldException ex)
+        {
             e = ex;
         }
         System.assertNotEquals(null,e);
     }
 
     @IsTest
-    static void invalidFields_nullToken(){
+    static void invalidFields_nullToken()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         Exception e;
-        List<Schema.SObjectField> token = new List<Schema.SObjectField>{
+        List<Schema.SObjectField> token = new List<Schema.SObjectField>
+        {
             null
-        };
-        try{
+        }
+;
+        try
+        {
             qf.selectFields( token );
-        }catch(fflib_QueryFactory.InvalidFieldException ex){
+        }
+catch(fflib_QueryFactory.InvalidFieldException ex)
+        {
             e = ex;
         }
         System.assertNotEquals(null,e);
     }
 
     @IsTest
-    static void invalidFields_noQueryField(){
-        try {
+    static void invalidFields_noQueryField()
+    {
+        try
+        {
             fflib_QueryFactory.getFieldTokenPath(null);
             System.assert(false,'Expected InvalidFieldException; none was thrown');
         }
-        catch (fflib_QueryFactory.InvalidFieldException ife) {
+        catch (fflib_QueryFactory.InvalidFieldException ife)
+        {
             System.assert(ife.getMessage().contains('Invalid'), 'Unexpected exception message: ' + ife.getMessage());
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             System.assert(false,'Expected InvalidFieldException; ' + e.getTypeName() + ' was thrown instead: ' + e);
         }
     }
 
     @IsTest
-    static void queryFieldsNotEquals(){
+    static void queryFieldsNotEquals()
+    {
         String qfld = fflib_QueryFactory.getFieldTokenPath(Contact.Name);
         String qfld2 = fflib_QueryFactory.getFieldTokenPath(Contact.LastName);
         System.assert(!qfld.equals(qfld2));
     }
 
     @IsTest
-    static void addChildQueriesWithChildRelationship_success(){
+    static void addChildQueriesWithChildRelationship_success()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name').selectField('Id').setCondition('name=\'test\'').addOrdering('CreatedDate', fflib_QueryFactory.SortOrder.DESCENDING, true);
         //explicitly assert object accessibility when creating the subselect
@@ -299,7 +399,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void addChildQueriesWithChildRelationshipNoAccessibleCheck_success(){
+    static void addChildQueriesWithChildRelationshipNoAccessibleCheck_success()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name').selectField('Id').setCondition('name=\'test\'').addOrdering('CreatedDate', fflib_QueryFactory.SortOrder.DESCENDING, true);
         //explicitly assert object accessibility when creating the subselect
@@ -313,15 +414,18 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void addChildQueriesWithChildRelationshipObjCheckIsAccessible_success(){
+    static void addChildQueriesWithChildRelationshipObjCheckIsAccessible_success()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name').selectField('Id').setCondition('name=\'test\'').addOrdering('CreatedDate', fflib_QueryFactory.SortOrder.DESCENDING, true);
-        Schema.DescribeSObjectResult descResult = Contact.SObjectType.getDescribe();
+        Schema.DescribeSObjectResult descResult = Contact.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED);
         Schema.ChildRelationship relationship;
-        for (Schema.ChildRelationship childRow : descResult.getChildRelationships()){
+        for (Schema.ChildRelationship childRow : descResult.getChildRelationships())
+        {
             //occasionally on some standard objects (Like Contact child of Contact) do not have a relationship name.
             //if there is no relationship name, we cannot query on it, so throw an exception.
-            if (childRow.getRelationshipName() == 'Tasks'){
+            if (childRow.getRelationshipName() == 'Tasks')
+            {
                 relationship = childRow;
             }
         }
@@ -336,15 +440,18 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void addChildQueriesWithChildRelationshipObj_success(){
+    static void addChildQueriesWithChildRelationshipObj_success()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name').selectField('Id').setCondition( 'name=\'%test%\'' ).addOrdering('CreatedDate',fflib_QueryFactory.SortOrder.DESCENDING, true);
-        Schema.DescribeSObjectResult descResult = Contact.SObjectType.getDescribe();
+        Schema.DescribeSObjectResult descResult = Contact.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED);
         Schema.ChildRelationship relationship;
-        for (Schema.ChildRelationship childRow : descResult.getChildRelationships()){
+        for (Schema.ChildRelationship childRow : descResult.getChildRelationships())
+        {
             //occasionally on some standard objects (Like Contact child of Contact) do not have a relationship name.
             //if there is no relationship name, we cannot query on it, so throw an exception.
-            if (childRow.getRelationshipName() == 'Tasks'){
+            if (childRow.getRelationshipName() == 'Tasks')
+            {
                 relationship = childRow;
             }
         }
@@ -359,22 +466,27 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void addChildQueriesWithChildRelationshipNoAccessibleCheck_fail(){
+    static void addChildQueriesWithChildRelationshipNoAccessibleCheck_fail()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name').selectField('Id').setCondition( 'name=\'test\'' ).addOrdering('CreatedDate',fflib_QueryFactory.SortOrder.DESCENDING, true);
         //explicitly assert object accessibility when creating the subselect
         //
         Exception e;
-        try {
+        try
+        {
             qf.subselectQuery('Tas').selectField('Id').selectField('Subject').setCondition(' IsDeleted = false ');
-        } catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex) {
+        }
+catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex)
+        {
             e = ex;
         }
         System.assertNotEquals(e, null);
     }
 
     @IsTest
-    static void addChildQueries_success(){
+    static void addChildQueries_success()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name').selectField('Id').setCondition( 'name like \'%test%\'' ).addOrdering('CreatedDate',fflib_QueryFactory.SortOrder.DESCENDING, true);
         //explicitly assert object accessibility when creating the subselect
@@ -388,16 +500,19 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void addChildQuerySameRelationshipAgain_success(){
+    static void addChildQuerySameRelationshipAgain_success()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         qf.selectField('Id');
         qf.setCondition( 'name like \'%test%\'' );
         qf.addOrdering( new fflib_QueryFactory.Ordering('Contact','name',fflib_QueryFactory.SortOrder.ASCENDING) ).addOrdering('CreatedBy.Name',fflib_QueryFactory.SortOrder.DESCENDING);
-        Schema.DescribeSObjectResult descResult = Contact.SObjectType.getDescribe();
+        Schema.DescribeSObjectResult descResult = Contact.SObjectType.getDescribe(SObjectDescribeOptions.DEFERRED);
         Schema.ChildRelationship relationship;
-        for (Schema.ChildRelationship childRow : descResult.getChildRelationships()) {
-            if (childRow.getRelationshipName() == 'Tasks') {
+        for (Schema.ChildRelationship childRow : descResult.getChildRelationships())
+        {
+            if (childRow.getRelationshipName() == 'Tasks')
+            {
                 relationship = childRow;
             }
         }
@@ -412,37 +527,54 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void addChildQueries_invalidChildRelationship(){
+    static void addChildQueries_invalidChildRelationship()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.selectField('name');
         qf.selectField('email');
         qf.setCondition( 'name like \'%test%\'' );
         qf.addOrdering( new fflib_QueryFactory.Ordering('Contact','name',fflib_QueryFactory.SortOrder.ASCENDING) ).addOrdering( 'CreatedDATE',fflib_QueryFactory.SortOrder.DESCENDING);
         Exception e;
-        try {
+        try
+        {
             SObjectType invalidType = null;
             fflib_QueryFactory childQf = qf.subselectQuery(invalidType);
             childQf.selectField('Id');
-        } catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex) {
+        }
+catch (fflib_QueryFactory.InvalidSubqueryRelationshipException ex)
+        {
             e = ex;
         }
         System.assertNotEquals(e, null);
     }
 
     @IsTest
-    static void checkFieldObjectReadSort_success(){
+    static void checkFieldObjectReadSort_success()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.assertIsAccessible()
           .setEnforceFLS(true)
           .selectField('createdby.name')
           .selectField(Contact.LastModifiedById)
-          .selectFields(new List<SObjectField>{Contact.LastModifiedDate})
+          .selectFields(new List<SObjectField>
+          {
+Contact.LastModifiedDate
+          }
+)
           .setEnforceFLS(false)
           .selectField(Contact.LastName)
-          .selectFields(new List<SObjectField>{Contact.Id})
+          .selectFields(new List<SObjectField>
+          {
+Contact.Id
+          }
+)
           .setCondition( 'name like \'%test%\'' )
           .setEnforceFLS(true)
-          .selectFields(new Set<SObjectField>{Contact.FirstName})
+          .selectFields(new Set<SObjectField>
+          {
+Contact.FirstName
+          }
+)
           .addOrdering(new fflib_QueryFactory.Ordering('Contact','name',fflib_QueryFactory.SortOrder.ASCENDING) )
           .addOrdering(Contact.LastModifiedDate,fflib_QueryFactory.SortOrder.DESCENDING)
           .addOrdering(Contact.CreatedDate,fflib_QueryFactory.SortOrder.DESCENDING, true);
@@ -450,30 +582,39 @@ private class fflib_QueryFactoryTest {
         fflib_QueryFactory.Ordering ordering = new fflib_QueryFactory.Ordering('Contact','name',fflib_QueryFactory.SortOrder.ASCENDING);
         System.assertEquals('Name',ordering.getField());
 
-        System.assertEquals(new Set<String>{
+        System.assertEquals(new Set<String>
+        {
             'CreatedBy.Name',
             'LastModifiedById',
             'LastModifiedDate',
             'LastName',
             'Id',
-            'FirstName'},
+            'FirstName'
+            }
+,
             fields);
 
         System.assert(qf.toSOQL().containsIgnoreCase('NULLS LAST'));
     }
 
     @IsTest
-    static void checkObjectRead_fail(){
+    static void checkObjectRead_fail()
+    {
         User usr = createTestUser_noAccess();
-        if (usr != null){
-            System.runAs(usr){
+        if (usr != null)
+        {
+            System.runAs(usr)
+            {
                 //create a query factory object for Account.
                 fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
                 Boolean excThrown = false;
-                try {
+                try
+                {
                     //check to see if this record is accessible, it isn't.
                     qf.assertIsAccessible();
-                } catch (fflib_SecurityUtils.CrudException e) {
+                }
+catch (fflib_SecurityUtils.CrudException e)
+                {
                     excThrown = true;
                 }
                 System.assert(excThrown);
@@ -482,18 +623,24 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void checkFieldRead_fail(){
+    static void checkFieldRead_fail()
+    {
         User usr = createTestUser_noAccess();
-        if (usr != null){
-            System.runAs(usr){
+        if (usr != null)
+        {
+            System.runAs(usr)
+            {
                 //create a query factory object for Account.
                 fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
                 Boolean excThrown = false;
-                try {
+                try
+                {
                     //set field to enforce FLS, then try to add a field.
                     qf.setEnforceFLS(true);
                     qf.selectField('Name');
-                } catch (fflib_SecurityUtils.FlsException e) {
+                }
+catch (fflib_SecurityUtils.FlsException e)
+                {
                     excThrown = true;
                 }
                 System.assert(excThrown);
@@ -502,7 +649,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void queryWith_noFields(){
+    static void queryWith_noFields()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType);
         qf.assertIsAccessible().setEnforceFLS(true).setCondition( 'name like \'%test%\'' ).addOrdering('CreatedDate',fflib_QueryFactory.SortOrder.DESCENDING);
         String query = qf.toSOQL();
@@ -510,18 +658,26 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void deterministic_toSOQL(){
+    static void deterministic_toSOQL()
+    {
         fflib_QueryFactory qf1 = new fflib_QueryFactory(User.SObjectType);
         fflib_QueryFactory qf2 = new fflib_QueryFactory(User.SObjectType);
-        for(fflib_QueryFactory qf:new List<fflib_QueryFactory>{qf1,qf2}){
-            qf.selectFields(new List<String>{
+        for(fflib_QueryFactory qf:new List<fflib_QueryFactory>
+        {
+qf1,qf2
+        }
+)
+        {
+            qf.selectFields(new List<String>
+            {
                 'Id',
                 'FirstName',
                 'LastName',
                 'CreatedBy.Name',
                 'CreatedBy.Manager',
                 'LastModifiedBy.Email'
-            });
+            }
+);
         }
         String expectedQuery =
             'SELECT CreatedBy.ManagerId, CreatedBy.Name, '
@@ -533,7 +689,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void deepCloneBasicNoChanges() {
+    static void deepCloneBasicNoChanges()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType)
         .setLimit(10)
         .setCondition('id=12345')
@@ -553,7 +710,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void deepCloneSubqueryNoChanges() {
+    static void deepCloneSubqueryNoChanges()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType)
         .setLimit(10)
         .setCondition('id=12345')
@@ -576,7 +734,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void deepCloneBasic() {
+    static void deepCloneBasic()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Contact.SObjectType)
         .setLimit(10)
         .setCondition('id=12345')
@@ -620,7 +779,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void deepCloneSubquery() {
+    static void deepCloneSubquery()
+    {
         fflib_QueryFactory qf = new fflib_QueryFactory(Account.SObjectType);
         qf.subselectQuery('Contacts', true);
 
@@ -642,17 +802,20 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void testSoql_unsortedSelectFields(){
+    static void testSoql_unsortedSelectFields()
+    {
         //Given
         fflib_QueryFactory qf = new fflib_QueryFactory(User.SObjectType);
-        qf.selectFields(new List<String>{
+        qf.selectFields(new List<String>
+        {
             'Id',
             'FirstName',
             'LastName',
             'CreatedBy.Name',
             'CreatedBy.Manager',
             'LastModifiedBy.Email'
-        });
+        }
+);
 
         qf.setSortSelectFields(false);
 
@@ -670,7 +833,8 @@ private class fflib_QueryFactoryTest {
     }
 
     @IsTest
-    static void testSoql_allRows(){
+    static void testSoql_allRows()
+    {
         //Given
         fflib_QueryFactory qf = new fflib_QueryFactory(User.SObjectType);
         qf.selectField('Id');
@@ -688,9 +852,11 @@ private class fflib_QueryFactoryTest {
         System.assertEquals(allRowsQuery, actualSoql);
     }
 
-    public static User createTestUser_noAccess(){
+    public static User createTestUser_noAccess()
+    {
         User usr;
-        try {
+        try
+        {
             //look for a profile that does not have access to the Account object
             PermissionSet ps =
             [SELECT Profile.Id, profile.name
@@ -703,7 +869,8 @@ private class fflib_QueryFactoryTest {
                                AND PermissionsRead = true)
                 LIMIT 1];
 
-            if (ps != null){
+            if (ps != null)
+            {
                 //create a user with the profile found that doesn't have access to the Account object
                 usr = new User(
                     firstName = 'testUsrF',
@@ -720,7 +887,9 @@ private class fflib_QueryFactoryTest {
                     );
                 insert usr;
             }
-        } catch (Exception e) {
+        }
+catch (Exception e)
+        {
             //do nothing, just return null User because this test case won't work in this org.
             return null;
         }

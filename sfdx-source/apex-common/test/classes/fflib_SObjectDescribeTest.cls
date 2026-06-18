@@ -29,15 +29,17 @@
     Used under a BSD license: https://github.com/capeterson/Apex-Util/blob/master/LICENSE
 **/
 @IsTest
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs')
-private class fflib_SObjectDescribeTest {
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ClassNamingConventions, PMD.MethodNamingConventions')
+private class fflib_SObjectDescribeTest
+{
 
     /**
      * Verify that the different ways of getting your hands on an fflib_SObjectDescribe instance all handle null inputs
      * (and blank/empty strings, why not?) by returning null - since there's no possible way to resolve it.
     **/
     @IsTest
-    static void getDescribe_badInput(){
+    static void getDescribe_badInput()
+    {
         String nullStr = null; //having it as a string var makes for unambiguous selection of overloads
         Schema.SObjectType nullType = null;
         Schema.DescribeSObjectResult nullDescribe = null;
@@ -51,7 +53,8 @@ private class fflib_SObjectDescribeTest {
     }
 
     @IsTest
-    static void NamespacedAttributeMap_implementations(){
+    static void NamespacedAttributeMap_implementations()
+    {
         fflib_SObjectDescribe.GlobalDescribeMap gdm = fflib_SObjectDescribe.getGlobalDescribe();
         Schema.SObjectType accountObjType = gdm.get('AccOunT');
         System.assertEquals(accountObjType, Account.SobjectType);
@@ -69,14 +72,17 @@ private class fflib_SObjectDescribeTest {
     }
 
     @IsTest
-    static void FieldsMap(){
+    static void FieldsMap()
+    {
         String fakeNamespace = 'fflib_test';
-        Map<String,Schema.SObjectField> fakeFieldData = new Map<String,Schema.SObjectField>{
+        Map<String,Schema.SObjectField> fakeFieldData = new Map<String,Schema.SObjectField>
+        {
             'name__c' => Contact.SObjectType.fields.name, //re-use standard field types since we can't mock them
             fakeNamespace+'__name__c' => Account.SObjectType.fields.name,
             fakeNamespace+'__otherField__c' => Account.SObjectType.fields.name,
             'createddate' => Contact.SObjectType.fields.CreatedDate
-        };
+        }
+;
         fflib_SObjectDescribe.FieldsMap fields = new fflib_SObjectDescribe.FieldsMap(fakeFieldData);
         fields.currentNamespace = fakeNamespace;
         System.assertEquals(true, fields.containsKey('name__c') );
@@ -94,13 +100,16 @@ private class fflib_SObjectDescribeTest {
     }
 
     @IsTest
-    static void GlobalDescribeMap(){
+    static void GlobalDescribeMap()
+    {
         String fakeNamespace = 'fflib_test';
-        Map<String,Schema.SObjectType> fakeFieldData = new Map<String,Schema.SObjectType>{
+        Map<String,Schema.SObjectType> fakeFieldData = new Map<String,Schema.SObjectType>
+        {
             'name__c' => Contact.SObjectType, //re-use stndard object types since we can't mock them
             fakeNamespace+'__name__c' => Account.SObjectType,
             'createddate' => Lead.SObjectType
-        };
+        }
+;
         fflib_SObjectDescribe.GlobalDescribeMap gdm = new fflib_SObjectDescribe.GlobalDescribeMap(fakeFieldData);
         gdm.currentNamespace = fakeNamespace;
         System.assertEquals(true, gdm.containsKey('name__c') );
@@ -112,7 +121,8 @@ private class fflib_SObjectDescribeTest {
     }
 
     @IsTest //Tests all forms of the getDescribe static
-    static void getAccountDescribes(){
+    static void getAccountDescribes()
+    {
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe('Account');
         fflib_SObjectDescribe d2 = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         fflib_SObjectDescribe d3 = fflib_SObjectDescribe.getDescribe(Schema.SObjectType.Account);
@@ -121,10 +131,12 @@ private class fflib_SObjectDescribeTest {
     }
 
     @IsTest
-    static void simpleAccountFieldDescribe(){
+    static void simpleAccountFieldDescribe()
+    {
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         Map<String,Schema.SObjectField> fields;
-        for(integer i = 0; i < 10; i++){
+        for(integer i = 0; i < 10; i++)
+        {
             fields = d.getFieldsMap();
         }
 
@@ -141,10 +153,12 @@ private class fflib_SObjectDescribeTest {
     }
 
     @IsTest
-    static void simpleAccountFieldSetDescribe(){
+    static void simpleAccountFieldSetDescribe()
+    {
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
         Map<String,Schema.FieldSet> fields;
-        for(integer i = 0; i < 10; i++){
+        for(integer i = 0; i < 10; i++)
+        {
             fields = d.getFieldSetsMap();
         }
 
@@ -156,18 +170,20 @@ private class fflib_SObjectDescribeTest {
 
         // System.assertEquals(1, Limits.getFieldSetsDescribes() );
 
-        // no asserts on result size to avoid a requirement on field sets existing
+        System.assertNotEquals(null, fields, 'Field set describe map should be initialized even when no field sets exist.');
     }
 
     @IsTest
-    	static void simpleAccountGetNameField(){
-        	fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
-        	Schema.SObjectField nameField = d.getNameField();
-        	System.assertEquals('Name', nameField.getDescribe().getName());
+    static void simpleAccountGetNameField()
+    {
+        fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe(Account.SObjectType);
+        Schema.SObjectField nameField = d.getNameField();
+        System.assertEquals('Name', nameField.getDescribe().getName());
     }
 
     @IsTest
-    static void flushCache(){
+    static void flushCache()
+    {
         fflib_SObjectDescribe d = fflib_SObjectDescribe.getDescribe('Account');
         fflib_SObjectDescribe.flushCache();
         fflib_SObjectDescribe d2 = fflib_SObjectDescribe.getDescribe('Account');
@@ -175,7 +191,8 @@ private class fflib_SObjectDescribeTest {
     }
 
     @IsTest
-    static void rawGlobalDescribeCheck(){
+    static void rawGlobalDescribeCheck()
+    {
         Map<String,Schema.SObjectType> systemGd = Schema.getGlobalDescribe();
         Map<String,Schema.SObjectType> cachedGd = fflib_SObjectDescribe.getRawGlobalDescribe();
         System.assertEquals(systemGd.size(),cachedGd.size());

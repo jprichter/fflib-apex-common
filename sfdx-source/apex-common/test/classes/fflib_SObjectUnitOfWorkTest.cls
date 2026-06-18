@@ -25,16 +25,19 @@
 **/
 
 @IsTest(IsParallel=true)
-@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc')
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.EmptyStatementBlock, PMD.FieldNamingConventions, PMD.FieldDeclarationsShouldBeAtStart')
 private with sharing class fflib_SObjectUnitOfWorkTest
 {
     // SObjects (in order of dependency) used by UnitOfWork in tests bellow
     private static List<Schema.SObjectType> MY_SOBJECTS =
-        new Schema.SObjectType[] {
+        new Schema.SObjectType[]
+        {
             Product2.SObjectType,
             PricebookEntry.SObjectType,
             Opportunity.SObjectType,
-            OpportunityLineItem.SObjectType };
+            OpportunityLineItem.SObjectType
+            }
+;
 
     @IsTest
     private static void testUnitOfWorkEmail()
@@ -42,7 +45,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         String testRecordName = 'UoW Test Name 1';
 
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        email.setToAddresses(new List<String>{ 'foobar@test.com' });
+        email.setToAddresses(new List<String>
+        {
+'foobar@test.com'
+        }
+);
         email.setPlainTextBody('See Spot run.');
 
         MockDML mockDML = new MockDML();
@@ -132,11 +139,19 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         fflib_SObjectUnitOfWork unitOfWork = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
 
         // WHEN - we mark the records as deleted
-        unitOfWork.registerDeleted(new List<SObject> { opportunity, product });
+        unitOfWork.registerDeleted(new List<SObject>
+        {
+opportunity, product
+        }
+);
         unitOfWork.commitWork();
 
         // THEN - the dmlDelete action should be invoked
-        System.assertEquals(new List<SObject> { opportunity, product }, mockDML.recordsForDelete);
+        System.assertEquals(new List<SObject>
+        {
+opportunity, product
+        }
+, mockDML.recordsForDelete);
     }
 
     @IsTest
@@ -149,12 +164,24 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         fflib_SObjectUnitOfWork unitOfWork = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
 
         // WHEN - we mark the records as deleted
-        unitOfWork.registerPermanentlyDeleted(new List<SObject> { opportunity, product });
+        unitOfWork.registerPermanentlyDeleted(new List<SObject>
+        {
+opportunity, product
+        }
+);
         unitOfWork.commitWork();
 
         // THEN - the dmlDelete and emptyRecycleBin actions should be invoked
-        System.assertEquals(new List<SObject> { opportunity, product }, mockDML.recordsForDelete);
-        System.assertEquals(new List<SObject> { opportunity, product }, mockDML.recordsForRecycleBin);
+        System.assertEquals(new List<SObject>
+        {
+opportunity, product
+        }
+, mockDML.recordsForDelete);
+        System.assertEquals(new List<SObject>
+        {
+opportunity, product
+        }
+, mockDML.recordsForRecycleBin);
     }
 
     @IsTest
@@ -166,7 +193,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         fflib_SObjectUnitOfWork unitOfWork = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
 
         // WHEN - we empty the record from the recycle bin
-        unitOfWork.registerEmptyRecycleBin(new List<Opportunity>{ opportunity });
+        unitOfWork.registerEmptyRecycleBin(new List<Opportunity>
+        {
+opportunity
+        }
+);
         unitOfWork.commitWork();
 
         // THEN - the emptyRecycleBin action should be invoked
@@ -177,7 +208,10 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     private static void testAssertForNonEventSObjectType()
     {
         fflib_SObjectUnitOfWork unitOfWork = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
+        Boolean completed = false;
         unitOfWork.assertForNonEventSObjectType('CustomObject__c');
+        completed = true;
+        System.assert(completed, 'Non-event SObject types should not throw.');
     }
 
     @IsTest
@@ -205,7 +239,10 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     private static void testAssertForEventSObjectType()
     {
         fflib_SObjectUnitOfWork unitOfWork = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
+        Boolean completed = false;
         unitOfWork.assertForEventSObjectType('PlatformEventObject__e');
+        completed = true;
+        System.assert(completed, 'Event SObject types should not throw.');
     }
 
     @IsTest
@@ -270,12 +307,20 @@ private with sharing class fflib_SObjectUnitOfWorkTest
             opp.Name = 'UoW Test Name ' + o;
             opp.StageName = 'Open';
             opp.CloseDate = System.today();
-            uow.registerNew(new List<SObject>{opp});
+            uow.registerNew(new List<SObject>
+            {
+opp
+            }
+);
             for(Integer i=0; i<o+1; i++)
             {
                 Product2 product = new Product2();
                 product.Name = opp.Name + ' : Product : ' + i;
-                uow.registerNew(new List<SObject>{product});
+                uow.registerNew(new List<SObject>
+                {
+product
+                }
+);
                 PricebookEntry pbe = new PricebookEntry();
                 pbe.UnitPrice = 10;
                 pbe.IsActive = true;
@@ -293,7 +338,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         // Assert Results
         System.assertEquals(175, mockDML.recordsForInsert.size(), 'Incorrect of new records');
 
-        assertEvents(new List<String> {
+        assertEvents(new List<String>
+        {
                 'onCommitWorkStarting'
                 , 'onPublishBeforeEventsStarting'
                 , 'onPublishBeforeEventsFinished'
@@ -323,23 +369,34 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         // Insert Opportunities with UnitOfWork forcing a failure on DML by not setting 'Name' field
         DerivedUnitOfWork uow = new DerivedUnitOfWork(MY_SOBJECTS);
         Opportunity opp = new Opportunity();
-        uow.registerNew(new List<SObject>{opp});
+        uow.registerNew(new List<SObject>
+        {
+opp
+        }
+);
         Boolean didFail = false;
         System.DmlException caughtEx = null;
 
-        try {
+        try
+        {
             uow.commitWork();
         }
-        catch (System.DmlException dmlex) {
+        catch (System.DmlException dmlex)
+        {
             didFail = true;
             caughtEx = dmlex;
         }
 
         // Assert Results
         System.assertEquals(didFail, true, 'didFail');
-        System.assert(caughtEx.getMessage().contains('REQUIRED_FIELD_MISSING'), String.format('Exception message was {0}', new List<String> { caughtEx.getMessage() }));
+        System.assert(caughtEx.getMessage().contains('REQUIRED_FIELD_MISSING'), String.format('Exception message was {0}', new List<String>
+        {
+caughtEx.getMessage()
+        }
+));
 
-        assertEvents(new List<String> {
+        assertEvents(new List<String>
+        {
                 'onCommitWorkStarting'
                 , 'onPublishBeforeEventsStarting'
                 , 'onPublishBeforeEventsFinished'
@@ -369,7 +426,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         opp.Name = 'UoW Test Name 1';
         opp.StageName = 'Open';
         opp.CloseDate = System.today();
-        uow.registerNew(new List<SObject>{opp});
+        uow.registerNew(new List<SObject>
+        {
+opp
+        }
+);
 
         // register work that will fail during processing
         FailDoingWork fdw = new FailDoingWork();
@@ -378,19 +439,26 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         Boolean didFail = false;
         FailDoingWorkException caughtEx = null;
 
-        try {
+        try
+        {
             uow.commitWork();
         }
-        catch (FailDoingWorkException fdwe) {
+        catch (FailDoingWorkException fdwe)
+        {
             didFail = true;
             caughtEx = fdwe;
         }
 
         // Assert Results
         System.assertEquals(didFail, true, 'didFail');
-        System.assert(caughtEx.getMessage().contains('Work failed.'), String.format('Exception message was {0}', new List<String> { caughtEx.getMessage() }));
+        System.assert(caughtEx.getMessage().contains('Work failed.'), String.format('Exception message was {0}', new List<String>
+        {
+caughtEx.getMessage()
+        }
+));
 
-        assertEvents(new List<String> {
+        assertEvents(new List<String>
+        {
                 'onCommitWorkStarting'
                 , 'onPublishBeforeEventsStarting'
                 , 'onPublishBeforeEventsFinished'
@@ -441,7 +509,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
      *      - field is updated
      */
     @IsTest
-    private static void testRegisterDirty_field() {
+    private static void testRegisterDirty_field()
+    {
         Opportunity opp = new Opportunity(
                 Id = fflib_SObjectsTest.generateTestRecordId(Schema.Opportunity.SObjectType),
                 Name = 'test name',
@@ -453,7 +522,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         MockDML mockDML = new MockDML();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
         uow.registerDirty(nameUpdate);
-        uow.registerDirty(amountUpdate, new List<SObjectField> { Opportunity.Amount } );
+        uow.registerDirty(amountUpdate, new List<SObjectField>
+        {
+Opportunity.Amount
+        }
+);
         uow.commitWork();
 
         System.assertEquals(1, mockDML.recordsForUpdate.size());
@@ -482,27 +555,42 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 
         MockDML mockDML = new MockDML();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
-        uow.registerDirty(new List<Opportunity>{ opportunityA, opportunityB });
+        uow.registerDirty(new List<Opportunity>
+        {
+opportunityA, opportunityB
+        }
+);
 
         // WHEN we register the records again with different fields updated
         List<Opportunity> recordsWithStageUpdate = new List<Opportunity>
         {
                 new Opportunity(Id = opportunityA.Id, StageName = 'Closed'),
                 new Opportunity(Id = opportunityB.Id, StageName = 'Closed')
-        };
+        }
+;
         List<Opportunity> recordsWithAmountUpdate = new List<Opportunity>
         {
                 new Opportunity(Id = opportunityA.Id, Amount = 250),
                 new Opportunity(Id = opportunityB.Id, Amount = 250)
-        };
-        uow.registerDirty(recordsWithStageUpdate, new List<SObjectField> { Opportunity.StageName });
-        uow.registerDirty(recordsWithAmountUpdate, new List<SObjectField> { Opportunity.Amount });
+        }
+;
+        uow.registerDirty(recordsWithStageUpdate, new List<SObjectField>
+        {
+Opportunity.StageName
+        }
+);
+        uow.registerDirty(recordsWithAmountUpdate, new List<SObjectField>
+        {
+Opportunity.Amount
+        }
+);
         uow.commitWork();
 
         // THEN the records should be registered with both changed values for Amount and StageName
         System.assertEquals(2, mockDML.recordsForUpdate.size(), 'Records not registered with the correct values');
         Map<Id, SObject> byId = new Map<Id, SObject>();
-        for (SObject row : mockDML.recordsForUpdate) {
+        for (SObject row : mockDML.recordsForUpdate)
+        {
             byId.put(row.Id, row);
         }
         System.assert(byId.containsKey(opportunityA.Id) && byId.containsKey(opportunityB.Id));
@@ -549,21 +637,35 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 
         MockDML mockDML = new MockDML();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
-        uow.registerDirty(new List<Opportunity>{ opportunityA, opportunityB });
+        uow.registerDirty(new List<Opportunity>
+        {
+opportunityA, opportunityB
+        }
+);
 
         // WHEN we register the records again with different fields updated
         List<Opportunity> recordsWithStageUpdate = new List<Opportunity>
         {
                 new Opportunity(Id = opportunityA.Id, StageName = 'Closed'),
                 new Opportunity(Id = opportunityB.Id, StageName = 'Closed')
-        };
+        }
+;
         List<Opportunity> recordsWithAmountUpdate = new List<Opportunity>
         {
                 new Opportunity(Id = opportunityA.Id, Amount = 250),
                 new Opportunity(Id = opportunityB.Id, Amount = 250)
-        };
-        uow.registerDirty(recordsWithStageUpdate, new List<SObjectField> { Opportunity.StageName });
-        uow.registerDirty(recordsWithAmountUpdate, new List<SObjectField> { Opportunity.Amount });
+        }
+;
+        uow.registerDirty(recordsWithStageUpdate, new List<SObjectField>
+        {
+Opportunity.StageName
+        }
+);
+        uow.registerDirty(recordsWithAmountUpdate, new List<SObjectField>
+        {
+Opportunity.Amount
+        }
+);
         uow.registerDirty( // Register again the original record, should overwrite the one with the dirty fields
                 new Opportunity(
                 Id = opportunityB.Id,
@@ -576,7 +678,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         // THEN only the first record should be registered with both changed values for Amount and StageName and the second should be the original
         System.assertEquals(2, mockDML.recordsForUpdate.size());
         Map<Id, SObject> byId = new Map<Id, SObject>();
-        for (SObject row : mockDML.recordsForUpdate) {
+        for (SObject row : mockDML.recordsForUpdate)
+        {
             byId.put(row.Id, row);
         }
         System.assert(
@@ -611,7 +714,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void testRegisterUpsert() {
+    private static void testRegisterUpsert()
+    {
         Opportunity existingOpp = new Opportunity(
                 Id = fflib_SObjectsTest.generateTestRecordId(Schema.Opportunity.SObjectType),
                 Name = 'Existing Opportunity',
@@ -623,7 +727,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         Test.startTest();
         MockDML mockDML = new MockDML();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
-        uow.registerUpsert(new List<Opportunity>{existingOpp, newOpportunity});
+        uow.registerUpsert(new List<Opportunity>
+        {
+existingOpp, newOpportunity
+        }
+);
         uow.commitWork();
         Test.stopTest();
 
@@ -632,7 +740,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void testRegisterUpsertByExternalId() {
+    private static void testRegisterUpsertByExternalId()
+    {
 
         Opportunity existingOpp = new Opportunity(Name = 'Existing Opportunity', StageName = 'Open', CloseDate = System.today());
         insert existingOpp;
@@ -644,7 +753,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 
         Test.startTest();
             fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
-            uow.registerUpsert(new List<Opportunity>{existingOpp}, Opportunity.Id);
+            uow.registerUpsert(new List<Opportunity>
+            {
+existingOpp
+            }
+, Opportunity.Id);
             uow.commitWork();
         Test.stopTest();
 
@@ -653,7 +766,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void testRegisterUpsertByExternalId_When_UserModeDML_Expect_UpsertInUserMode() {
+    private static void testRegisterUpsertByExternalId_When_UserModeDML_Expect_UpsertInUserMode()
+    {
         // Covers UserModeDML.dmlUpsert (Database.upsert with accessLevel)
         Opportunity existingOpp = new Opportunity(Name = 'Existing Opportunity', StageName = 'Open', CloseDate = System.today());
         insert existingOpp;
@@ -661,7 +775,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 
         Test.startTest();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, new fflib_SObjectUnitOfWork.UserModeDML());
-        uow.registerUpsert(new List<Opportunity>{existingOpp}, Opportunity.Id);
+        uow.registerUpsert(new List<Opportunity>
+        {
+existingOpp
+        }
+, Opportunity.Id);
         uow.commitWork();
         Test.stopTest();
 
@@ -669,7 +787,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void testRegisterUpsertByExternalIdParentWillResolve() {
+    private static void testRegisterUpsertByExternalIdParentWillResolve()
+    {
 
         Opportunity existingOpp = new Opportunity(Name = 'Existing Opportunity', StageName = 'Open', CloseDate = System.today());
         insert existingOpp;
@@ -702,7 +821,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 
 
     @IsTest
-    private static void testRegisterUpsertByExternalIdChildWillResolve() {
+    private static void testRegisterUpsertByExternalIdChildWillResolve()
+    {
 
         Opportunity newOpportunity = new Opportunity(Name = 'Existing Opportunity', StageName = 'Closed', CloseDate = System.today());
 
@@ -733,7 +853,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 
 
     @IsTest
-    private static void testRegisterUpsertByExternalIdBothWillResolve() {
+    private static void testRegisterUpsertByExternalIdBothWillResolve()
+    {
 
         Opportunity newOpportunity = new Opportunity(Name = 'Existing Opportunity', StageName = 'Closed', CloseDate = System.today());
 
@@ -759,7 +880,8 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void testRegisterUpsertByExternalId_When_CustomIDMLNotIDMLUpsertable_Expect_Exception() {
+    private static void testRegisterUpsertByExternalId_When_CustomIDMLNotIDMLUpsertable_Expect_Exception()
+    {
         // GIVEN an existing opportunity and a custom DML that implements IDML but not IDML2
         Opportunity existingOpp = new Opportunity(Name = 'Existing Opportunity', StageName = 'Open', CloseDate = System.today());
         insert existingOpp;
@@ -770,22 +892,33 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
 
         // WHEN we try to register an upsert by external ID THEN an exception is thrown at registration (MockDML doesn't implement IDML2)
-        try {
-            uow.registerUpsert(new List<Opportunity>{existingOpp}, Opportunity.Id);
+        try
+        {
+            uow.registerUpsert(new List<Opportunity>
+            {
+existingOpp
+            }
+, Opportunity.Id);
             Assert.fail('Expected UnitOfWorkException to be thrown when using IDML without IDMLUpsertable');
-        } catch (fflib_SObjectUnitOfWork.UnitOfWorkException e) {
+        }
+catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
+        {
             Assert.areEqual('Upsert by external ID requires IDMLUpsertable implementation. Current IDML implementation does not support this feature.',e.getMessage());
         }
     }
 
     @IsTest
-    private static void testRegisterUpsert_When_NullExternalIdField_Expect_Exception() {
+    private static void testRegisterUpsert_When_NullExternalIdField_Expect_Exception()
+    {
         Opportunity opp = new Opportunity(Name = 'Test', StageName = 'Open', CloseDate = System.today());
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
         Boolean exceptionThrown = false;
-        try {
+        try
+        {
             uow.registerUpsert(opp, null, null, null);
-        } catch (fflib_SObjectUnitOfWork.UnitOfWorkException e) {
+        }
+catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
+        {
             exceptionThrown = true;
             System.assert(e.getMessage().contains('externalIdField'), 'Expected message to mention externalIdField');
         }
@@ -793,13 +926,17 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void testRegisterUpsert_When_FieldNotOnTargetSObject_Expect_Exception() {
+    private static void testRegisterUpsert_When_FieldNotOnTargetSObject_Expect_Exception()
+    {
         Opportunity opp = new Opportunity(Name = 'Test', StageName = 'Open', CloseDate = System.today());
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
         Boolean exceptionThrown = false;
-        try {
+        try
+        {
             uow.registerUpsert(opp, Account.NumberOfEmployees, null, null);
-        } catch (fflib_SObjectUnitOfWork.UnitOfWorkException e) {
+        }
+catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
+        {
             exceptionThrown = true;
             System.assert(e.getMessage().contains('not a known field') || e.getMessage().contains('target sObject'),
                 'Expected message about field not on target sObject');
@@ -808,13 +945,17 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void testRegisterUpsert_When_FieldNotValidForUpsert_Expect_Exception() {
+    private static void testRegisterUpsert_When_FieldNotValidForUpsert_Expect_Exception()
+    {
         Opportunity opp = new Opportunity(Name = 'Test', StageName = 'Open', CloseDate = System.today());
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
         Boolean exceptionThrown = false;
-        try {
+        try
+        {
             uow.registerUpsert(opp, Opportunity.StageName, null, null);
-        } catch (fflib_SObjectUnitOfWork.UnitOfWorkException e) {
+        }
+catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
+        {
             exceptionThrown = true;
             System.assert(e.getMessage().contains('cannot be used with upsert'),
                 'Expected message about field not valid for upsert');
@@ -823,16 +964,24 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void testRegisterUpsert_When_DifferentExternalIdAlreadyRegisteredForSameType_Expect_Exception() {
+    private static void testRegisterUpsert_When_DifferentExternalIdAlreadyRegisteredForSameType_Expect_Exception()
+    {
         User runningUser = [SELECT Id, Username FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1];
-        List<Schema.SObjectType> userTypes = new List<Schema.SObjectType>{ User.SObjectType };
+        List<Schema.SObjectType> userTypes = new List<Schema.SObjectType>
+        {
+User.SObjectType
+        }
+;
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(userTypes);
         uow.registerUpsert(runningUser, User.Id, null, null);
         User secondUser = runningUser.clone(false, true);
         Boolean exceptionThrown = false;
-        try {
+        try
+        {
             uow.registerUpsert(secondUser, User.Username, null, null);
-        } catch (fflib_SObjectUnitOfWork.UnitOfWorkException e) {
+        }
+catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
+        {
             exceptionThrown = true;
             System.assert(e.getMessage().contains('you cannot use another in this unit of work'),
                 'Expected message about different external id already registered');
@@ -841,19 +990,22 @@ private with sharing class fflib_SObjectUnitOfWorkTest
     }
 
     @IsTest
-    private static void constructUserModeDML_When_DefaultConstructor_Expect_UserMode(){
+    private static void constructUserModeDML_When_DefaultConstructor_Expect_UserMode()
+    {
         fflib_SObjectUnitOfWork.UserModeDML dml = new fflib_SObjectUnitOfWork.UserModeDML();
         System.assertEquals(AccessLevel.USER_MODE,dml.m_accessLevel);
     }
 
     @IsTest
-    private static void constructUserModeDML_When_AccessLevelSupplied_Expect_SameAccessLevel(){
+    private static void constructUserModeDML_When_AccessLevelSupplied_Expect_SameAccessLevel()
+    {
         fflib_SObjectUnitOfWork.UserModeDML dml = new fflib_SObjectUnitOfWork.UserModeDML(AccessLevel.SYSTEM_MODE);
         System.assertEquals(AccessLevel.SYSTEM_MODE,dml.m_accessLevel);
     }
 
     @IsTest
-    private static void constructSimpleDML_When_EmptyListOperations_Expect_NoException() {
+    private static void constructSimpleDML_When_EmptyListOperations_Expect_NoException()
+    {
         fflib_SObjectUnitOfWork.SimpleDML dml = new fflib_SObjectUnitOfWork.SimpleDML();
 
         dml.eventPublish(new List<SObject>());
@@ -872,14 +1024,22 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         System.assertEquals(expectedEvents.size(), actualEvents.size(), 'events size');
         for (Integer i = 0; i < expectedEvents.size(); i++)
         {
-            System.assertEquals(expectedEvents[i], actualEvents[i], String.format('Event {0} was not fired in order expected.', new List<String> { expectedEvents[i] }));
+            System.assertEquals(expectedEvents[i], actualEvents[i], String.format('Event {0} was not fired in order expected.', new List<String>
+            {
+expectedEvents[i]
+            }
+));
         }
 
         // assert that types match
         System.assertEquals(expectedTypes.size(), actualTypes.size(), 'types size');
         for (Schema.SObjectType sObjectType :expectedTypes)
         {
-            System.assertEquals(true, actualTypes.contains(sObjectType), String.format('Type {0} was not registered.', new List<String> { String.valueOf(sObjectType) }));
+            System.assertEquals(true, actualTypes.contains(sObjectType), String.format('Type {0} was not registered.', new List<String>
+            {
+String.valueOf(sObjectType)
+            }
+));
         }
     }
 
@@ -930,7 +1090,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
             {
                 if (event == eventName)
                 {
-                    throw new DerivedUnitOfWorkException(String.format('Event {0} has already been fired.', new List<String> { event }));
+                    throw new DerivedUnitOfWorkException(String.format('Event {0} has already been fired.', new List<String>
+                    {
+event
+                    }
+));
                 }
             }
             m_commitWorkEventsFired.add(event);
@@ -940,7 +1104,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         {
             if (m_registeredTypes.contains(sObjectType))
             {
-                throw new DerivedUnitOfWorkException(String.format('Type {0} has already been registered.', new List<String> { String.valueOf(sObjectType) }));
+                throw new DerivedUnitOfWorkException(String.format('Type {0} has already been registered.', new List<String>
+                {
+String.valueOf(sObjectType)
+                }
+));
             }
             m_registeredTypes.add(sObjectType);
         }
@@ -1075,6 +1243,10 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         }
     }
 
-    public class DerivedUnitOfWorkException extends Exception {}
-    public class FailDoingWorkException extends Exception {}
+    public class DerivedUnitOfWorkException extends Exception
+    {
+    }
+    public class FailDoingWorkException extends Exception
+    {
+    }
 }

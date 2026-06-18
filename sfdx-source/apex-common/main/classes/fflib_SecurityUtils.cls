@@ -28,18 +28,23 @@
  * Utility class for checking FLS/CRUD. NOTE: all "check" methods will throw a SecurityException (or subclass) if the
  * user does not have the proper security granted.
  **/
-@SuppressWarnings('PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc')
+@SuppressWarnings('PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.FieldDeclarationsShouldBeAtStart')
 public class fflib_SecurityUtils
 {
     @TestVisible
-    private enum OperationType { CREATE, READ, MODIFY, DEL } //UPDATE and DELETE are reserved words
+    private enum OperationType
+    {
+CREATE, READ, MODIFY, DEL
+    }
+//UPDATE and DELETE are reserved words
 
     /**
      * SecurityException is never be thrown directly by fflib_SecurityUtils, instead all
      * forms of CRUD and FLD violations throw subclasses of it. It is provided as a convenience
      * in the event you wish to handle CRUD and FLS violations the same way (e.g. die and display an error)
     **/
-    public virtual class SecurityException extends Exception {
+    public virtual class SecurityException extends Exception
+    {
         protected OperationType m_operation;
         protected Schema.SObjectType m_objectType;
     }
@@ -48,9 +53,11 @@ public class fflib_SecurityUtils
      * CrudException represents a running user's lack of read/create/update/delete access at a profile (or permission set)
      * level. Sharing and field level security issues will never cause this.
      **/
-    public class CrudException extends SecurityException{
+    public class CrudException extends SecurityException
+    {
 
-        private CrudException(OperationType operation, Schema.SObjectType objectType){
+        private CrudException(OperationType operation, Schema.SObjectType objectType)
+        {
             this.m_operation = operation;
             this.m_objectType = objectType;
             if(operation == OperationType.CREATE)
@@ -73,7 +80,8 @@ public class fflib_SecurityUtils
             this.setMessage(
                 String.format(
                     this.getMessage(),
-                    new List<String>{
+                    new List<String>
+                    {
                         objectType.getDescribe().getName()
                     }
                 )
@@ -84,10 +92,12 @@ public class fflib_SecurityUtils
      * FlsException represents a running user's lack of field level security to a specific field at a profile (or permission set) level
      * Sharing and CRUD security issues will never cause this to be thrown.
      **/
-    public class FlsException extends SecurityException{
+    public class FlsException extends SecurityException
+    {
         private Schema.SObjectField m_fieldToken;
 
-        private FlsException(OperationType operation, Schema.SObjectType objectType, Schema.SObjectField fieldToken){
+        private FlsException(OperationType operation, Schema.SObjectType objectType, Schema.SObjectField fieldToken)
+        {
             this.m_operation = operation;
             this.m_objectType = objectType;
             this.m_fieldToken = fieldToken;
@@ -107,7 +117,8 @@ public class fflib_SecurityUtils
             this.setMessage(
                 String.format(
                     this.getMessage(),
-                    new List<String>{
+                    new List<String>
+                    {
                         objectType.getDescribe().getName(),
                         fieldToken.getDescribe().getName()
                     }
