@@ -30,8 +30,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
 {
     // SObjects (in order of dependency) used by UnitOfWork in tests bellow
     private static List<Schema.SObjectType> MY_SOBJECTS =
-        new Schema.SObjectType[]
-        {
+        new Schema.SObjectType[]{
             Product2.SObjectType,
             PricebookEntry.SObjectType,
             Opportunity.SObjectType,
@@ -45,11 +44,7 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         String testRecordName = 'UoW Test Name 1';
 
         Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        email.setToAddresses(new List<String>
-        {
-'foobar@test.com'
-        }
-);
+        email.setToAddresses(new List<String>{ 'foobar@test.com' });
         email.setPlainTextBody('See Spot run.');
 
         MockDML mockDML = new MockDML();
@@ -139,19 +134,11 @@ private with sharing class fflib_SObjectUnitOfWorkTest
         fflib_SObjectUnitOfWork unitOfWork = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
 
         // WHEN - we mark the records as deleted
-        unitOfWork.registerDeleted(new List<SObject>
-        {
-opportunity, product
-        }
-);
+        unitOfWork.registerDeleted(new List<SObject>{ opportunity, product });
         unitOfWork.commitWork();
 
         // THEN - the dmlDelete action should be invoked
-        System.assertEquals(new List<SObject>
-        {
-opportunity, product
-        }
-, mockDML.recordsForDelete, 'test Register Deleted should produce new List<SObject> { opportunity, product }');
+        System.assertEquals(new List<SObject>{ opportunity, product }, mockDML.recordsForDelete, 'test Register Deleted should produce new List<SObject> { opportunity, product }');
     }
 
     @IsTest
@@ -164,24 +151,12 @@ opportunity, product
         fflib_SObjectUnitOfWork unitOfWork = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
 
         // WHEN - we mark the records as deleted
-        unitOfWork.registerPermanentlyDeleted(new List<SObject>
-        {
-opportunity, product
-        }
-);
+        unitOfWork.registerPermanentlyDeleted(new List<SObject>{ opportunity, product });
         unitOfWork.commitWork();
 
         // THEN - the dmlDelete and emptyRecycleBin actions should be invoked
-        System.assertEquals(new List<SObject>
-        {
-opportunity, product
-        }
-, mockDML.recordsForDelete, 'test Register Permanently Deleted should produce new List<SObject> { opportunity, product }');
-        System.assertEquals(new List<SObject>
-        {
-opportunity, product
-        }
-, mockDML.recordsForRecycleBin, 'test Register Permanently Deleted should produce new List<SObject> { opportunity, product }');
+        System.assertEquals(new List<SObject>{ opportunity, product }, mockDML.recordsForDelete, 'test Register Permanently Deleted should produce new List<SObject> { opportunity, product }');
+        System.assertEquals(new List<SObject>{ opportunity, product }, mockDML.recordsForRecycleBin, 'test Register Permanently Deleted should produce new List<SObject> { opportunity, product }');
     }
 
     @IsTest
@@ -193,11 +168,7 @@ opportunity, product
         fflib_SObjectUnitOfWork unitOfWork = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
 
         // WHEN - we empty the record from the recycle bin
-        unitOfWork.registerEmptyRecycleBin(new List<Opportunity>
-        {
-opportunity
-        }
-);
+        unitOfWork.registerEmptyRecycleBin(new List<Opportunity>{ opportunity });
         unitOfWork.commitWork();
 
         // THEN - the emptyRecycleBin action should be invoked
@@ -307,20 +278,12 @@ opportunity
             opp.Name = 'UoW Test Name ' + o;
             opp.StageName = 'Open';
             opp.CloseDate = System.today();
-            uow.registerNew(new List<SObject>
-            {
-opp
-            }
-);
+            uow.registerNew(new List<SObject>{ opp });
             for(Integer i=0; i<o+1; i++)
             {
                 Product2 product = new Product2();
                 product.Name = opp.Name + ' : Product : ' + i;
-                uow.registerNew(new List<SObject>
-                {
-product
-                }
-);
+                uow.registerNew(new List<SObject>{ product });
                 PricebookEntry pbe = new PricebookEntry();
                 pbe.UnitPrice = 10;
                 pbe.IsActive = true;
@@ -338,8 +301,7 @@ product
         // Assert Results
         System.assertEquals(175, mockDML.recordsForInsert.size(), 'Incorrect of new records');
 
-        assertEvents(new List<String>
-        {
+        assertEvents(new List<String>{
                 'onCommitWorkStarting'
                 , 'onPublishBeforeEventsStarting'
                 , 'onPublishBeforeEventsFinished'
@@ -369,11 +331,7 @@ product
         // Insert Opportunities with UnitOfWork forcing a failure on DML by not setting 'Name' field
         DerivedUnitOfWork uow = new DerivedUnitOfWork(MY_SOBJECTS);
         Opportunity opp = new Opportunity();
-        uow.registerNew(new List<SObject>
-        {
-opp
-        }
-);
+        uow.registerNew(new List<SObject>{ opp });
         Boolean didFail = false;
         System.DmlException caughtEx = null;
 
@@ -389,14 +347,9 @@ opp
 
         // Assert Results
         System.assertEquals(didFail, true, 'didFail');
-        System.assert(caughtEx.getMessage().contains('REQUIRED_FIELD_MISSING'), String.format('Exception message was {0}', new List<String>
-        {
-caughtEx.getMessage()
-        }
-));
+        System.assert(caughtEx.getMessage().contains('REQUIRED_FIELD_MISSING'), String.format('Exception message was {0}', new List<String>{ caughtEx.getMessage() }));
 
-        assertEvents(new List<String>
-        {
+        assertEvents(new List<String>{
                 'onCommitWorkStarting'
                 , 'onPublishBeforeEventsStarting'
                 , 'onPublishBeforeEventsFinished'
@@ -426,11 +379,7 @@ caughtEx.getMessage()
         opp.Name = 'UoW Test Name 1';
         opp.StageName = 'Open';
         opp.CloseDate = System.today();
-        uow.registerNew(new List<SObject>
-        {
-opp
-        }
-);
+        uow.registerNew(new List<SObject>{ opp });
 
         // register work that will fail during processing
         FailDoingWork fdw = new FailDoingWork();
@@ -451,14 +400,9 @@ opp
 
         // Assert Results
         System.assertEquals(didFail, true, 'didFail');
-        System.assert(caughtEx.getMessage().contains('Work failed.'), String.format('Exception message was {0}', new List<String>
-        {
-caughtEx.getMessage()
-        }
-));
+        System.assert(caughtEx.getMessage().contains('Work failed.'), String.format('Exception message was {0}', new List<String>{ caughtEx.getMessage() }));
 
-        assertEvents(new List<String>
-        {
+        assertEvents(new List<String>{
                 'onCommitWorkStarting'
                 , 'onPublishBeforeEventsStarting'
                 , 'onPublishBeforeEventsFinished'
@@ -522,11 +466,7 @@ caughtEx.getMessage()
         MockDML mockDML = new MockDML();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
         uow.registerDirty(nameUpdate);
-        uow.registerDirty(amountUpdate, new List<SObjectField>
-        {
-Opportunity.Amount
-        }
-);
+        uow.registerDirty(amountUpdate, new List<SObjectField>{ Opportunity.Amount });
         uow.commitWork();
 
         System.assertEquals(1, mockDML.recordsForUpdate.size(), 'test Register Dirty field should produce 1');
@@ -555,35 +495,21 @@ Opportunity.Amount
 
         MockDML mockDML = new MockDML();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
-        uow.registerDirty(new List<Opportunity>
-        {
-opportunityA, opportunityB
-        }
-);
+        uow.registerDirty(new List<Opportunity>{ opportunityA, opportunityB });
 
         // WHEN we register the records again with different fields updated
-        List<Opportunity> recordsWithStageUpdate = new List<Opportunity>
-        {
+        List<Opportunity> recordsWithStageUpdate = new List<Opportunity>{
                 new Opportunity(Id = opportunityA.Id, StageName = 'Closed'),
                 new Opportunity(Id = opportunityB.Id, StageName = 'Closed')
         }
 ;
-        List<Opportunity> recordsWithAmountUpdate = new List<Opportunity>
-        {
+        List<Opportunity> recordsWithAmountUpdate = new List<Opportunity>{
                 new Opportunity(Id = opportunityA.Id, Amount = 250),
                 new Opportunity(Id = opportunityB.Id, Amount = 250)
         }
 ;
-        uow.registerDirty(recordsWithStageUpdate, new List<SObjectField>
-        {
-Opportunity.StageName
-        }
-);
-        uow.registerDirty(recordsWithAmountUpdate, new List<SObjectField>
-        {
-Opportunity.Amount
-        }
-);
+        uow.registerDirty(recordsWithStageUpdate, new List<SObjectField>{ Opportunity.StageName });
+        uow.registerDirty(recordsWithAmountUpdate, new List<SObjectField>{ Opportunity.Amount });
         uow.commitWork();
 
         // THEN the records should be registered with both changed values for Amount and StageName
@@ -637,35 +563,21 @@ Opportunity.Amount
 
         MockDML mockDML = new MockDML();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
-        uow.registerDirty(new List<Opportunity>
-        {
-opportunityA, opportunityB
-        }
-);
+        uow.registerDirty(new List<Opportunity>{ opportunityA, opportunityB });
 
         // WHEN we register the records again with different fields updated
-        List<Opportunity> recordsWithStageUpdate = new List<Opportunity>
-        {
+        List<Opportunity> recordsWithStageUpdate = new List<Opportunity>{
                 new Opportunity(Id = opportunityA.Id, StageName = 'Closed'),
                 new Opportunity(Id = opportunityB.Id, StageName = 'Closed')
         }
 ;
-        List<Opportunity> recordsWithAmountUpdate = new List<Opportunity>
-        {
+        List<Opportunity> recordsWithAmountUpdate = new List<Opportunity>{
                 new Opportunity(Id = opportunityA.Id, Amount = 250),
                 new Opportunity(Id = opportunityB.Id, Amount = 250)
         }
 ;
-        uow.registerDirty(recordsWithStageUpdate, new List<SObjectField>
-        {
-Opportunity.StageName
-        }
-);
-        uow.registerDirty(recordsWithAmountUpdate, new List<SObjectField>
-        {
-Opportunity.Amount
-        }
-);
+        uow.registerDirty(recordsWithStageUpdate, new List<SObjectField>{ Opportunity.StageName });
+        uow.registerDirty(recordsWithAmountUpdate, new List<SObjectField>{ Opportunity.Amount });
         uow.registerDirty( // Register again the original record, should overwrite the one with the dirty fields
                 new Opportunity(
                 Id = opportunityB.Id,
@@ -727,11 +639,7 @@ Opportunity.Amount
         Test.startTest();
         MockDML mockDML = new MockDML();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, mockDML);
-        uow.registerUpsert(new List<Opportunity>
-        {
-existingOpp, newOpportunity
-        }
-);
+        uow.registerUpsert(new List<Opportunity>{ existingOpp, newOpportunity });
         uow.commitWork();
         Test.stopTest();
 
@@ -753,11 +661,7 @@ existingOpp, newOpportunity
 
         Test.startTest();
             fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS);
-            uow.registerUpsert(new List<Opportunity>
-            {
-existingOpp
-            }
-, Opportunity.Id);
+            uow.registerUpsert(new List<Opportunity>{ existingOpp }, Opportunity.Id);
             uow.commitWork();
         Test.stopTest();
 
@@ -775,11 +679,7 @@ existingOpp
 
         Test.startTest();
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(MY_SOBJECTS, new fflib_SObjectUnitOfWork.UserModeDML());
-        uow.registerUpsert(new List<Opportunity>
-        {
-existingOpp
-        }
-, Opportunity.Id);
+        uow.registerUpsert(new List<Opportunity>{ existingOpp }, Opportunity.Id);
         uow.commitWork();
         Test.stopTest();
 
@@ -894,11 +794,7 @@ existingOpp
         // WHEN we try to register an upsert by external ID THEN an exception is thrown at registration (MockDML doesn't implement IDML2)
         try
         {
-            uow.registerUpsert(new List<Opportunity>
-            {
-existingOpp
-            }
-, Opportunity.Id);
+            uow.registerUpsert(new List<Opportunity>{ existingOpp }, Opportunity.Id);
             Assert.fail('Expected UnitOfWorkException to be thrown when using IDML without IDMLUpsertable');
         }
 catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
@@ -967,11 +863,7 @@ catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
     private static void testRegisterUpsert_When_DifferentExternalIdAlreadyRegisteredForSameType_Expect_Exception()
     {
         User runningUser = [SELECT Id, Username FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1];
-        List<Schema.SObjectType> userTypes = new List<Schema.SObjectType>
-        {
-User.SObjectType
-        }
-;
+        List<Schema.SObjectType> userTypes = new List<Schema.SObjectType>{ User.SObjectType };
         fflib_SObjectUnitOfWork uow = new fflib_SObjectUnitOfWork(userTypes);
         uow.registerUpsert(runningUser, User.Id, null, null);
         User secondUser = runningUser.clone(false, true);
@@ -1024,22 +916,14 @@ catch (fflib_SObjectUnitOfWork.UnitOfWorkException e)
         System.assertEquals(expectedEvents.size(), actualEvents.size(), 'events size');
         for (Integer i = 0; i < expectedEvents.size(); i++)
         {
-            System.assertEquals(expectedEvents[i], actualEvents[i], String.format('Event {0} was not fired in order expected.', new List<String>
-            {
-expectedEvents[i]
-            }
-));
+            System.assertEquals(expectedEvents[i], actualEvents[i], String.format('Event {0} was not fired in order expected.', new List<String>{ expectedEvents[i] }));
         }
 
         // assert that types match
         System.assertEquals(expectedTypes.size(), actualTypes.size(), 'types size');
         for (Schema.SObjectType sObjectType :expectedTypes)
         {
-            System.assertEquals(true, actualTypes.contains(sObjectType), String.format('Type {0} was not registered.', new List<String>
-            {
-String.valueOf(sObjectType)
-            }
-));
+            System.assertEquals(true, actualTypes.contains(sObjectType), String.format('Type {0} was not registered.', new List<String>{ String.valueOf(sObjectType) }));
         }
     }
 
@@ -1090,11 +974,7 @@ String.valueOf(sObjectType)
             {
                 if (event == eventName)
                 {
-                    throw new DerivedUnitOfWorkException(String.format('Event {0} has already been fired.', new List<String>
-                    {
-event
-                    }
-));
+                    throw new DerivedUnitOfWorkException(String.format('Event {0} has already been fired.', new List<String>{ event }));
                 }
             }
             m_commitWorkEventsFired.add(event);
@@ -1104,11 +984,7 @@ event
         {
             if (m_registeredTypes.contains(sObjectType))
             {
-                throw new DerivedUnitOfWorkException(String.format('Type {0} has already been registered.', new List<String>
-                {
-String.valueOf(sObjectType)
-                }
-));
+                throw new DerivedUnitOfWorkException(String.format('Type {0} has already been registered.', new List<String>{ String.valueOf(sObjectType) }));
             }
             m_registeredTypes.add(sObjectType);
         }

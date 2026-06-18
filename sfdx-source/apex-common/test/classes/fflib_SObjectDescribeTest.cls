@@ -75,8 +75,7 @@ private class fflib_SObjectDescribeTest
     static void FieldsMap()
     {
         String fakeNamespace = 'fflib_test';
-        Map<String,Schema.SObjectField> fakeFieldData = new Map<String,Schema.SObjectField>
-        {
+        Map<String,Schema.SObjectField> fakeFieldData = new Map<String,Schema.SObjectField>{
             'name__c' => Contact.SObjectType.fields.name, //re-use standard field types since we can't mock them
             fakeNamespace+'__name__c' => Account.SObjectType.fields.name,
             fakeNamespace+'__otherField__c' => Account.SObjectType.fields.name,
@@ -103,8 +102,7 @@ private class fflib_SObjectDescribeTest
     static void GlobalDescribeMap()
     {
         String fakeNamespace = 'fflib_test';
-        Map<String,Schema.SObjectType> fakeFieldData = new Map<String,Schema.SObjectType>
-        {
+        Map<String,Schema.SObjectType> fakeFieldData = new Map<String,Schema.SObjectType>{
             'name__c' => Contact.SObjectType, //re-use stndard object types since we can't mock them
             fakeNamespace+'__name__c' => Account.SObjectType,
             'createddate' => Lead.SObjectType

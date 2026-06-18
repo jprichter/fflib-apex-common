@@ -53,11 +53,7 @@ public class fflib_SObjectsTest
     static void itShouldClearTheField()
     {
         Account record = new Account(ShippingCountry = 'Holland');
-        DomainAccounts domain = new DomainAccounts(new List<Account>
-        {
-record
-        }
-);
+        DomainAccounts domain = new DomainAccounts(new List<Account>{ record });
         System.assert(!domain.selectByShippingCountry('Holland').isEmpty(), 'Incorrect test data');
 
         domain.clearField(Schema.Account.ShippingCountry);
@@ -92,19 +88,14 @@ record
         Id idC = generateTestRecordId(accountSObjectType);
 
         DomainAccounts domain = new DomainAccounts(
-                new List<SObject>
-                {
+                new List<SObject>{
                         new Account(Id = idA),
                         new Account(Id = idB),
                         new Account(Id = idC)
                 }
         );
 
-        Set<Id> recordIds = new Set<Id>
-        {
-idA, idB, idC
-        }
-;
+        Set<Id> recordIds = new Set<Id>{ idA, idB, idC };
         System.assert(
                 domain.getRecordIds().equals(recordIds),
                 'The domain should return all the record Ids'
@@ -175,8 +166,7 @@ idA, idB, idC
     {
         DomainAccounts domain = generateDomain();
 
-        final Set<String> expected = new Set<String>
-        {
+        final Set<String> expected = new Set<String>{
                 null,
                 '',
                 'Canada',
@@ -200,8 +190,7 @@ idA, idB, idC
     {
         DomainAccounts domain = generateDomain();
 
-        final Set<Integer> expectedOriginalType = new Set<Integer>
-        {
+        final Set<Integer> expectedOriginalType = new Set<Integer>{
                 null,
                 10,
                 20,
@@ -248,11 +237,7 @@ idA, idB, idC
     {
         DomainAccounts domain = generateDomain();
         domain.setRatingByShippingCountry(
-                new Map<Object,Object>
-                {
-                        'USA' => 'Hot'
-                }
-        );
+                new Map<Object,Object>{ 'USA' => 'Hot' });
 
         System.assert(domain.selectByRating('Hot').size() == 1, 'it Should Set Field Value By Condition should satisfy domain.selectByRating(Hot).size() == 1');
     }
@@ -262,19 +247,11 @@ idA, idB, idC
     {
         Account recordA = new Account(Name = 'A', ShippingCountry = 'USA');
         Account recordB = new Account(Name = 'B', ShippingCountry = 'Canada');
-        DomainAccounts domain = new DomainAccounts(new List<Account>
-        {
-recordA, recordB
-        }
-);
+        DomainAccounts domain = new DomainAccounts(new List<Account>{ recordA, recordB });
 
         domain.addError('Bulk record error');
         domain.addError(Schema.Account.Name, 'Bulk field error');
-        domain.clearFields(new Set<Schema.SObjectField>
-        {
-Schema.Account.ShippingCountry
-        }
-);
+        domain.clearFields(new Set<Schema.SObjectField>{ Schema.Account.ShippingCountry });
 
         System.assertEquals(2, domain.getRecords().size(), 'it Should Allow Bulk Mutators From Outside Domain Hierarchy should produce 2');
         System.assertEquals(null, recordA.ShippingCountry, 'it Should Allow Bulk Mutators From Outside Domain Hierarchy should produce null');
@@ -287,11 +264,7 @@ Schema.Account.ShippingCountry
         // Test static helpers for raise none domain object instance errors
         final String errorMessage = 'Test Error';
         Account record = new Account();
-        DomainAccounts domain = new DomainAccounts(new List<Account>
-        {
-record
-        }
-);
+        DomainAccounts domain = new DomainAccounts(new List<Account>{ record });
         domain.addNameError(errorMessage);
 
         System.assertEquals(1, fflib_SObjects.Errors.getAll().size(), 'test Domain Error Logging should produce 1');
@@ -317,8 +290,7 @@ record
     private static DomainAccounts generateDomain()
     {
         DomainAccounts domain = new DomainAccounts(
-                new List<Account>
-                {
+                new List<Account>{
                         new Account(Name = 'A', ShippingCountry = 'USA'),
                         new Account(Name = 'B', ShippingCountry = 'Ireland'),
                         new Account(Name = 'C', ShippingCountry = 'UK', NumberOfEmployees = 10),
@@ -343,11 +315,7 @@ record
         {
             return (List<Account>) getRecordsByFieldValues(
                 Schema.Account.ShippingCountry,
-                new Set<Object>
-                {
-country
-                }
-            );
+                new Set<Object>{ country });
         }
 
         public List<Account> selectByRating(String rating)
@@ -389,8 +357,7 @@ country
         public List<Account> selectWithEmptyRecord()
         {
             return (List<Account>) getRecordsWithAllBlankFieldValues(
-                    new Set<Schema.SObjectField>
-                    {
+                    new Set<Schema.SObjectField>{
                             Schema.Account.Name,
                             Schema.Account.ShippingCountry,
                             Schema.Account.NumberOfEmployees
@@ -401,8 +368,7 @@ country
         public List<Account> selectPopulatedRecords()
         {
             return (List<Account>) getRecordsWithAllNotBlankFieldValues(
-                    new Set<Schema.SObjectField>
-                    {
+                    new Set<Schema.SObjectField>{
                             Schema.Account.Name,
                             Schema.Account.ShippingCountry,
                             Schema.Account.NumberOfEmployees

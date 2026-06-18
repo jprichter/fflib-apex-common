@@ -279,8 +279,7 @@ catch(fflib_SecurityUtils.SecurityException e)
                 {
                     fflib_SecurityUtils.checkInsert(
                         Account.SObjectType,
-                        new List<String>
-                        {
+                        new List<String>{
                             'Name',
                             'ParentId',
                             'ownerId'
@@ -300,8 +299,7 @@ catch(fflib_SecurityUtils.SecurityException e)
                 {
                     fflib_SecurityUtils.checkRead(
                         Contact.SObjectType,
-                        new List<String>
-                        {
+                        new List<String>{
                             'LastName',
                             'eMaiL',
                             'BirthDATE'
@@ -320,8 +318,7 @@ catch(fflib_SecurityUtils.SecurityException e)
                 {
                     fflib_SecurityUtils.checkUpdate(
                         Lead.SObjectType,
-                        new List<String>
-                        {
+                        new List<String>{
                             'LastName',
                             'FirstNAMe',
                             'cOMPANY'
@@ -341,8 +338,7 @@ catch(fflib_SecurityUtils.SecurityException e)
 //no exceptions, despite no rights
                 fflib_SecurityUtils.checkInsert(
                     Account.SObjectType,
-                    new List<String>
-                    {
+                    new List<String>{
                         'Name',
                         'Type',
                         'ownerId'
@@ -350,8 +346,7 @@ catch(fflib_SecurityUtils.SecurityException e)
                 );
                 fflib_SecurityUtils.checkRead(
                     Contact.SObjectType,
-                    new List<String>
-                    {
+                    new List<String>{
                         'LastName',
                         'accountId',
                         'ownerId'
@@ -359,8 +354,7 @@ catch(fflib_SecurityUtils.SecurityException e)
                 );
                 fflib_SecurityUtils.checkUpdate(
                     Lead.SObjectType,
-                    new List<String>
-                    {
+                    new List<String>{
                         'LastName',
                         'FirstNAMe',
                         'cOMPANY'
@@ -379,8 +373,7 @@ catch(fflib_SecurityUtils.SecurityException e)
         {
             fflib_SecurityUtils.checkInsert(
                 Account.SObjectType,
-                new List<Schema.SObjectField>
-                {
+                new List<Schema.SObjectField>{
                     Account.SObjectType.fields.Name,
                     Account.SObjectType.fields.ParentId,
                     Account.SObjectType.fields.ownerId
@@ -388,8 +381,7 @@ catch(fflib_SecurityUtils.SecurityException e)
             );
             fflib_SecurityUtils.checkRead(
                 Contact.SObjectType,
-                new List<Schema.SObjectField>
-                {
+                new List<Schema.SObjectField>{
                     Contact.SObjectType.fields.LastName,
                     Contact.SObjectType.fields.accountId,
                     Contact.SObjectType.fields.ownerId
@@ -397,8 +389,7 @@ catch(fflib_SecurityUtils.SecurityException e)
             );
             fflib_SecurityUtils.checkUpdate(
                 Lead.SObjectType,
-                new List<Schema.SObjectField>
-                {
+                new List<Schema.SObjectField>{
                     Lead.SObjectType.fields.LastName,
                     Lead.SObjectType.fields.FirstNAMe,
                     Lead.SObjectType.fields.cOMPANY

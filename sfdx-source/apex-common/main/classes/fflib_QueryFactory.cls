@@ -57,11 +57,11 @@ public class fflib_QueryFactory
     // No explicit sharing declaration - inherit from caller
     public enum SortOrder
     {
-ASCENDING, DESCENDING
+        ASCENDING, DESCENDING
     }
     public enum FLSEnforcement
     {
-NONE, LEGACY, USER_MODE, SYSTEM_MODE
+        NONE, LEGACY, USER_MODE, SYSTEM_MODE
     }
 
     /**
@@ -113,7 +113,7 @@ get; private set;
 
         if(!fieldName.contains('.'))
         {
-//single field
+            //single field
             Schema.SObjectField token = fflib_SObjectDescribe.getDescribe(table).getField(fieldName.toLowerCase());
             if(token == null)
             {
@@ -165,11 +165,11 @@ get; private set;
 
                 fieldPath.add(tokenDescribe.getRelationshipName());
             }
-else if(token != null && !i.hasNext())
+                else if(token != null && !i.hasNext())
             {
                 fieldPath.add(tokenDescribe.getName());
             }
-else
+                else
             {
                 if(token == null)
                 {
@@ -293,11 +293,7 @@ else
      **/
     public fflib_QueryFactory selectField(String fieldName)
     {
-        return selectFields(new Set<String>
-        {
-fieldName
-        }
-);
+        return selectFields(new Set<String>{ fieldName });
     }
 
     /**
@@ -320,11 +316,7 @@ fieldName
     **/
     public fflib_QueryFactory selectField(Schema.SObjectField field)
     {
-        return selectFields(new Set<Schema.SObjectField>
-        {
-field
-        }
-);
+        return selectFields(new Set<Schema.SObjectField> { field });
     }
     /**
      * Selects multiple fields. This acts the same as calling {@link #selectField(String)} multiple times.
@@ -496,11 +488,7 @@ field
      **/
     public fflib_QueryFactory setOrdering(Ordering o)
     {
-        this.order = new List<Ordering>
-        {
-o
-        }
-;
+        this.order = new List<Ordering>{ o };
         return this;
     }
     /**

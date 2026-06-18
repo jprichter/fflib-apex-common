@@ -421,11 +421,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
         String sObjectType = record.getSObjectType().getDescribe().getName();
         if(!m_newListByType.containsKey(sObjectType))
         {
-            throw new UnitOfWorkException(String.format('SObject type {0} is not supported by this unit of work', new String[]
-            {
-sObjectType
-            }
-));
+            throw new UnitOfWorkException(String.format('SObject type {0} is not supported by this unit of work', new String[]{ sObjectType }));
         }
         m_relationships.get(sObjectType).add(record, relatedToField, externalIdField, externalId);
     }
@@ -598,11 +594,7 @@ sObjectType
         {
             throw new UnitOfWorkException(String.format(
                 'SObject type {0} has already registered an upsert by external id {1}, you cannot use another in this unit of work.',
-                new List<String>
-                {
-sObjName, registeredExternalId.getDescribe().getName()
-                }
-            ));
+                new List<String>{ sObjName, registeredExternalId.getDescribe().getName() }));
         }
         if (!(m_dml instanceof IDMLUpsertable))
         {
@@ -951,11 +943,7 @@ sObjName, registeredExternalId.getDescribe().getName()
                     String.format(
                             'SObject type {0} must use registerPublishBeforeTransaction or ' +
                                     'registerPublishAfterTransaction methods to be used within this unit of work',
-                            new List<String>
-                            {
-sObjectType
-                            }
-                    )
+                            new List<String>{ sObjectType })
             );
         }
     }
@@ -968,11 +956,7 @@ sObjectType
             throw new UnitOfWorkException(
                     String.format(
                             'SObject type {0} is invalid for publishing within this unit of work',
-                            new List<String>
-                            {
-sObjectType
-                            }
-                    )
+                            new List<String>{ sObjectType })
             );
         }
     }
@@ -985,11 +969,7 @@ sObjectType
             throw new UnitOfWorkException(
                     String.format(
                             'SObject type {0} is not supported by this unit of work',
-                            new List<String>
-                            {
-sObjectType
-                            }
-                    )
+                            new List<String>{ sObjectType })
             );
         }
     }
