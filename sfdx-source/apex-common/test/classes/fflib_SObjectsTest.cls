@@ -25,6 +25,7 @@
 **/
 
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions')
 public class fflib_SObjectsTest
 {
     private static Integer testFakeIdSequence = 0;
@@ -37,7 +38,8 @@ public class fflib_SObjectsTest
      * @param sobjectType The type whose key prefix the fake Id should use
      */
     @TestVisible
-    private static Id generateTestRecordId(Schema.SObjectType sobjectType) {
+    private static Id generateTestRecordId(Schema.SObjectType sobjectType)
+    {
         String keyPrefix = fflib_SObjectDescribe.getDescribe(sobjectType).getDescribe().getKeyPrefix();
         testFakeIdSequence++;
         String prefix = TEST_FAKE_ID_PADDING.substring(
@@ -86,15 +88,14 @@ public class fflib_SObjectsTest
         Id idC = generateTestRecordId(accountSObjectType);
 
         DomainAccounts domain = new DomainAccounts(
-                new List<SObject>
-                {
+                new List<SObject>{
                         new Account(Id = idA),
                         new Account(Id = idB),
                         new Account(Id = idC)
                 }
         );
 
-        Set<Id> recordIds = new Set<Id> {idA, idB, idC};
+        Set<Id> recordIds = new Set<Id>{ idA, idB, idC };
         System.assert(
                 domain.getRecordIds().equals(recordIds),
                 'The domain should return all the record Ids'
@@ -111,7 +112,7 @@ public class fflib_SObjectsTest
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectByShippingCountry('USA').size() == 1);
+        System.assert(domain.selectByShippingCountry('USA').size() == 1, 'it Should Return Records With Field Values should satisfy domain.selectByShippingCountry(USA).size() == 1');
     }
 
     @IsTest
@@ -119,14 +120,14 @@ public class fflib_SObjectsTest
     {
         DomainAccounts domain = generateDomain();
 
-        System.assertEquals(3, domain.selectWithoutShippingCountry().size());
+        System.assertEquals(3, domain.selectWithoutShippingCountry().size(), 'it Should Return Records Without Field Values should produce 3');
     }
     @IsTest
     static void itShouldReturnRecordsWithoutFieldValuesForNonStringFields()
     {
         DomainAccounts domain = generateDomain();
 
-        System.assertEquals(4, domain.selectWithoutNumberOfEmployees().size());
+        System.assertEquals(4, domain.selectWithoutNumberOfEmployees().size(), 'it Should Return Records Without Field Values For Non String Fields should produce 4');
     }
 
     @IsTest
@@ -134,7 +135,7 @@ public class fflib_SObjectsTest
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectWithEmptyRecord().size() == 1);
+        System.assert(domain.selectWithEmptyRecord().size() == 1, 'it Should Return Records Without All Field Values should satisfy domain.selectWithEmptyRecord().size() == 1');
     }
 
     @IsTest
@@ -142,14 +143,14 @@ public class fflib_SObjectsTest
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectWithShippingCountry().size() == 4);
+        System.assert(domain.selectWithShippingCountry().size() == 4, 'it Should Return Records With Shipping Country should satisfy domain.selectWithShippingCountry().size() == 4');
     }
     @IsTest
     static void itShouldReturnRecordsWithNumberOfEmployees()
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectWithNumberOfEmployees().size() == 3);
+        System.assert(domain.selectWithNumberOfEmployees().size() == 3, 'it Should Return Records With Number Of Employees should satisfy domain.selectWithNumberOfEmployees().size() == 3');
     }
 
     @IsTest
@@ -157,7 +158,7 @@ public class fflib_SObjectsTest
     {
         DomainAccounts domain = generateDomain();
 
-        System.assert(domain.selectPopulatedRecords().size() == 2);
+        System.assert(domain.selectPopulatedRecords().size() == 2, 'it Should Return Records With All Field Values should satisfy domain.selectPopulatedRecords().size() == 2');
     }
 
     @IsTest
@@ -165,23 +166,23 @@ public class fflib_SObjectsTest
     {
         DomainAccounts domain = generateDomain();
 
-        final Set<String> expected = new Set<String>
-        {
+        final Set<String> expected = new Set<String>{
                 null,
                 '',
                 'Canada',
                 'Ireland',
                 'UK',
                 'USA'
-        };
+        }
+;
         System.assert(
                 domain.getStringFieldValues(Schema.Account.ShippingCountry).equals(expected)
-        );
+        , 'it Should Return Field Values should satisfy domain.getStringFieldValues(Schema.Account.ShippingCountry).equals(ex...');
 
         System.assert(
                 domain.getFieldValues(Schema.Account.ShippingCountry)
                         .equals(expected)
-        );
+        , 'it Should Return Field Values should satisfy domain.getFieldValues(Schema.Account.ShippingCountry) .equals(expected)');
     }
 
     @IsTest
@@ -189,18 +190,18 @@ public class fflib_SObjectsTest
     {
         DomainAccounts domain = generateDomain();
 
-        final Set<Integer> expectedOriginalType = new Set<Integer>
-        {
+        final Set<Integer> expectedOriginalType = new Set<Integer>{
                 null,
                 10,
                 20,
                 30
-        };
+        }
+;
 
         System.assert(
                 domain.getFieldValues(Schema.Account.NumberOfEmployees)
                         .equals(expectedOriginalType)
-        );
+        , 'it Should Return Field Values For Non String Fields should satisfy domain.getFieldValues(Schema.Account.NumberOfEmployees) .equals(expec...');
     }
 
     @IsTest
@@ -227,7 +228,7 @@ public class fflib_SObjectsTest
         String country = 'Holland';
         domain.setShippingCountry(country);
 
-        System.assert(domain.selectByShippingCountry(country).size() == 7);
+        System.assert(domain.selectByShippingCountry(country).size() == 7, 'it Should Set Field Value should satisfy domain.selectByShippingCountry(country).size() == 7');
     }
 
 
@@ -236,13 +237,9 @@ public class fflib_SObjectsTest
     {
         DomainAccounts domain = generateDomain();
         domain.setRatingByShippingCountry(
-                new Map<Object,Object>
-                {
-                        'USA' => 'Hot'
-                }
-        );
+                new Map<Object,Object>{ 'USA' => 'Hot' });
 
-        System.assert(domain.selectByRating('Hot').size() == 1);
+        System.assert(domain.selectByRating('Hot').size() == 1, 'it Should Set Field Value By Condition should satisfy domain.selectByRating(Hot).size() == 1');
     }
 
     @IsTest
@@ -256,9 +253,9 @@ public class fflib_SObjectsTest
         domain.addError(Schema.Account.Name, 'Bulk field error');
         domain.clearFields(new Set<Schema.SObjectField>{ Schema.Account.ShippingCountry });
 
-        System.assertEquals(2, domain.getRecords().size());
-        System.assertEquals(null, recordA.ShippingCountry);
-        System.assertEquals(null, recordB.ShippingCountry);
+        System.assertEquals(2, domain.getRecords().size(), 'it Should Allow Bulk Mutators From Outside Domain Hierarchy should produce 2');
+        System.assertEquals(null, recordA.ShippingCountry, 'it Should Allow Bulk Mutators From Outside Domain Hierarchy should produce null');
+        System.assertEquals(null, recordB.ShippingCountry, 'it Should Allow Bulk Mutators From Outside Domain Hierarchy should produce null');
     }
 
     @IsTest
@@ -270,9 +267,9 @@ public class fflib_SObjectsTest
         DomainAccounts domain = new DomainAccounts(new List<Account>{ record });
         domain.addNameError(errorMessage);
 
-        System.assertEquals(1, fflib_SObjects.Errors.getAll().size());
-        System.assertEquals(errorMessage, fflib_SObjects.Errors.getAll()[0].message);
-        System.assertEquals(Account.Name, ((fflib_SObjects.FieldError) fflib_SObjects.Errors.getAll()[0]).field);
+        System.assertEquals(1, fflib_SObjects.Errors.getAll().size(), 'test Domain Error Logging should produce 1');
+        System.assertEquals(errorMessage, fflib_SObjects.Errors.getAll()[0].message, 'test Domain Error Logging should produce errorMessage');
+        System.assertEquals(Account.Name, ((fflib_SObjects.FieldError) fflib_SObjects.Errors.getAll()[0]).field, 'test Domain Error Logging should produce Account.Name');
     }
 
     @IsTest
@@ -282,19 +279,18 @@ public class fflib_SObjectsTest
         Opportunity opp = new Opportunity ( Name = 'Test', Type = 'Existing Account' );
         fflib_SObjects.Errors.error('Error', opp);
         fflib_SObjects.Errors.error('Error', opp, Opportunity.Type);
-        System.assertEquals(2, fflib_SObjects.Errors.getAll().size());
-        System.assertEquals('Error', fflib_SObjects.Errors.getAll()[0].message);
-        System.assertEquals('Error', fflib_SObjects.Errors.getAll()[1].message);
-        System.assertEquals(Opportunity.Type, ((fflib_SObjects.FieldError) fflib_SObjects.Errors.getAll()[1]).field);
+        System.assertEquals(2, fflib_SObjects.Errors.getAll().size(), 'test Error Logging should produce 2');
+        System.assertEquals('Error', fflib_SObjects.Errors.getAll()[0].message, 'test Error Logging should produce Error');
+        System.assertEquals('Error', fflib_SObjects.Errors.getAll()[1].message, 'test Error Logging should produce Error');
+        System.assertEquals(Opportunity.Type, ((fflib_SObjects.FieldError) fflib_SObjects.Errors.getAll()[1]).field, 'test Error Logging should produce Opportunity.Type');
         fflib_SObjects.Errors.clearAll();
-        System.assertEquals(0, fflib_SObjects.Errors.getAll().size());
+        System.assertEquals(0, fflib_SObjects.Errors.getAll().size(), 'test Error Logging should produce 0');
     }
 
     private static DomainAccounts generateDomain()
     {
         DomainAccounts domain = new DomainAccounts(
-                new List<Account>
-                {
+                new List<Account>{
                         new Account(Name = 'A', ShippingCountry = 'USA'),
                         new Account(Name = 'B', ShippingCountry = 'Ireland'),
                         new Account(Name = 'C', ShippingCountry = 'UK', NumberOfEmployees = 10),
@@ -319,8 +315,7 @@ public class fflib_SObjectsTest
         {
             return (List<Account>) getRecordsByFieldValues(
                 Schema.Account.ShippingCountry,
-                new Set<Object>{ country }
-            );
+                new Set<Object>{ country });
         }
 
         public List<Account> selectByRating(String rating)
@@ -362,8 +357,7 @@ public class fflib_SObjectsTest
         public List<Account> selectWithEmptyRecord()
         {
             return (List<Account>) getRecordsWithAllBlankFieldValues(
-                    new Set<Schema.SObjectField>
-                    {
+                    new Set<Schema.SObjectField>{
                             Schema.Account.Name,
                             Schema.Account.ShippingCountry,
                             Schema.Account.NumberOfEmployees
@@ -374,8 +368,7 @@ public class fflib_SObjectsTest
         public List<Account> selectPopulatedRecords()
         {
             return (List<Account>) getRecordsWithAllNotBlankFieldValues(
-                    new Set<Schema.SObjectField>
-                    {
+                    new Set<Schema.SObjectField>{
                             Schema.Account.Name,
                             Schema.Account.ShippingCountry,
                             Schema.Account.NumberOfEmployees

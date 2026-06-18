@@ -29,7 +29,7 @@
  * of the Apex Enterprise Patterns, Service, Unit Of Work, Selector and Domain.
  *   See the sample applications Application.cls file for an example
  **/
-@SuppressWarnings('PMD.EmptyStatementBlock, PMD.CognitiveComplexity, PMD.ClassNamingConventions, PMD.FieldNamingConventions')
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.CognitiveComplexity, PMD.ClassNamingConventions, PMD.FieldNamingConventions, PMD.ApexDoc')
 public virtual class fflib_Application
 {
     /**
@@ -43,7 +43,9 @@ public virtual class fflib_Application
         /**
          * Constructs a Unit Of Work factory
          **/
-        public UnitOfWorkFactory() { }
+        public UnitOfWorkFactory()
+        {
+        }
 
         /**
          * Constructs a Unit Of Work factory
@@ -140,7 +142,9 @@ public virtual class fflib_Application
         /**
          * Constructs a simple Service Factory
          **/
-        public ServiceFactory() { }
+        public ServiceFactory()
+        {
+        }
 
         /**
          * Constructs a simple Service Factory,
@@ -199,7 +203,9 @@ public virtual class fflib_Application
         /**
          * Constructs a simple Selector Factory
          **/
-        public SelectorFactory() { }
+        public SelectorFactory()
+        {
+        }
 
         /**
          * Constructs a Selector Factory linking SObjectType's with Apex Classes implement the fflib_ISObjectSelector interface
@@ -298,7 +304,6 @@ public virtual class fflib_Application
         @TestVisible
         protected virtual void setMock(fflib_ISObjectSelector selectorInstance)
         {
-            System.debug(System.LoggingLevel.INFO, '*** fflib - Please note your mocked class should have sObjectType() stubbed, or use setMock( SObjectType, SelectorMock )');
             setMock(selectorInstance.sObjectType(), selectorInstance);
         }
 
@@ -323,7 +328,9 @@ public virtual class fflib_Application
         /**
          * Constructs a Domain factory
          **/
-        public DomainFactory() { }
+        public DomainFactory()
+        {
+        }
 
         /**
          * Constructs a Domain factory, using an instance of the Selector Factory
@@ -455,7 +462,6 @@ public virtual class fflib_Application
         @TestVisible
         protected virtual void setMock(fflib_ISObjectDomain mockDomain)
         {
-            System.debug(System.LoggingLevel.INFO, '*** fflib - Please note your mocked class should have sObjectType() stubbed, or use setMock( SObjectType, SelectorMock )');
             setMock(mockDomain.sObjectType(), mockDomain);
         }
 
@@ -485,10 +491,14 @@ public virtual class fflib_Application
         }
     }
 
-    public class ApplicationException extends Exception { }
+    public class ApplicationException extends Exception
+    {
+    }
 
     /**
      * Exception representing a developer coding error, not intended for end user eyes
      **/
-    public class DeveloperException extends Exception { }
+    public class DeveloperException extends Exception
+    {
+    }
 }

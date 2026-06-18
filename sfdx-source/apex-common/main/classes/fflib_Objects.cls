@@ -23,9 +23,14 @@
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-public virtual class fflib_Objects implements fflib_IObjects
+@SuppressWarnings('PMD.ApexDoc, PMD.ClassNamingConventions')
+public virtual class fflib_Objects
+        implements fflib_IObjects
 {
-    protected List<Object> objects { get; private set;} { objects = new List<Object>(); }
+    protected List<Object> objects { get; private set; }
+    {
+        objects = new List<Object>();
+    }
 
     /**
      * Class constructor
@@ -52,18 +57,27 @@ public virtual class fflib_Objects implements fflib_IObjects
 
     public Boolean containsAll(List<Object> values)
     {
-        if (values == null) return false;
+        if (values == null)
+        {
+            return false;
+        }
 
         return containsAll(new Set<Object>(values));
     }
 
     public Boolean containsAll(Set<Object> values)
     {
-        if (values == null) return false;
+        if (values == null)
+        {
+            return false;
+        }
 
         for (Object value : values)
         {
-            if (!getObjects()?.contains(value)) return false;
+            if (!getObjects()?.contains(value))
+            {
+                return false;
+            }
         }
         return true;
     }
@@ -75,18 +89,27 @@ public virtual class fflib_Objects implements fflib_IObjects
 
     public Boolean containsNot(List<Object> values)
     {
-        if (values == null) return true;
+        if (values == null)
+        {
+            return true;
+        }
 
         return containsNot(new Set<Object>(values));
     }
 
     public Boolean containsNot(Set<Object> values)
     {
-        if (values == null) return true;
+        if (values == null)
+        {
+            return true;
+        }
 
         for (Object value : values)
         {
-            if (getObjects()?.contains(value)) return false;
+            if (getObjects()?.contains(value))
+            {
+                return false;
+            }
         }
         return true;
     }

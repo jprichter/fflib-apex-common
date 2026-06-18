@@ -2,22 +2,22 @@
  * Copyright (c), FinancialForce.com, inc
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification, 
+ * Redistribution and use in source and binary forms, with or without modification,
  *   are permitted provided that the following conditions are met:
  *
- * - Redistributions of source code must retain the above copyright notice, 
+ * - Redistributions of source code must retain the above copyright notice,
  *      this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright notice, 
- *      this list of conditions and the following disclaimer in the documentation 
+ * - Redistributions in binary form must reproduce the above copyright notice,
+ *      this list of conditions and the following disclaimer in the documentation
  *      and/or other materials provided with the distribution.
- * - Neither the name of the FinancialForce.com, inc nor the names of its contributors 
- *      may be used to endorse or promote products derived from this software without 
+ * - Neither the name of the FinancialForce.com, inc nor the names of its contributors
+ *      may be used to endorse or promote products derived from this software without
  *      specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
- *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
@@ -51,7 +51,7 @@
  * TODO: Need to add some more test methods for more complex use cases and some unexpected (e.g. registerDirty and then registerDeleted)
  *
  **/
-@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions')
+@SuppressWarnings('PMD.EmptyStatementBlock, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.FieldNamingConventions, PMD.PropertyNamingConventions, PMD.ApexDoc, PMD.AvoidBooleanMethodParameters, PMD.ExcessiveParameterList, PMD.CyclomaticComplexity, PMD.CognitiveComplexity, PMD.ExcessivePublicCount, PMD.NcssMethodCount, PMD.ExcessiveClassLength')
 public virtual inherited sharing class fflib_SObjectUnitOfWork
     implements fflib_ISObjectUnitOfWork
 {
@@ -128,7 +128,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
             {
                 return;
             }
-            
+
             EventBus.publish(objList);
         }
         public virtual void emptyRecycleBin(List<SObject> objList)
@@ -144,26 +144,32 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
 
     // User-mode DML delegates CRUD/FLS enforcement to the platform; sharing is inherited from the caller.
     @SuppressWarnings('PMD.ApexCRUDViolation')
-    public virtual inherited sharing class UserModeDML extends SimpleDML{
+    public virtual inherited sharing class UserModeDML extends SimpleDML
+    {
         @TestVisible
         private AccessLevel m_accessLevel;
 
-        public UserModeDML(){
+        public UserModeDML()
+        {
             this(AccessLevel.USER_MODE);
         }
 
         /** Supply the AccessLevel explicitly (UserModeDML uses AccessMode.USER_MODE, by default) */
-        public UserModeDML(AccessLevel access){
+        public UserModeDML(AccessLevel access)
+        {
             m_accessLevel = access;
         }
 
-        public virtual override void dmlInsert(List<SObject> objList){
+        public virtual override void dmlInsert(List<SObject> objList)
+        {
             Database.insert(objList,m_accessLevel);
         }
-        public virtual override void dmlUpdate(List<SObject> objList){
+        public virtual override void dmlUpdate(List<SObject> objList)
+        {
             Database.update(objList,m_accessLevel);
         }
-        public virtual override void dmlDelete(List<SObject> objList){
+        public virtual override void dmlDelete(List<SObject> objList)
+        {
             Database.delete(objList,m_accessLevel);
         }
         public virtual override void dmlUpsert(List<SObject> objList, Schema.SObjectField externalId)
@@ -199,26 +205,54 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
     }
 
     // default implementations for commitWork events
-    public virtual void onRegisterType(Schema.SObjectType sObjectType) {}
-    public virtual void onCommitWorkStarting() {}
+    public virtual void onRegisterType(Schema.SObjectType sObjectType)
+    {
+    }
+    public virtual void onCommitWorkStarting()
+    {
+    }
 
-    public virtual void onPublishBeforeEventsStarting() {}
-    public virtual void onPublishBeforeEventsFinished() {}
+    public virtual void onPublishBeforeEventsStarting()
+    {
+    }
+    public virtual void onPublishBeforeEventsFinished()
+    {
+    }
 
-    public virtual void onDMLStarting() {}
-    public virtual void onDMLFinished() {}
+    public virtual void onDMLStarting()
+    {
+    }
+    public virtual void onDMLFinished()
+    {
+    }
 
-    public virtual void onDoWorkStarting() {}
-    public virtual void onDoWorkFinished() {}
+    public virtual void onDoWorkStarting()
+    {
+    }
+    public virtual void onDoWorkFinished()
+    {
+    }
 
-    public virtual void onPublishAfterSuccessEventsStarting() {}
-    public virtual void onPublishAfterSuccessEventsFinished() {}
+    public virtual void onPublishAfterSuccessEventsStarting()
+    {
+    }
+    public virtual void onPublishAfterSuccessEventsFinished()
+    {
+    }
 
-    public virtual void onPublishAfterFailureEventsStarting() {}
-    public virtual void onPublishAfterFailureEventsFinished() {}
+    public virtual void onPublishAfterFailureEventsStarting()
+    {
+    }
+    public virtual void onPublishAfterFailureEventsFinished()
+    {
+    }
 
-    public virtual void onCommitWorkFinishing() {}
-    public virtual void onCommitWorkFinished(Boolean wasSuccessful) {}
+    public virtual void onCommitWorkFinishing()
+    {
+    }
+    public virtual void onCommitWorkFinished(Boolean wasSuccessful)
+    {
+    }
 
     /**
      * Registers the type to be used for DML operations
@@ -387,7 +421,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
         String sObjectType = record.getSObjectType().getDescribe().getName();
         if(!m_newListByType.containsKey(sObjectType))
         {
-            throw new UnitOfWorkException(String.format('SObject type {0} is not supported by this unit of work', new String[] { sObjectType }));
+            throw new UnitOfWorkException(String.format('SObject type {0} is not supported by this unit of work', new String[]{ sObjectType }));
         }
         m_relationships.get(sObjectType).add(record, relatedToField, externalIdField, externalId);
     }
@@ -444,7 +478,8 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
             // Update the registered record's fields
             SObject registeredRecord = m_dirtyMapByType.get(sObjectType).get(record.Id);
 
-            for (SObjectField dirtyField : dirtyFields) {
+            for (SObjectField dirtyField : dirtyFields)
+            {
                 registeredRecord.put(dirtyField, record.get(dirtyField));
             }
 
@@ -489,7 +524,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
      **/
     public void registerUpsert(SObject record)
     {
-        if (record.Id == null) 
+        if (record.Id == null)
         {
             registerNew(record, null, null);
         }
@@ -518,9 +553,10 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
      * @param records A list of mix of new and existing records
      * @param externalIdField External id field to use for upserting operation
      **/
-    public void registerUpsert(List<SObject> records, Schema.SObjectField externalIdField) 
+    public void registerUpsert(List<SObject> records, Schema.SObjectField externalIdField)
     {
-        for (SObject record : records) {
+        for (SObject record : records)
+        {
             this.registerUpsert(record, externalIdField, null, null);
         }
     }
@@ -542,35 +578,41 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
         assertForNonEventSObjectType(sObjName);
         assertForSupportedSObjectType(m_upsertRecordsPerType, sObjName);
 
-        if (externalIdField == null) {
+        if (externalIdField == null)
+        {
             throw new UnitOfWorkException('Invalid argument: externalIdField. If you want to upsert by id, use the registerUpsert method that has only one argument');
         }
 
         Schema.SObjectField registeredExternalId = m_externalIdToUpsertPerType.get(sObjName);
-        if (registeredExternalId == externalIdField) {
+        if (registeredExternalId == externalIdField)
+        {
             putUpsertRecord(sObjName,record,relatedToParentRecord,relatedToParentField);
             return;
         }
 
-        if (registeredExternalId != null) {
+        if (registeredExternalId != null)
+        {
             throw new UnitOfWorkException(String.format(
                 'SObject type {0} has already registered an upsert by external id {1}, you cannot use another in this unit of work.',
-                new List<String> { sObjName, registeredExternalId.getDescribe().getName() }
-            ));
+                new List<String>{ sObjName, registeredExternalId.getDescribe().getName() }));
         }
-        if (!(m_dml instanceof IDMLUpsertable)) {
+        if (!(m_dml instanceof IDMLUpsertable))
+        {
             throw new UnitOfWorkException('Upsert by external ID requires IDMLUpsertable implementation. Current IDML implementation does not support this feature.');
         }
 
         DescribeFieldResult fieldDescribe = externalIdField.getDescribe();
 
-        if (record.Id != null && !fieldDescribe.getName().equalsIgnoreCase('Id')) {
+        if (record.Id != null && !fieldDescribe.getName().equalsIgnoreCase('Id'))
+        {
             throw new UnitOfWorkException('When upserting by external id, the record cannot already have the standard Id populated');
         }
-        if (sObjectType != fieldDescribe.getSObjectType()) {
+        if (sObjectType != fieldDescribe.getSObjectType())
+        {
             throw new UnitOfWorkException('Invalid argument: externalIdField. Field supplied is not a known field on the target sObject.');
         }
-        if (!fieldDescribe.isIdLookup()) {
+        if (!fieldDescribe.isIdLookup())
+        {
             throw new UnitOfWorkException('Invalid argument: externalIdField. Field supplied cannot be used with upsert.');
         }
 
@@ -579,9 +621,11 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
         putUpsertRecord(sObjName,record,relatedToParentRecord,relatedToParentField);
     }
 
-    private void putUpsertRecord(String sObjName, SObject record, SObject relatedToParentRecord, SObjectField relatedToParentField){
+    private void putUpsertRecord(String sObjName, SObject record, SObject relatedToParentRecord, SObjectField relatedToParentField)
+    {
         m_upsertRecordsPerType.get(sObjName).add(record);
-        if (relatedToParentRecord != null && relatedToParentField != null) {
+        if (relatedToParentRecord != null && relatedToParentField != null)
+        {
             registerRelationship(record, relatedToParentField, relatedToParentRecord);
         }
     }
@@ -824,10 +868,12 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
     private void upsertDmlByType()
     {
         String sobjName;
-        for (Schema.SObjectType sObjectType : m_sObjectTypes) {
+        for (Schema.SObjectType sObjectType : m_sObjectTypes)
+        {
             sobjName = getSObjectName(sObjectType);
             List<SObject> upsertRecords = m_upsertRecordsPerType.get(sobjName);
-            if (upsertRecords != null && !upsertRecords.isEmpty()) {
+            if (upsertRecords != null && !upsertRecords.isEmpty())
+            {
                 m_relationships.get(sobjName).resolve();
                 IDMLUpsertable dmlUpsertable = (IDMLUpsertable) m_dml;
                 dmlUpsertable.dmlUpsert(upsertRecords, m_externalIdToUpsertPerType.get(sobjName));
@@ -897,8 +943,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
                     String.format(
                             'SObject type {0} must use registerPublishBeforeTransaction or ' +
                                     'registerPublishAfterTransaction methods to be used within this unit of work',
-                            new List<String> { sObjectType }
-                    )
+                            new List<String>{ sObjectType })
             );
         }
     }
@@ -911,8 +956,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
             throw new UnitOfWorkException(
                     String.format(
                             'SObject type {0} is invalid for publishing within this unit of work',
-                            new List<String> {sObjectType}
-                    )
+                            new List<String>{ sObjectType })
             );
         }
     }
@@ -925,8 +969,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
             throw new UnitOfWorkException(
                     String.format(
                             'SObject type {0} is not supported by this unit of work',
-                            new List<String> { sObjectType }
-                    )
+                            new List<String>{ sObjectType })
             );
         }
     }
@@ -950,12 +993,14 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
 
         public void add(SObject record, Schema.SObjectField relatedToField, Schema.SObjectField externalIdField, Object externalId)
         {
-            if (relatedToField == null) {
+            if (relatedToField == null)
+            {
                 throw new UnitOfWorkException('Invalid argument: relatedToField.');
             }
 
             String relationshipName = relatedToField.getDescribe().getRelationshipName();
-            if (String.isBlank(relationshipName)) {
+            if (String.isBlank(relationshipName))
+            {
                 throw new UnitOfWorkException('Invalid argument: relatedToField. Field supplied is not a relationship field.');
             }
 
@@ -966,11 +1011,13 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
             Boolean relatedHasExternalIdField = relatedObject.getDescribe().fields.getMap().keySet().contains(externalIdFieldName.toLowerCase());
             Boolean externalIdFieldIsValid = externalIdField.getDescribe().isExternalId();
 
-            if (!relatedHasExternalIdField) {
+            if (!relatedHasExternalIdField)
+            {
                 throw new UnitOfWorkException('Invalid argument: externalIdField. Field supplied is not a known field on the target sObject.');
             }
 
-            if (!externalIdFieldIsValid) {
+            if (!externalIdFieldIsValid)
+            {
                 throw new UnitOfWorkException('Invalid argument: externalIdField. Field supplied is not a marked as an External Identifier.');
             }
 
@@ -1039,8 +1086,8 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
         public SObject RelatedTo;
 
         public void resolve()
-        {   
-            if (String.isNotBlank(this.RelatedTo.Id)) 
+        {
+            if (String.isNotBlank(this.RelatedTo.Id))
             {
                 this.Record.put( this.RelatedToField, this.RelatedTo.Id );
             }
@@ -1071,7 +1118,9 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
     /**
      * UnitOfWork Exception
      **/
-    public class UnitOfWorkException extends Exception {}
+    public class UnitOfWorkException extends Exception
+    {
+    }
 
     /**
      * Internal implementation of Messaging.sendEmail, see outer class registerEmail method
@@ -1097,7 +1146,10 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
 
         public void doWork()
         {
-            if (emails.size() > 0) { Messaging.sendEmail(emails); }
+            if (emails.size() > 0)
+            {
+                Messaging.sendEmail(emails);
+            }
         }
     }
 }
