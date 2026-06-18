@@ -84,26 +84,17 @@ public virtual with sharing class fflib_SObjectDomain
     /**
      * Exposes the configuration for this domain class instance
      **/
-    public Configuration Configuration
-    {
-get; private set;
-    }
+    public Configuration Configuration { get; private set; }
 
     /**
      * DEPRECATED, This property has been moved to fflib_SObjects
      **/
-    public static fflib_SObjectDomain.ErrorFactory Errors
-    {
-get; private set;
-    }
+    public static fflib_SObjectDomain.ErrorFactory Errors { get; private set; }
 
     /**
      * Useful during unit testing to access mock support for database inserts and updates (testing without DML)
      **/
-    public static TestFactory Test
-    {
-get; private set;
-    }
+    public static TestFactory Test { get; private set; }
 
     /**
      * Retains instances of domain classes implementing trigger stateful
@@ -456,19 +447,19 @@ get; private set;
             // Construct the domain class with the approprite record set
             if(isInsert)
             {
-domainObject = domainConstructor.construct(newRecords);
+                domainObject = domainConstructor.construct(newRecords);
             }
             else if(isUpdate)
             {
-domainObject = domainConstructor.construct(newRecords);
+                domainObject = domainConstructor.construct(newRecords);
             }
             else if(isDelete)
             {
-domainObject = domainConstructor.construct(oldRecordsMap.values());
+                domainObject = domainConstructor.construct(oldRecordsMap.values());
             }
             else if(isUndelete)
             {
-domainObject = domainConstructor.construct(newRecords);
+                domainObject = domainConstructor.construct(newRecords);
             }
 
             // Should this instance be reused on the next trigger invocation?
@@ -490,34 +481,34 @@ domainObject = domainConstructor.construct(newRecords);
         {
             if(isInsert)
             {
-domainObject.handleBeforeInsert();
+                domainObject.handleBeforeInsert();
             }
             else if(isUpdate)
             {
-domainObject.handleBeforeUpdate(oldRecordsMap);
+                domainObject.handleBeforeUpdate(oldRecordsMap);
             }
             else if(isDelete)
             {
-domainObject.handleBeforeDelete();
+                domainObject.handleBeforeDelete();
             }
         }
         else
         {
             if(isInsert)
             {
-domainObject.handleAfterInsert();
+                domainObject.handleAfterInsert();
             }
             else if(isUpdate)
             {
-domainObject.handleAfterUpdate(oldRecordsMap);
+                domainObject.handleAfterUpdate(oldRecordsMap);
             }
             else if(isDelete)
             {
-domainObject.handleAfterDelete();
+                domainObject.handleAfterDelete();
             }
             else if(isUndelete)
             {
-domainObject.handleAfterUndelete();
+                domainObject.handleAfterUndelete();
             }
         }
     }
@@ -563,35 +554,14 @@ domainObject.handleAfterUndelete();
 
     public class TriggerEvent
     {
-        public boolean BeforeInsertEnabled
-        {
-get; private set;
-        }
-        public boolean BeforeUpdateEnabled
-        {
-get; private set;
-        }
-        public boolean BeforeDeleteEnabled
-        {
-get; private set;
-        }
+        public boolean BeforeInsertEnabled { get; private set; }
+        public boolean BeforeUpdateEnabled { get; private set; }
+        public boolean BeforeDeleteEnabled { get; private set; }
 
-        public boolean AfterInsertEnabled
-        {
-get; private set;
-        }
-        public boolean AfterUpdateEnabled
-        {
-get; private set;
-        }
-        public boolean AfterDeleteEnabled
-        {
-get; private set;
-        }
-        public boolean AfterUndeleteEnabled
-        {
-get; private set;
-        }
+        public boolean AfterInsertEnabled { get; private set; }
+        public boolean AfterUpdateEnabled { get; private set; }
+        public boolean AfterDeleteEnabled { get; private set; }
+        public boolean AfterUndeleteEnabled { get; private set; }
 
         public TriggerEvent()
         {
@@ -601,64 +571,78 @@ get; private set;
         // befores
         public TriggerEvent enableBeforeInsert()
         {
-BeforeInsertEnabled = true; return this;
+            BeforeInsertEnabled = true;
+            return this;
         }
         public TriggerEvent enableBeforeUpdate()
         {
-BeforeUpdateEnabled = true; return this;
+            BeforeUpdateEnabled = true;
+            return this;
         }
         public TriggerEvent enableBeforeDelete()
         {
-BeforeDeleteEnabled = true; return this;
+            BeforeDeleteEnabled = true;
+            return this;
         }
 
         public TriggerEvent disableBeforeInsert()
         {
-BeforeInsertEnabled = false; return this;
+            BeforeInsertEnabled = false;
+            return this;
         }
         public TriggerEvent disableBeforeUpdate()
         {
-BeforeUpdateEnabled = false; return this;
+            BeforeUpdateEnabled = false;
+            return this;
         }
         public TriggerEvent disableBeforeDelete()
         {
-BeforeDeleteEnabled = false; return this;
+            BeforeDeleteEnabled = false;
+            return this;
         }
 
         // afters
         public TriggerEvent enableAfterInsert()
         {
-AfterInsertEnabled     = true; return this;
+            AfterInsertEnabled = true;
+            return this;
         }
         public TriggerEvent enableAfterUpdate()
         {
-AfterUpdateEnabled     = true; return this;
+            AfterUpdateEnabled = true;
+            return this;
         }
         public TriggerEvent enableAfterDelete()
         {
-AfterDeleteEnabled     = true; return this;
+            AfterDeleteEnabled = true;
+            return this;
         }
         public TriggerEvent enableAfterUndelete()
         {
-AfterUndeleteEnabled     = true; return this;
+            AfterUndeleteEnabled = true;
+            return this;
         }
 
 
         public TriggerEvent disableAfterInsert()
         {
-AfterInsertEnabled     = false; return this;
+            AfterInsertEnabled = false;
+            return this;
         }
         public TriggerEvent disableAfterUpdate()
         {
-AfterUpdateEnabled     = false; return this;
+            AfterUpdateEnabled = false;
+            return this;
         }
         public TriggerEvent disableAfterDelete()
         {
-AfterDeleteEnabled     = false; return this;
+            AfterDeleteEnabled = false;
+            return this;
         }
         public TriggerEvent disableAfterUndelete()
         {
-AfterUndeleteEnabled     = false; return this;
+            AfterUndeleteEnabled = false;
+            return this;
         }
 
         public TriggerEvent enableAll()
@@ -697,34 +681,34 @@ AfterUndeleteEnabled     = false; return this;
             {
                 if(isInsert)
                 {
-return BeforeInsertEnabled;
+                    return BeforeInsertEnabled;
                 }
                 else if(isUpdate)
                 {
-return BeforeUpdateEnabled;
+                    return BeforeUpdateEnabled;
                 }
                 else if(isDelete)
                 {
-return BeforeDeleteEnabled;
+                    return BeforeDeleteEnabled;
                 }
             }
             else if(isAfter)
             {
                 if(isInsert)
                 {
-return AfterInsertEnabled;
+                    return AfterInsertEnabled;
                 }
                 else if(isUpdate)
                 {
-return AfterUpdateEnabled;
+                    return AfterUpdateEnabled;
                 }
                 else if(isDelete)
                 {
-return AfterDeleteEnabled;
+                    return AfterDeleteEnabled;
                 }
                 else if(isUndelete)
                 {
-return AfterUndeleteEnabled;
+                    return AfterUndeleteEnabled;
                 }
             }
             return true; // shouldnt ever get here!
@@ -739,25 +723,16 @@ return AfterUndeleteEnabled;
         /**
          * Backwards compatibility mode for handleAfterUpdate routing to onValidate()
          **/
-        public Boolean OldOnUpdateValidateBehaviour
-        {
-get; private set;
-        }
+        public Boolean OldOnUpdateValidateBehaviour { get; private set; }
         /**
          * True if the base class is checking the users CRUD requirements before invoking trigger methods
          **/
-        public Boolean EnforcingTriggerCRUDSecurity
-        {
-get; private set;
-        }
+        public Boolean EnforcingTriggerCRUDSecurity { get; private set; }
 
         /**
          * Enables reuse of the same Domain instance between before and after trigger phases (subject to recursive scenarios)
          **/
-        public Boolean TriggerStateEnabled
-        {
-get; private set;
-        }
+        public Boolean TriggerStateEnabled { get; private set; }
 
         /**
          * Default configuration

@@ -27,12 +27,9 @@
 public virtual class fflib_Objects
         implements fflib_IObjects
 {
-    protected List<Object> objects
+    protected List<Object> objects { get; private set; }
     {
-get; private set;
-    }
-    {
-objects = new List<Object>();
+        objects = new List<Object>();
     }
 
     /**
