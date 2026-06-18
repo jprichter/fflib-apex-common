@@ -185,10 +185,7 @@ private class fflib_ObjectsTest
 
     private class DataTransferObject
     {
-        public String MyProperty
-        {
-get; set;
-        }
+        public String MyProperty { get; set; }
 
         public DataTransferObject(String property)
         {

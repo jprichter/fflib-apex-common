@@ -33,7 +33,7 @@ public abstract with sharing class fflib_SObjectSelector
 {
     public enum DataAccess
     {
-LEGACY, USER_MODE, SYSTEM_MODE
+        LEGACY, USER_MODE, SYSTEM_MODE
     }
 
     /**
@@ -86,15 +86,15 @@ LEGACY, USER_MODE, SYSTEM_MODE
      **/
     private fflib_SObjectDescribe describeWrapper
     {
-    get
-    {
-        if(describeWrapper == null)
+        get
         {
-            describeWrapper = fflib_SObjectDescribe.getDescribe(getSObjectType());
+            if(describeWrapper == null)
+            {
+                describeWrapper = fflib_SObjectDescribe.getDescribe(getSObjectType());
+            }
+            return describeWrapper;
         }
-        return describeWrapper;
-    }
-    set;
+        set;
     }
     /**
      * static variables
@@ -487,7 +487,7 @@ LEGACY, USER_MODE, SYSTEM_MODE
       **/
      public fflib_QueryFactory addQueryFactorySubselect(fflib_QueryFactory parentQueryFactory, String relationshipName)
      {
-    return addQueryFactorySubselect(parentQueryFactory, relationshipName, TRUE);
+        return addQueryFactorySubselect(parentQueryFactory, relationshipName, TRUE);
      }
 
      /**

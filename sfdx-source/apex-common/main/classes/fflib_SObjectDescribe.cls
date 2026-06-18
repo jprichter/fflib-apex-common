@@ -219,8 +219,8 @@ public class fflib_SObjectDescribe
     **/
     private static Map<String,fflib_SObjectDescribe> instanceCache
     {
-get
-    {
+        get
+        {
             if(instanceCache == null)
             {
                 instanceCache = new Map<String,fflib_SObjectDescribe>();

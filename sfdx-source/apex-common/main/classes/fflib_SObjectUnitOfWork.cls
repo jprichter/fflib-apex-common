@@ -1148,7 +1148,7 @@ public virtual inherited sharing class fflib_SObjectUnitOfWork
         {
             if (emails.size() > 0)
             {
-Messaging.sendEmail(emails);
+                Messaging.sendEmail(emails);
             }
         }
     }

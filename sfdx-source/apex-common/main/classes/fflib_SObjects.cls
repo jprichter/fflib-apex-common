@@ -41,10 +41,7 @@ public virtual class fflib_SObjects
     /**
      * Useful during unit testing to assert at a more granular and robust level for errors raised during the various trigger events
      **/
-    public static ErrorFactory Errors
-    {
-get; private set;
-    }
+    public static ErrorFactory Errors { get; private set; }
 
     static
     {
@@ -248,8 +245,7 @@ get; private set;
      */
     protected virtual List<SObject> getRecordsWithBlankFieldValues(Schema.SObjectField field)
     {
-        return getRecordsWithBlankFieldValues(
-                new Set<Schema.SObjectField>{ field });
+        return getRecordsWithBlankFieldValues(new Set<Schema.SObjectField>{ field });
     }
 
     /**
@@ -266,7 +262,7 @@ get; private set;
             {
                 if (String.isNotBlank(String.valueOf(record.get(field))))
                 {
-continue;
+                    continue;
                 }
 
                 result.add(record);
@@ -297,7 +293,7 @@ continue;
             }
             if (allBlank)
             {
-result.add(record);
+                result.add(record);
             }
         }
         return result;
@@ -357,7 +353,7 @@ result.add(record);
             }
             if (allNonBlank)
             {
-result.add(record);
+                result.add(record);
             }
         }
         return result;

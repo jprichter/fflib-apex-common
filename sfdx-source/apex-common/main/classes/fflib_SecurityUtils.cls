@@ -34,9 +34,9 @@ public class fflib_SecurityUtils
     @TestVisible
     private enum OperationType
     {
-CREATE, READ, MODIFY, DEL
+        CREATE, READ, MODIFY, DEL
     }
-//UPDATE and DELETE are reserved words
+    //UPDATE and DELETE are reserved words
 
     /**
      * SecurityException is never be thrown directly by fflib_SecurityUtils, instead all

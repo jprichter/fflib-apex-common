@@ -68,10 +68,7 @@ public class fflib_QueryFactory
      * This property is read-only and may not be set after instantiation.
      * The {@link Schema.SObjectType} token of the SObject that will be used in the FROM clause of the resultant query.
     **/
-    public Schema.SObjectType table
-    {
-get; private set;
-    }
+    public Schema.SObjectType table { get; private set; }
     @TestVisible
     private Set<String> fields;
     private String conditionExpression;
@@ -144,7 +141,7 @@ get; private set;
 
             if (token != null && i.hasNext() && (tokenDescribe.getSoapType() == Schema.SoapType.ID
                 || (tokenDescribe.getSoapType() == Schema.SoapType.STRING && tokenDescribe.getType() == Schema.DisplayType.REFERENCE)))
-                {
+            {
                 List<Schema.sObjectType> relatedObjs = tokenDescribe.getReferenceTo(); //if it's polymorphic, it matters which one we use - i.e. Lead.Owner is GROUP|USER and each has different fields.
 
                 if (relatedObjs.size() == 1 || relatedSObjectType == null)
@@ -165,11 +162,11 @@ get; private set;
 
                 fieldPath.add(tokenDescribe.getRelationshipName());
             }
-                else if(token != null && !i.hasNext())
+            else if(token != null && !i.hasNext())
             {
                 fieldPath.add(tokenDescribe.getName());
             }
-                else
+            else
             {
                 if(token == null)
                 {
