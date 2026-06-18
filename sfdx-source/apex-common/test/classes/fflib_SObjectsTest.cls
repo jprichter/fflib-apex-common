@@ -25,6 +25,7 @@
 **/
 
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions')
 public class fflib_SObjectsTest
 {
     private static Integer testFakeIdSequence = 0;

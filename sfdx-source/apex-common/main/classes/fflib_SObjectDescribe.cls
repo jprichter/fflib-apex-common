@@ -36,6 +36,7 @@
  * This allows both upgrading old code to APIv29 by making use of these as a nearly drop in replacement, as well as keeping
  * namespace detection logic encapsulated.
 **/
+@SuppressWarnings('PMD.ApexDoc, PMD.ClassNamingConventions, PMD.AvoidBooleanMethodParameters, PMD.CognitiveComplexity')
 public class fflib_SObjectDescribe
 {
     //internal implementation details

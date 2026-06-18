@@ -29,6 +29,7 @@
     Used under a BSD license: https://github.com/capeterson/Apex-Util/blob/master/LICENSE
 **/
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ClassNamingConventions, PMD.MethodNamingConventions')
 private class fflib_SObjectDescribeTest
 {
 

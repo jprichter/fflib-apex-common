@@ -27,6 +27,7 @@
 /**
  * @see fflib_SObjectUnitOfWork
  **/
+@SuppressWarnings('PMD.ApexDoc, PMD.ClassNamingConventions, PMD.ExcessiveParameterList')
 public interface fflib_ISObjectUnitOfWork
 {
     /**

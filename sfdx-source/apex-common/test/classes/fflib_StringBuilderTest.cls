@@ -25,6 +25,7 @@
 **/
 
 @IsTest
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ClassNamingConventions, PMD.MethodNamingConventions')
 private with sharing class fflib_StringBuilderTest
 {
     @IsTest

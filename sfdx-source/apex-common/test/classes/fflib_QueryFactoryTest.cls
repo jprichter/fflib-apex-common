@@ -25,6 +25,7 @@
 **/
 
 @IsTest( isParallel = true )
+@SuppressWarnings('PMD.ApexUnitTestClassShouldHaveRunAs, PMD.ApexDoc, PMD.ClassNamingConventions, PMD.MethodNamingConventions, PMD.CyclomaticComplexity, PMD.LocalVariableNamingConventions')
 private class fflib_QueryFactoryTest
 {
 
